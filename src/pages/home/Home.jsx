@@ -55,7 +55,7 @@ const Home = (props) => {
         <Topber userName={props.userDetails?.name} />
         <div className='homeMainWrapper'>
           <div className='homeMainTop'>
-            {data.map((singleItem, index) => {
+            {data?.map((singleItem, index) => {
               return (
                 <DashboardCard
                   type='manageClients'
