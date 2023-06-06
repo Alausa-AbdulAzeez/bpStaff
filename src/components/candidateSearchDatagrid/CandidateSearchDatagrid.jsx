@@ -16,6 +16,7 @@ import React, { useState } from 'react'
 import { FaAngleDown } from 'react-icons/fa'
 import { MdCancel } from 'react-icons/md'
 import './candidateSearchDatagrid.scss'
+import { toast } from 'react-toastify'
 
 const CandidateSearchDatagrid = (props) => {
   const [pageSize, setPageSize] = useState(5)
@@ -114,8 +115,8 @@ const CandidateSearchDatagrid = (props) => {
   const receptionistRows = [
     {
       id: 1,
-      lastName: 'Snow',
-      firstName: '1',
+      lastName: 'Alausa',
+      firstName: 'Abdulazeez',
       age: 35,
       attendedTo: 'false',
       compName: 'Chicken Republic',
@@ -202,9 +203,9 @@ const CandidateSearchDatagrid = (props) => {
 
   const phlebotomistRows = [
     {
-      id: 1,
-      lastName: 'Snow',
-      firstName: '1',
+      id: 'Chicken Republic',
+      lastName: 'Alausa',
+      firstName: 'Abdulazeez',
       date: '1-March-2023',
       age: 35,
       attendedTo: 'false',
@@ -295,8 +296,8 @@ const CandidateSearchDatagrid = (props) => {
   const labScientistRows = [
     {
       id: 1,
-      lastName: 'Snow',
-      firstName: '1',
+      lastName: 'Alausa',
+      firstName: 'Abdulazeez',
       date: '1-March-2023',
       age: 35,
       attendedTo: 'true',
@@ -491,6 +492,30 @@ const CandidateSearchDatagrid = (props) => {
     default:
       break
   }
+
+  // DUMMY DATA STATE
+  const [result, setResult] = useState({
+    Gender: '',
+    Age: '',
+    Temperature: '',
+    Weight: '',
+    Height: '',
+    BMI: '',
+    ['Blood Pressure']: '',
+  })
+
+  // DUMMY DATA FUNCTION
+  const dummyDataSave = () => {
+    setTimeout(() => {
+      handleHideSlide()
+      toast('Details Saved Successfully')
+    }, 3000)
+  }
+
+  // DUMMY HANDLE CHANGE
+  const handleChange = () => {
+    console.log(result)
+  }
   return (
     <div className='datagridWraper'>
       <div className='slide' style={{ right: position }}>
@@ -530,12 +555,12 @@ const CandidateSearchDatagrid = (props) => {
               <Select
                 labelId='demo-simple-select-label'
                 id='demo-simple-select'
-                //   value={age}
+                value={result?.Gender}
                 label='Company name'
-                //   onChange={handleChange}
+                onChange={() => handleChange()}
               >
-                <MenuItem value={10}>M</MenuItem>
-                <MenuItem value={20}>F</MenuItem>
+                <MenuItem value={'M'}>M</MenuItem>
+                <MenuItem value={'F'}>F</MenuItem>
               </Select>
             </FormControl>
             <TextField
@@ -543,36 +568,42 @@ const CandidateSearchDatagrid = (props) => {
               label='Age'
               type='number'
               className='candidateName basicCandidateDetailsInput'
+              onChange={(e) => handleChange(e, 'Age')}
             />
             <TextField
               id='outlined-search'
               label='Temperature'
               type='number'
               className='candidateName basicCandidateDetailsInput'
+              onChange={(e) => handleChange(e, 'Temperature')}
             />
             <TextField
               id='outlined-search'
               label='Weight'
               type='number'
               className='candidateName basicCandidateDetailsInput'
+              onChange={(e) => handleChange(e, 'Weight')}
             />
             <TextField
               id='outlined-search'
               label='Height'
               type='number'
               className='candidateName basicCandidateDetailsInput'
+              onChange={(e) => handleChange(e, 'Height')}
             />
             <TextField
               id='outlined-search'
               label='BMI'
               type='number'
               className='candidateName basicCandidateDetailsInput'
+              onChange={(e) => handleChange(e, 'BMI')}
             />
             <TextField
               id='outlined-search'
               label='Blood Pressure'
               type='search'
               className='candidateName basicCandidateDetailsInput'
+              onChange={(e) => handleChange(e, 'Blood Pressure')}
             />
           </div>
         )}
@@ -634,11 +665,13 @@ const CandidateSearchDatagrid = (props) => {
           </div>
         )}
         <div className='bottomButtons'>
-          {leftBtnText && (
+          {/* {leftBtnText && (
             <div className='authorize sendDetails'>{leftBtnText}</div>
-          )}
+          )} */}
           {rightBtnText?.length > 0 && (
-            <div className='authorize'>{rightBtnText}</div>
+            <div className='authorize' onClick={() => dummyDataSave()}>
+              {rightBtnText}
+            </div>
           )}
         </div>
       </div>
