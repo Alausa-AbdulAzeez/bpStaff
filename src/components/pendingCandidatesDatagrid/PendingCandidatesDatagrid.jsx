@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux'
 import SimpleBackdrop from '../backdrop/Backdrop'
 import './pendingCandidatesDatagrid.scss'
 import { FaAngleDown } from 'react-icons/fa'
+import { publicRequestWithHeaders } from '../../functions/requestMethods'
 
 const PendingCandidatesDatagrid = (props) => {
   // BMI
@@ -611,6 +612,19 @@ const PendingCandidatesDatagrid = (props) => {
     default:
       break
   }
+  // FUNCTION TO SEND UPDATED USER DETAILS TO THE BACKEND
+  const updatedUserDetails = async (candidateId = 5, clientId = 1) => {
+    console.log(userDetails)
+    try {
+      const res = await publicRequestWithHeaders.put(
+        `/Candidate/UInfo?Candidateid=${candidateId}&Clientid=${clientId}`,
+        userDetails
+      )
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   // HANDLE LEFT AND RIGHT BUTTON CLICK
   const handleBtnClick = (e) => {
@@ -618,9 +632,10 @@ const PendingCandidatesDatagrid = (props) => {
       case 'Preview Report':
         setOpen(true)
         console.log(e.target.textContent)
-
         break
-
+      case 'Save Details':
+        updatedUserDetails()
+        break
       default:
         break
     }
@@ -643,13 +658,15 @@ const PendingCandidatesDatagrid = (props) => {
     setBMI(bmi)
     console.log(BMI)
   }
-  console.log(BMI)
+  // END OF FUNCTION TO CALCULATE BMI
 
   // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
   const handleCandidatePropertyChange = (e, dataType) => {
     setUserDetails({ ...userDetails, [dataType]: e.target.value })
     console.log(userDetails)
   }
+
+  // END OF FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
 
   // use effect to update bmi
   useEffect(() => {
@@ -717,7 +734,7 @@ const PendingCandidatesDatagrid = (props) => {
               label='Temperature'
               type='string'
               className='candidateName basicCandidateDetailsInput'
-              onChange={(e) => handleCandidatePropertyChange(e, 'temperature')}
+              // onChange={(e) => handleCandidatePropertyChange(e, 'temperature')}
             />
             <TextField
               id='outlined-search'
