@@ -19,21 +19,21 @@ import './pendingCandidatesDatagrid.scss'
 import { FaAngleDown } from 'react-icons/fa'
 
 const PendingCandidatesDatagrid = (props) => {
+  // BMI
+  const [BMI, setBMI] = useState('')
+
   // USER DETAILS
   const [userDetails, setUserDetails] = useState({
-    candidateId: null,
-    clientid: '',
+    candidateId: 5,
+    clientid: '1',
     height: '',
     bloodPressure: '',
     weight: '',
     age: '',
-    bmi: '',
+    bmi: BMI,
     gender: '',
     state: '',
   })
-
-  // BMI
-  const [BMI, setBMI] = useState(null)
 
   const [pageSize, setPageSize] = useState(5)
   const [position, setPosition] = useState('-100%')
@@ -648,6 +648,7 @@ const PendingCandidatesDatagrid = (props) => {
   // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
   const handleCandidatePropertyChange = (e, dataType) => {
     setUserDetails({ ...userDetails, [dataType]: e.target.value })
+    console.log(userDetails)
   }
 
   // use effect to update bmi
@@ -740,6 +741,7 @@ const PendingCandidatesDatagrid = (props) => {
               type='number'
               value={BMI}
               className='candidateName basicCandidateDetailsInput'
+              InputLabelProps={{ shrink: true }}
             />
             <TextField
               id='outlined-search'
