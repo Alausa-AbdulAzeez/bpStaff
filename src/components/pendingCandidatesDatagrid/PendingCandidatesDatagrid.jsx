@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import { Box } from '@mui/system'
 import { DataGrid } from '@mui/x-data-grid'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdCancel } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import SimpleBackdrop from '../backdrop/Backdrop'
@@ -19,6 +19,22 @@ import './pendingCandidatesDatagrid.scss'
 import { FaAngleDown } from 'react-icons/fa'
 
 const PendingCandidatesDatagrid = (props) => {
+  // USER DETAILS
+  const [userDetails, setUserDetails] = useState({
+    candidateId: null,
+    clientid: '',
+    height: '',
+    bloodPressure: '',
+    weight: '',
+    age: '',
+    bmi: '',
+    gender: '',
+    state: '',
+  })
+
+  // BMI
+  const [BMI, setBMI] = useState(null)
+
   const [pageSize, setPageSize] = useState(5)
   const [position, setPosition] = useState('-100%')
   let rows
@@ -567,8 +583,8 @@ const PendingCandidatesDatagrid = (props) => {
       rows = phlebotomistRows
       columns = phlebotomistcolumns
       title = 'Pending Candidates'
-      leftBtnText = 'Send Details'
-      rightBtnText = 'Save Details'
+      leftBtnText = 'Save Details'
+      // rightBtnText = 'Save Details'
       break
     case 'labScientist':
       rows = labScientistRows
@@ -609,6 +625,36 @@ const PendingCandidatesDatagrid = (props) => {
         break
     }
   }
+  // FUNCTION TO CALCULATE BMI
+  const calculateBmi = () => {
+    let height = Number(userDetails?.height)
+    let weight = Number(userDetails?.weight)
+    let bmi
+    let heightInMetres
+
+    // CHECK IF HEIGHT AND WEIGHT ARE AVAILABLE
+    userDetails?.height && userDetails?.weight
+
+    // convert Number( to) metres
+    heightInMetres = Number(height) / 100
+
+    bmi = weight / Math.pow(heightInMetres, 2)
+
+    setBMI(bmi)
+    console.log(BMI)
+  }
+  console.log(BMI)
+
+  // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
+  const handleCandidatePropertyChange = (e, dataType) => {
+    setUserDetails({ ...userDetails, [dataType]: e.target.value })
+  }
+
+  // use effect to update bmi
+  useEffect(() => {
+    calculateBmi()
+  }, [userDetails?.height, userDetails?.weight])
+
   return (
     <div className='datagridWraper'>
       <SimpleBackdrop open={open} handleClose={handleClose} />
@@ -650,42 +696,49 @@ const PendingCandidatesDatagrid = (props) => {
               <Select
                 labelId='demo-simple-select-label'
                 id='demo-simple-select'
-                //   value={age}
+                value={userDetails?.gender}
                 label='Company name'
-                //   onChange={handleChange}
+                onChange={(e) => handleCandidatePropertyChange(e, 'gender')}
               >
-                <MenuItem value={10}>M</MenuItem>
-                <MenuItem value={20}>F</MenuItem>
+                <MenuItem value={'M'}>M</MenuItem>
+                <MenuItem value={'F'}>F</MenuItem>
               </Select>
             </FormControl>
             <TextField
               id='outlined-search'
               label='Age'
-              type='number'
+              type='string'
               className='candidateName basicCandidateDetailsInput'
+              onChange={(e) => handleCandidatePropertyChange(e, 'age')}
             />
             <TextField
               id='outlined-search'
               label='Temperature'
-              type='number'
+              type='string'
               className='candidateName basicCandidateDetailsInput'
+              onChange={(e) => handleCandidatePropertyChange(e, 'temperature')}
             />
             <TextField
               id='outlined-search'
               label='Weight'
-              type='number'
+              type='string'
               className='candidateName basicCandidateDetailsInput'
+              onChange={(e) => handleCandidatePropertyChange(e, 'weight')}
+              value={userDetails?.weight}
             />
             <TextField
               id='outlined-search'
               label='Height'
               type='number'
               className='candidateName basicCandidateDetailsInput'
+              onChange={(e) => handleCandidatePropertyChange(e, 'height')}
+              value={userDetails?.height}
             />
             <TextField
               id='outlined-search'
               label='BMI'
               type='number'
+              value={BMI}
               className='candidateName basicCandidateDetailsInput'
             />
             <TextField
@@ -693,6 +746,9 @@ const PendingCandidatesDatagrid = (props) => {
               label='Blood Pressure'
               type='search'
               className='candidateName basicCandidateDetailsInput'
+              onChange={(e) =>
+                handleCandidatePropertyChange(e, 'bloodPressure')
+              }
             />
           </div>
         )}
