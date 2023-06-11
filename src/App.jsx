@@ -77,6 +77,7 @@ function App() {
             element={<Reports userDetails={userDetails && userDetails} />}
           />
           <Route path="/getToken" element={<ForgotPassword />} />
+          <Route path="/forgotPassword" element={<ResetPassword />} />
         </Routes>
       )}
     </BrowserRouter>
