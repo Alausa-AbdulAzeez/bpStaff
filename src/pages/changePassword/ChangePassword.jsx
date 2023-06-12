@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./changePassword.scss";
 import { BsEye, BsFillEyeSlashFill } from "react-icons/bs";
@@ -7,12 +7,15 @@ import { publicRequest } from "../../functions/requestMethods";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { login } from "../../redux/apiCalls";
 
 const ChangePassword = () => {
   // MISCELLANEOUS
   const [btnDisabled, setBtnDisabled] = useState(true);
   const { token } = useSelector((state) => state?.user?.currentUser?.data);
   console.log(token);
+
+  const toastId = useRef(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -56,16 +59,43 @@ const ChangePassword = () => {
 
   // FUNCTION FOR ONCLICK LOGIN BUTTON
   const handleChangePassword = async (e) => {
+    toastId.current = toast("Please Wait", {
+      autoClose: 3000,
+      isLoading: true,
+    });
+
     console.log(user);
     e.preventDefault();
     try {
-      if (user?.password === user?.confirmPassword) {
-        const res = await publicRequest.post("/Account/change-password", user, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      if (user?.newPassword === user?.confirmPassword) {
+        const res = await publicRequest
+          .post("/Account/change-password", user, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(() => {
+            toast.update(toastId.current, {
+              render:
+                "Password updated succesfully! You'll be redirected in a bit, Please wait...",
+              type: "success",
+              isLoading: false,
+              autoClose: 3000,
+            });
+
+            setTimeout(() => {
+              navigate("/login");
+            }, 2500);
+
+            // setTimeout(() => {
+            //   login(
+            //     dispatch,
+            //     { email: user?.username, password: user?.confirmPassword },
+            //     navigate
+            //   );
+            // }, 2000);
+          });
         console.log(res);
       } else {
         toast.error("Passwords don't match!", {
@@ -74,12 +104,17 @@ const ChangePassword = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(
-        error.response.data.title ||
-          error.response.data.description ||
+      toast.update(toastId.current, {
+        type: "error",
+        autoClose: 3000,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
           error?.message ||
           "Something went wrong, please try again"
-      );
+        }`,
+      });
     }
 
     // login(dispatch, user, navigate)
