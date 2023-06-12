@@ -2,8 +2,9 @@ import { useState, useEffect, React } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import BackgroundImg from "../../utils/images/IMG_6229.png";
-import { updateUser } from "../../redux/globalSlice";
 import "./login.scss";
+import { login } from "../../redux/apiCalls";
+import { BsEye, BsFillEyeSlashFill } from "react-icons/bs";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,9 @@ const Register = () => {
     email: "",
     password: "",
   });
+  // PASSWORD VISIBILITY
+  const [showPassword, setShowPassword] = useState(false);
+
   const [userDetails, setUserDetails] = useState({
     name: "",
     role: "",
@@ -37,19 +41,20 @@ const Register = () => {
   // FUNCTION FOR ONCLICK LOGIN BUTTON
   const handleLogin = (e) => {
     e.preventDefault();
-    localStorage.setItem("isLoggedIn", "true");
-    dispatch(updateUser(user));
-
-    // sessionStorage.removeItem('user')
-    // sessionStorage.setItem('user', JSON.stringify(user))
-    navigate("/");
+    login(dispatch, user, navigate);
   };
   // END OF FUNCTION FOR ONCLICK LOGIN BUTTON
+
+  // FUNCTION FOR PASSWORD TOGGLE
+  const handlePasswordToggle = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  // END OF FUNCTION FOR PASSWORD TOGGLE
 
   //   USE EFFECT FOR SETTING BUTTON STATE
   useEffect(() => {
     setBtnState(user, setBtnDisabled);
-    sessionStorage.setItem("user", JSON.stringify(user));
   }, [user]);
 
   return (
@@ -79,13 +84,18 @@ const Register = () => {
               onChange={(e) => handleSetUser(e, "email")}
             />
             <label htmlFor="">Password</label>
-            <input
-              type="password"
-              className="loginPasswordInput loginInput"
-              placeholder="Password"
-              onChange={(e) => handleSetUser(e, "password")}
-              data-testid="passwordTestId"
-            />
+            <div className="passwordWrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="loginPasswordInput loginInput"
+                placeholder="Password"
+                onChange={(e) => handleSetUser(e, "password")}
+                data-testid="passwordTestId"
+              />
+              <span onClick={handlePasswordToggle}>
+                {showPassword ? <BsEye /> : <BsFillEyeSlashFill />}
+              </span>
+            </div>
             <Link to={"/getToken"}>
               <div className="forgotPassword">Forgotten your password?</div>
             </Link>

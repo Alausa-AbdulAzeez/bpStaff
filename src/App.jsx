@@ -9,13 +9,15 @@ import ViewClients from "./pages/viewClients/ViewClients";
 import { useSelector } from "react-redux";
 import Reports from "./pages/reports/Reports";
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
+import ResetPassword from "./pages/resetPassword/ResetPassword";
+import ChangePassword from "./pages/changePassword/ChangePassword";
 
 function App() {
   let userDetails;
   // const user = sessionStorage.getItem('user')
   // const [user, setUser] = useState(sessionStorage.getItem('user'))
-  const user = useSelector((state) => state.globalState.globalState.user);
-  console.log(user);
+  // const user = useSelector((state) => state.globalState.globalState.user);
+  // console.log(user);
 
   // FUNCTION FOR SETTING USER DETAILS
   switch (user?.email) {
@@ -78,6 +80,7 @@ function App() {
           />
           <Route path="/getToken" element={<ForgotPassword />} />
           <Route path="/forgotPassword" element={<ResetPassword />} />
+          <Route path="/changePassword" element={<ChangePassword />} />
         </Routes>
       )}
     </BrowserRouter>

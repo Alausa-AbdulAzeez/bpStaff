@@ -70,8 +70,6 @@ const ForgotPassword = () => {
   };
   // END OF FUNCTION FOR ONCLICK LOGIN BUTTON
 
-  // USEEFFECT TO
-
   return (
     <>
       <ToastContainer />
