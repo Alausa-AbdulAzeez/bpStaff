@@ -11,17 +11,22 @@ import Topber from '../../components/topbar/Topber'
 import './candidateSearch.scss'
 import searchImg from '../../utils/images/searchImg.png'
 import CandidateSearchDatagrid from '../../components/candidateSearchDatagrid/CandidateSearchDatagrid'
+import { useSelector } from 'react-redux'
 
 const CandidateSearch = (props) => {
   const [searched, setSearched] = useState(false)
-  const loggedInUserRole = props.userDetails?.role
 
-  console.log(props)
+  // GET CURRENT LOGGED IN USER
+  const { currentUser } = useSelector((state) => state?.user)
+  const loggedInUserRole = currentUser?.data?.role
+  const userName = currentUser?.data?.profile?.fullName
+  console.log(currentUser)
+
   return (
     <div className='candidateSearchWrapper'>
       <Sidebar loggedInUserRole={loggedInUserRole} />
       <div className='candidateSearchRight'>
-        <Topber userName={props.userDetails.name} />
+        <Topber userName={userName} />
         <div className='candidateSearchMainWrapper'>
           <div className='candidateSearchMainTop'>
             <h3 className='candidateSearchMainTopTitle'>Search</h3>
@@ -58,7 +63,7 @@ const CandidateSearch = (props) => {
                 <h3>Nothing to see here, yet</h3>
               </>
             )}
-            {<CandidateSearchDatagrid userDetails={props.userDetails} />}
+            {<CandidateSearchDatagrid userDetails={currentUser} />}
           </div>
         </div>
       </div>

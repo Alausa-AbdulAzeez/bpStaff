@@ -14,14 +14,21 @@ import {
   receptionistData,
   reportOfficerData,
 } from '../../utils/data/sidebarData'
+import { useSelector } from 'react-redux'
 
-const Sidebar = (props) => {
+const Sidebar = () => {
+  // LOGOUT DIALOGUE
   const [open, setOpen] = React.useState(false)
-  const loggedInUserRole = props?.loggedInUserRole
+
+  // GET CURRENT LOGGED IN USER
+  const { currentUser } = useSelector((state) => state?.user)
+  const loggedInUserRole = currentUser?.data?.role
+
+  // INITIALIZE SIDEBAR DATA
   let sidebarInfo
 
   switch (loggedInUserRole) {
-    case 'receptionist':
+    case 'Reception':
       sidebarInfo = receptionistData
       break
     case 'phlebotomist':

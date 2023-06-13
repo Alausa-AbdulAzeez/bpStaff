@@ -26,7 +26,8 @@ const CandidateSearchDatagrid = (props) => {
   let title
   let leftBtnText
   let rightBtnText
-  const loggedInUserRole = props.userDetails?.role
+  console.log(props)
+  const loggedInUserRole = props.userDetails?.data?.role
   // const loggedInUserRole = 'phlebotomist'
   // const loggedInUserRole = 'receptionist'
 
@@ -462,7 +463,7 @@ const CandidateSearchDatagrid = (props) => {
   ]
 
   switch (loggedInUserRole) {
-    case 'receptionist':
+    case 'Reception':
       rows = receptionistRows
       columns = receptionistcolumns
       title = 'Candidates'
@@ -539,7 +540,7 @@ const CandidateSearchDatagrid = (props) => {
           <h3>Number of Tests</h3>
           <p>3</p>
         </div>
-        {loggedInUserRole === 'receptionist' && (
+        {loggedInUserRole === 'Reception' && (
           <div className='listOfTests'>
             <div className='singleTest'></div>
             <h3>Number of Tests</h3>

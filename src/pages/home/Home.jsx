@@ -12,14 +12,18 @@ import {
   reportOfficerDashboardData,
 } from '../../utils/data/dashboardCardData'
 import Homedatagrid from '../../components/homeDatagrid/Homedatagrid'
+import { useSelector } from 'react-redux'
 
 const Home = (props) => {
-  const loggedInUserRole = props.userDetails?.role
+  // const loggedInUserRole = props.userDetails?.role
+  // GET CURRENT LOGGED IN USER
+  const { currentUser } = useSelector((state) => state?.user)
+  const loggedInUserRole = currentUser?.data?.role
 
   let data
   // HANDLE CARD INFO
   switch (loggedInUserRole && loggedInUserRole) {
-    case 'receptionist':
+    case 'Reception':
       data = receptionistDashboardData
 
       break
