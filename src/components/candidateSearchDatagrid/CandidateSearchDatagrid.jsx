@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import { Box } from '@mui/system'
 import { DataGrid } from '@mui/x-data-grid'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaAngleDown } from 'react-icons/fa'
 import { MdCancel } from 'react-icons/md'
 import './candidateSearchDatagrid.scss'
@@ -22,6 +22,9 @@ import { format } from 'date-fns'
 const CandidateSearchDatagrid = (props) => {
   // TABLE ROWS TO LOAD
   const [pageSize, setPageSize] = useState(5)
+
+  // SELECTED CANDIDATE AFTER ROW CLICK
+  const [selectedCandidate, setSelecedCandidate] = useState({})
 
   // INITIAL POSITION OF SLIDE
   const [position, setPosition] = useState('-100%')
@@ -48,6 +51,8 @@ const CandidateSearchDatagrid = (props) => {
 
   // HANDLE ROW CLICK
   const handleRowClick = (row, e) => {
+    console.log(row)
+    setSelecedCandidate(row?.row)
     if (e.target.textContent !== 'Authorize') {
       if (position !== '0') {
         setPosition('0')
@@ -473,6 +478,9 @@ const CandidateSearchDatagrid = (props) => {
   const handleChange = () => {
     console.log(result)
   }
+
+  // USEEFFECT TO UPDATE SELECTED ROW
+  useEffect(() => {}, [selectedCandidate])
   return (
     <div className='datagridWraper'>
       <div className='slide' style={{ right: position }}>
@@ -480,8 +488,13 @@ const CandidateSearchDatagrid = (props) => {
           <div className='cancelconWrapper' onClick={handleHideSlide}>
             <MdCancel className='cancelIcon' />
           </div>
-          <div className='initials'>AA</div>
-          <div className='slideFullname'>Alausa Abdulazeez</div>
+          <div className='initials'>
+            {selectedCandidate?.candidateName &&
+              selectedCandidate?.candidateName[0]?.toUpperCase()}
+          </div>
+          <div className='slideFullname'>
+            {selectedCandidate?.candidateName?.toUpperCase()}
+          </div>
         </div>
         <div className='companyName h3'>
           <h3>Company Name</h3>
@@ -490,20 +503,24 @@ const CandidateSearchDatagrid = (props) => {
 
         <div className='phoneNo h3'>
           <h3>Candidate Phone Number</h3>
-          <p>+23456789010</p>
+          <p>{selectedCandidate?.phoneNumber}</p>
         </div>
         <div className='numberOfTests h3'>
-          <h3>Number of Tests</h3>
-          <p>3</p>
+          <h3>{"Candidate's Email"}</h3>
+          <p>{selectedCandidate?.email}</p>
         </div>
         {loggedInUserRole === 'Reception' && (
-          <div className='listOfTests'>
-            <div className='singleTest'></div>
-            <h3>Number of Tests</h3>
-            <p>
-              1. <span>Malaria test</span>
-            </p>
+          <div className='numberOfTests h3'>
+            <h3>{"Candidate's Adderess"}</h3>
+            <p>{selectedCandidate?.address}</p>
           </div>
+          // <div className='listOfTests'>
+          //   <div className='singleTest'></div>
+          //   <h3>Number of Tests</h3>
+          //   <p>
+          //     1. <span>Malaria test</span>
+          //   </p>
+          // </div>
         )}
         {loggedInUserRole === 'phlebotomist' && (
           <div className='basicDetailsWrapper'>
