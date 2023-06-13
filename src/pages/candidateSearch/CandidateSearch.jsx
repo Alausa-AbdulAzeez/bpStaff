@@ -20,7 +20,6 @@ const CandidateSearch = (props) => {
   const { currentUser } = useSelector((state) => state?.user)
   const loggedInUserRole = currentUser?.data?.role
   const userName = currentUser?.data?.profile?.fullName
-  console.log(currentUser)
 
   return (
     <div className='candidateSearchWrapper'>

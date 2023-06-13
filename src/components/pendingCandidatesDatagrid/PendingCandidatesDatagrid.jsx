@@ -43,10 +43,7 @@ const PendingCandidatesDatagrid = (props) => {
   let title
   let leftBtnText
   let rightBtnText
-  const loggedInUserRole = props.userDetails?.role
-  const user = useSelector((state) =>
-    console.log(state.globalState.globalState)
-  )
+  const loggedInUserRole = props.userDetails?.data?.role
 
   const [open, setOpen] = React.useState(false)
 
@@ -573,7 +570,7 @@ const PendingCandidatesDatagrid = (props) => {
   ]
 
   switch (loggedInUserRole) {
-    case 'receptionist':
+    case 'Reception':
       rows = receptionistRows
       columns = receptionistcolumns
       title = 'Pending Candidates'

@@ -11,17 +11,23 @@ import Topber from '../../components/topbar/Topber'
 import './pendingCandidates.scss'
 import searchImg from '../../utils/images/searchImg.png'
 import PendingCandidatesDatagrid from '../../components/pendingCandidatesDatagrid/PendingCandidatesDatagrid'
+import { useSelector } from 'react-redux'
 
 const PendingCandidates = (props) => {
-  const [searched, setSearched] = useState(false)
+  // GET CURRENT LOGGED IN USER
+  const { currentUser } = useSelector((state) => state?.user)
+  const loggedInUserRole = currentUser?.data?.role
+  const userName = currentUser?.data?.profile?.fullName
 
-  const loggedInUserRole = props.userDetails?.role
+  //
+
+  const [searched, setSearched] = useState(false)
 
   return (
     <div className='pendingCandidatesWrapper'>
       <Sidebar loggedInUserRole={loggedInUserRole} />
       <div className='pendingCandidatesRight'>
-        <Topber userName={props.userDetails.name} />
+        <Topber userName={userName} />
         <div className='pendingCandidatesMainWrapper'>
           <div className='pendingCandidatesMainTop'>
             <h3 className='pendingCandidatesMainTopTitle'>Search</h3>
@@ -58,7 +64,7 @@ const PendingCandidates = (props) => {
                 <h3>Nothing to see here, yet</h3>
               </>
             )}
-            {<PendingCandidatesDatagrid userDetails={props.userDetails} />}
+            {<PendingCandidatesDatagrid userDetails={currentUser} />}
           </div>
         </div>
       </div>
