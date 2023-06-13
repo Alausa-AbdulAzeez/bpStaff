@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux'
 import Loading from '../../components/loading/Loading'
 import { publicRequest } from '../../functions/requestMethods'
 
-const Home = (props) => {
+const Home = () => {
   // GET CURRENT LOGGED IN USER
   const { currentUser } = useSelector((state) => state?.user)
   const loggedInUserRole = currentUser?.data?.role

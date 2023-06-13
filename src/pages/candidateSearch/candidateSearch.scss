@@ -11,6 +11,8 @@
 
       .candidateSearchMainTopForm {
         display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .companySelect {
           width: 300px;
@@ -18,7 +20,7 @@
         }
 
         .candidateName {
-          width: 500px;
+          width: 400px;
           max-width: 600px;
           margin: 0 50px;
         }
@@ -33,13 +35,42 @@
           border-radius: 10px;
           justify-content: center;
           cursor: pointer;
+          margin-left: 0px;
+          height: 50px;
+        }
+
+        .reloadBtn {
+          height: 36px;
+          border-radius: 16px;
+          background-color: #000;
+          color: #fff;
+          padding: 6px 12px;
+          display: flex;
+          align-items: center;
+          outline: none;
+          border: none;
+          cursor: pointer;
+          margin-left: auto;
+
+          & > span {
+            display: flex;
+            align-items: center;
+            margin-left: 4px;
+
+            .reloadIcon {
+              color: white;
+              font-size: 20px;
+            }
+          }
         }
       }
       .candidateSearchMainBottom {
+        height: 400px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        // background-color: red;
         .searchImg {
           height: 380px;
         }

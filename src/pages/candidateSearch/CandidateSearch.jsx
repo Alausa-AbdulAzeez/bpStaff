@@ -1,13 +1,8 @@
-import {
-  Autocomplete,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from '@mui/material'
+import { Autocomplete, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import Sidebar from '../../components/sidebar/Sidebar'
+import ErrorComponent from '../../components/error/Error'
+
 import Topber from '../../components/topbar/Topber'
 import './candidateSearch.scss'
 import searchImg from '../../utils/images/searchImg.png'
@@ -15,8 +10,10 @@ import CandidateSearchDatagrid from '../../components/candidateSearchDatagrid/Ca
 import { useSelector } from 'react-redux'
 import { publicRequest } from '../../functions/requestMethods'
 import { ToastContainer, toast } from 'react-toastify'
+import Loading from '../../components/loading/Loading'
+import { RxReload } from 'react-icons/rx'
 
-const CandidateSearch = (props) => {
+const CandidateSearch = () => {
   // MISCELLANEOUS
   const [searched, setSearched] = useState(false)
   const toastId = React.useRef(null)
@@ -221,16 +218,28 @@ const CandidateSearch = (props) => {
                 >
                   Search
                 </div>
+                <button className='reloadBtn' onClick={getAllCandidates}>
+                  Show All
+                  <span>
+                    <RxReload className='reloadIcon' />
+                  </span>
+                </button>
               </div>
             </div>
             <div className='candidateSearchMainBottom'>
-              {searched && (
-                <>
-                  <img src={searchImg} alt='Search' className='searchImg' />
-                  <h3>Nothing to see here, yet</h3>
-                </>
+              {/* <Loading /> */}
+              {loading || error ? (
+                loading ? (
+                  <Loading />
+                ) : (
+                  <ErrorComponent errorMessage={errorMessage && errorMessage} />
+                )
+              ) : (
+                <CandidateSearchDatagrid
+                  userDetails={currentUser}
+                  tableData={tableData}
+                />
               )}
-              {<CandidateSearchDatagrid userDetails={currentUser} />}
             </div>
           </div>
         </div>

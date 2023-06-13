@@ -17,19 +17,28 @@ import { FaAngleDown } from 'react-icons/fa'
 import { MdCancel } from 'react-icons/md'
 import './candidateSearchDatagrid.scss'
 import { toast } from 'react-toastify'
+import { format } from 'date-fns'
 
 const CandidateSearchDatagrid = (props) => {
+  // TABLE ROWS TO LOAD
   const [pageSize, setPageSize] = useState(5)
+
+  // INITIAL POSITION OF SLIDE
   const [position, setPosition] = useState('-100%')
+
+  // TABLE DATA
+  const tableData = props?.tableData
   let rows
   let columns
   let title
+
+  // SLIDE BUTTONS
   let leftBtnText
   let rightBtnText
   console.log(props)
+
+  // LOGGED IN USER RLOE
   const loggedInUserRole = props.userDetails?.data?.role
-  // const loggedInUserRole = 'phlebotomist'
-  // const loggedInUserRole = 'receptionist'
 
   // SET SIDE INFO POSITION
   const handleSetPosition = () => {
@@ -55,17 +64,33 @@ const CandidateSearchDatagrid = (props) => {
 
   const receptionistcolumns = [
     {
-      field: 'lastName',
+      field: 'candidateName',
       headerName: 'Candidate Name',
       width: 250,
       editable: false,
     },
     { field: 'id', headerName: 'Company Name', width: 190 },
     {
-      field: 'firstName',
-      headerName: 'Number of tests',
+      field: 'testcategory',
+      headerName: 'Test Category',
       width: 150,
       editable: false,
+    },
+    {
+      field: 'appointmentdate',
+      headerName: 'Appointment Date',
+      width: 190,
+      description: 'The candidate shoul be present by this date',
+      renderCell: (props) => {
+        const refinedDate = new Date(props?.value)
+        const dateWithRightFormat = format(refinedDate, 'dd-MMM-yyyy')
+        return <div>{dateWithRightFormat}</div>
+      },
+    },
+    {
+      field: 'phoneNumber',
+      headerName: 'Phone Number',
+      width: 130,
     },
     {
       field: 'action',
@@ -83,92 +108,23 @@ const CandidateSearchDatagrid = (props) => {
         )
       },
     },
-    {
-      field: 'view',
-      headerName: 'View',
-      width: 150,
-      renderCell: () => {
-        return (
-          <div className='view' onClick={() => handleSetPosition()}>
-            View
-          </div>
-        )
-      },
-    },
-    {
-      field: 'role',
-      headerName: 'Attended to',
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <>
-            {params.row.attendedTo === 'true' ? (
-              <div className='attendedTo'>True</div>
-            ) : (
-              <div className='notAttendedTo'>False</div>
-            )}
-          </>
-        )
-      },
-    },
-  ]
 
-  const receptionistRows = [
-    {
-      id: 1,
-      lastName: 'Alausa',
-      firstName: 'Abdulazeez',
-      age: 35,
-      attendedTo: 'false',
-      compName: 'Chicken Republic',
-    },
-    {
-      id: 2,
-      lastName: 'Lannister',
-      firstName: '1',
-      age: 42,
-      attendedTo: 'false',
-      compName: 'Chicken Republic',
-    },
-    {
-      id: 3,
-      lastName: 'Lannister',
-      firstName: '3',
-      age: 45,
-      attendedTo: 'false',
-      compName: 'Chicken Republic',
-    },
-    {
-      id: 4,
-      lastName: 'Stark',
-      firstName: '3',
-      age: 16,
-      attendedTo: 'false',
-      compName: 'Chicken Republic',
-    },
-    {
-      id: 5,
-      lastName: 'Targaryen',
-      firstName: '2',
-      age: null,
-      attendedTo: 'true',
-    },
-    {
-      id: 6,
-      lastName: 'Melisandre',
-      firstName: '2',
-      age: 150,
-      attendedTo: 'true',
-    },
-    {
-      id: 7,
-      lastName: 'Clifford',
-      firstName: '3',
-      age: 44,
-      attendedTo: 'true',
-    },
-    { id: 8, lastName: 'Frances', firstName: '3', age: 36, attendedTo: 'true' },
-    { id: 9, lastName: 'Roxie', firstName: '3', age: 65, attendedTo: 'true' },
+    // {
+    //   field: 'role',
+    //   headerName: 'Attended to',
+    //   width: 150,
+    //   renderCell: (params) => {
+    //     return (
+    //       <>
+    //         {params.row.attendedTo === 'true' ? (
+    //           <div className='attendedTo'>True</div>
+    //         ) : (
+    //           <div className='notAttendedTo'>False</div>
+    //         )}
+    //       </>
+    //     )
+    //   },
+    // },
   ]
 
   const phlebotomistcolumns = [
@@ -464,7 +420,7 @@ const CandidateSearchDatagrid = (props) => {
 
   switch (loggedInUserRole) {
     case 'Reception':
-      rows = receptionistRows
+      rows = tableData
       columns = receptionistcolumns
       title = 'Candidates'
       rightBtnText = 'Authorize'
@@ -690,6 +646,7 @@ const CandidateSearchDatagrid = (props) => {
             rowsPerPageOptions={[5, 10, 20]}
             onRowClick={(row, e) => handleRowClick(row, e)}
             pagination
+            getRowId={(row) => row.candidateId}
           />
         </Box>
       </div>
