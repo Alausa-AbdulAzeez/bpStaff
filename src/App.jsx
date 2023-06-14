@@ -11,6 +11,7 @@ import Reports from './pages/reports/Reports'
 import ForgotPassword from './pages/forgotPassword/ForgotPassword'
 import ResetPassword from './pages/resetPassword/ResetPassword'
 import ChangePassword from './pages/changePassword/ChangePassword'
+import PrivateRoutes from './components/PrivateRoutes'
 
 function App() {
   let userDetails
@@ -48,12 +49,9 @@ function App() {
 
   return (
     <BrowserRouter>
-      {user.name === null ? (
-        <Register />
-      ) : (
-        <Routes>
-          <Route exact path='/login' element={<Register />} />
-          <Route exact path='/' element={<Home />} />
+      <Routes>
+        <Route element={<PrivateRoutes />}>
+          <Route path='/' element={<Home />} />
           <Route path='/candidateSearch' element={<CandidateSearch />} />
           <Route
             path='/pendingCandidates'
@@ -69,11 +67,13 @@ function App() {
             path='/reports'
             element={<Reports userDetails={userDetails && userDetails} />}
           />
-          <Route path='/getToken' element={<ForgotPassword />} />
-          <Route path='/forgotPassword' element={<ResetPassword />} />
-          <Route path='/changePassword' element={<ChangePassword />} />
-        </Routes>
-      )}
+        </Route>
+        <Route exact path='/login' element={<Register />} />
+
+        <Route path='/getToken' element={<ForgotPassword />} />
+        <Route path='/forgotPassword' element={<ResetPassword />} />
+        <Route path='/changePassword' element={<ChangePassword />} />
+      </Routes>
     </BrowserRouter>
   )
 }
