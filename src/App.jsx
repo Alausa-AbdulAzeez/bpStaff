@@ -21,52 +21,41 @@ function App() {
   // console.log(user);
 
   // FUNCTION FOR SETTING USER DETAILS
-  switch (user?.email) {
-    case 'e@gmail.com':
-      userDetails = { name: 'Esther', role: 'receptionist' }
-      break
-    case 'o@gmail.com':
-      userDetails = { name: 'Olamide', role: 'phlebotomist' }
-      console.log('Olamide')
-      break
-    case 'ada@gmail.com':
-      userDetails = { name: 'Ada', role: 'labScientist' }
-      break
-    case 'ade@gmail.com':
-      userDetails = { name: 'Adetola', role: 'reportOfficer' }
-      break
-    case 'b@gmail.com':
-      userDetails = { name: 'Bankole', role: 'qualityAssurance' }
-      break
+  // switch (user?.email) {
+  //   case 'e@gmail.com':
+  //     userDetails = { name: 'Esther', role: 'receptionist' }
+  //     break
+  //   case 'o@gmail.com':
+  //     userDetails = { name: 'Olamide', role: 'phlebotomist' }
+  //     console.log('Olamide')
+  //     break
+  //   case 'ada@gmail.com':
+  //     userDetails = { name: 'Ada', role: 'labScientist' }
+  //     break
+  //   case 'ade@gmail.com':
+  //     userDetails = { name: 'Adetola', role: 'reportOfficer' }
+  //     break
+  //   case 'b@gmail.com':
+  //     userDetails = { name: 'Bankole', role: 'qualityAssurance' }
+  //     break
 
-    default:
-      break
-  }
+  //   default:
+  //     break
+  // }
 
   // END OF FUNCTION FOR SETTING USER DETAILS
 
-  useEffect(() => {}, [user])
+  // useEffect(() => {}, [user])
 
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<PrivateRoutes />}>
-          <Route path='/' element={<Home />} />
+          <Route exact path='/' element={<Home />} />
           <Route path='/candidateSearch' element={<CandidateSearch />} />
-          <Route
-            path='/pendingCandidates'
-            element={
-              <PendingCandidates userDetails={userDetails && userDetails} />
-            }
-          />
-          <Route
-            path='/viewClients'
-            element={<ViewClients userDetails={userDetails && userDetails} />}
-          />
-          <Route
-            path='/reports'
-            element={<Reports userDetails={userDetails && userDetails} />}
-          />
+          <Route path='/pendingCandidates' element={<PendingCandidates />} />
+          <Route path='/viewClients' element={<ViewClients />} />
+          <Route path='/reports' element={<Reports />} />
         </Route>
         <Route exact path='/login' element={<Register />} />
 

@@ -13,7 +13,7 @@ import BiopathLogo from '../../utils/images/BiopathLogo.jpeg'
 
 export default function SimpleBackdrop(props) {
   const { open, handleClose, data } = props
-  console.log(props)
+  // console.log(props)
 
   const generatePDF = () => {
     const doc = new jsPDF()

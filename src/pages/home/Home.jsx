@@ -88,16 +88,16 @@ const Home = () => {
   }
   // END OF FUNCTION TO GET AND SET ALL CANDIDATES
 
+  // UPDATES LOGGEDINUSER ROLE
+  useEffect(() => {
+    console.log(loggedInUserRole)
+  }, [loggedInUserRole])
+
   // USE EFFECT TO FETCH CANDIDATES AS PAGE LOADS
   useEffect(() => {
     getAllCandidates()
   }, [])
   // END OF USE EFFECT TO FETCH CANDIDATES AS PAGE LOADS
-
-  // UPDATES LOGGEDINUSER ROLE
-  useEffect(() => {
-    console.log(loggedInUserRole)
-  }, [loggedInUserRole])
 
   return (
     <div className='homeWrapper'>

@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import './dashboardCard.scss'
 
 const DashboardCard = (props) => {
-  console.log(props)
   const cardInfo = props.data
 
   return (

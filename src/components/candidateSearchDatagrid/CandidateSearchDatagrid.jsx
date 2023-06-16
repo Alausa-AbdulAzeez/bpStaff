@@ -38,7 +38,6 @@ const CandidateSearchDatagrid = (props) => {
   // SLIDE BUTTONS
   let leftBtnText
   let rightBtnText
-  console.log(props)
 
   // LOGGED IN USER RLOE
   const loggedInUserRole = props.userDetails?.data?.role
@@ -51,7 +50,6 @@ const CandidateSearchDatagrid = (props) => {
 
   // HANDLE ROW CLICK
   const handleRowClick = (row, e) => {
-    console.log(row)
     setSelecedCandidate(row?.row)
     if (e.target.textContent !== 'Authorize') {
       if (position !== '0') {
@@ -74,11 +72,11 @@ const CandidateSearchDatagrid = (props) => {
       width: 250,
       editable: false,
     },
-    { field: 'id', headerName: 'Company Name', width: 190 },
+    { field: 'id', headerName: 'Company Name', width: 250 },
     {
       field: 'testcategory',
       headerName: 'Test Category',
-      width: 150,
+      width: 200,
       editable: false,
     },
     {
@@ -97,22 +95,22 @@ const CandidateSearchDatagrid = (props) => {
       headerName: 'Phone Number',
       width: 130,
     },
-    {
-      field: 'action',
-      headerName: 'Authorize',
-      width: 130,
-      renderCell: (params) => {
-        return (
-          <>
-            {params.row.attendedTo === 'true' ? (
-              <div className='notAuthorized'>Authorize</div>
-            ) : (
-              <div className='notAuthorized'>Authorize</div>
-            )}
-          </>
-        )
-      },
-    },
+    // {
+    //   field: 'action',
+    //   headerName: 'Authorize',
+    //   width: 130,
+    //   renderCell: (params) => {
+    //     return (
+    //       <>
+    //         {params.row.attendedTo === 'true' ? (
+    //           <div className='notAuthorized'>Authorize</div>
+    //         ) : (
+    //           <div className='notAuthorized'>Authorize</div>
+    //         )}
+    //       </>
+    //     )
+    //   },
+    // },
 
     // {
     //   field: 'role',
@@ -642,11 +640,11 @@ const CandidateSearchDatagrid = (props) => {
           {/* {leftBtnText && (
             <div className='authorize sendDetails'>{leftBtnText}</div>
           )} */}
-          {rightBtnText?.length > 0 && (
+          {/* {rightBtnText?.length > 0 && (
             <div className='authorize' onClick={() => dummyDataSave()}>
               {rightBtnText}
             </div>
-          )}
+          )} */}
         </div>
       </div>
       <div className='boxWrapper'>

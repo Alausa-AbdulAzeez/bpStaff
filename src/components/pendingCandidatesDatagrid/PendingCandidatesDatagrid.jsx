@@ -11,17 +11,27 @@ import {
 } from '@mui/material'
 import { Box } from '@mui/system'
 import { DataGrid } from '@mui/x-data-grid'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { MdCancel } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import SimpleBackdrop from '../backdrop/Backdrop'
 import './pendingCandidatesDatagrid.scss'
 import { FaAngleDown } from 'react-icons/fa'
-import { publicRequestWithHeaders } from '../../functions/requestMethods'
+import {
+  publicRequest,
+  publicRequestWithHeaders,
+} from '../../functions/requestMethods'
+import { toast } from 'react-toastify'
 
 const PendingCandidatesDatagrid = (props) => {
   // BMI
   const [BMI, setBMI] = useState('')
+
+  // TOAST ID
+  const toastId = useRef(null)
+
+  // SELECTED CANDIDATE AFTER ROW CLICK
+  const [selectedCandidate, setSelecedCandidate] = useState({})
 
   // USER DETAILS
   const [userDetails, setUserDetails] = useState({
@@ -35,15 +45,27 @@ const PendingCandidatesDatagrid = (props) => {
     gender: '',
     state: '',
   })
-
+  // TABLE ROWS PER PAGE
   const [pageSize, setPageSize] = useState(5)
+
+  // INITIAL POSITION OF SLIDE
   const [position, setPosition] = useState('-100%')
+
+  // TABLE DATA
+  const tableData = props?.tableData
   let rows
   let columns
   let title
+
+  // SLIDE BUTTONS
   let leftBtnText
   let rightBtnText
+
+  // LOGGED IN USER RLOE
   const loggedInUserRole = props.userDetails?.data?.role
+
+  // LOGGED IN USER TOKEN
+  const { token } = useSelector((state) => state?.user?.currentUser?.data)
 
   const [open, setOpen] = React.useState(false)
 
@@ -59,6 +81,8 @@ const PendingCandidatesDatagrid = (props) => {
 
   // HANDLE ROW CLICK
   const handleRowClick = (row, e) => {
+    setSelecedCandidate(row?.row)
+
     if (e.target.textContent !== 'Authorize') {
       if (position !== '0') {
         setPosition('0')
@@ -73,18 +97,73 @@ const PendingCandidatesDatagrid = (props) => {
   }
   // END OF HANDLE ROW CLICK
 
+  // FUNCTION TO HANDLE CANDIDATE AUTHORIZATION
+  const authorizeUser = async (params, type) => {
+    if (type === 'main') {
+      console.log(params?.row?.candidateId)
+    }
+    if (type === 'notMain') {
+      console.log(selectedCandidate)
+    }
+    toastId.current = toast('Please wait...', {
+      autoClose: 3000,
+      isLoading: true,
+    })
+
+    let selectedCandidateId =
+      params?.row?.candidateId || selectedCandidate?.candidateId
+    try {
+      await publicRequest
+        .put(
+          `Candidate/Authorize/${selectedCandidateId}`,
+          {},
+          {
+            headers: {
+              Accept: '*',
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(() => {
+          toast.update(toastId.current, {
+            render: 'Candidate can proceed to the next stage',
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+          })
+          props?.setReloadTable((prev) => !prev)
+        })
+    } catch (error) {
+      console.log(error)
+      console.log(error.message)
+      toast.update(toastId.current, {
+        type: 'error',
+        autoClose: 3000,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
+          error?.message ||
+          'Something went wrong, please try again'
+        }`,
+      })
+    }
+  }
+  // END OF FUNCTION TO HANDLE CANDIDATE AUTHORIZATION
+
   const receptionistcolumns = [
     {
-      field: 'lastName',
+      field: 'candidateName',
       headerName: 'Candidate Name',
       width: 250,
       editable: false,
     },
-    { field: 'id', headerName: 'Company Name', width: 190 },
+    { field: 'clientName', headerName: 'Client Name', width: 250 },
     {
-      field: 'firstName',
-      headerName: 'Number of tests',
-      width: 150,
+      field: 'testcategory',
+      headerName: 'Test Category',
+      width: 200,
       editable: false,
     },
     {
@@ -94,27 +173,17 @@ const PendingCandidatesDatagrid = (props) => {
       renderCell: (params) => {
         return (
           <>
-            {params.row.attendedTo === 'true' ? (
-              <div className='notAuthorized'>Authorize</div>
-            ) : (
-              <div className='notAuthorized'>Authorize</div>
-            )}
+            <div
+              className='notAuthorized'
+              onClick={() => authorizeUser(params, 'main')}
+            >
+              Authorize
+            </div>
           </>
         )
       },
     },
-    {
-      field: 'view',
-      headerName: 'View',
-      width: 150,
-      renderCell: () => {
-        return (
-          <div className='view' onClick={() => handleSetPosition()}>
-            View
-          </div>
-        )
-      },
-    },
+
     {
       field: 'role',
       headerName: 'Attended to',
@@ -127,48 +196,6 @@ const PendingCandidatesDatagrid = (props) => {
         )
       },
     },
-  ]
-
-  const receptionistRows = [
-    { id: 1, lastName: 'Snow', firstName: '1', age: 35, attendedTo: 'false' },
-    {
-      id: 2,
-      lastName: 'Lannister',
-      firstName: '1',
-      age: 42,
-      attendedTo: 'false',
-    },
-    {
-      id: 3,
-      lastName: 'Lannister',
-      firstName: '3',
-      age: 45,
-      attendedTo: 'false',
-    },
-    { id: 4, lastName: 'Stark', firstName: '3', age: 16, attendedTo: 'false' },
-    {
-      id: 5,
-      lastName: 'Targaryen',
-      firstName: '2',
-      age: null,
-      attendedTo: 'true',
-    },
-    {
-      id: 6,
-      lastName: 'Melisandre',
-      firstName: '2',
-      age: 150,
-      attendedTo: 'true',
-    },
-    {
-      id: 7,
-      lastName: 'Clifford',
-      firstName: '3',
-      age: 44,
-      attendedTo: 'true',
-    },
-    { id: 8, lastName: 'Frances', firstName: '3', age: 36, attendedTo: 'true' },
-    { id: 9, lastName: 'Roxie', firstName: '3', age: 65, attendedTo: 'true' },
   ]
 
   const phlebotomistcolumns = [
@@ -571,7 +598,7 @@ const PendingCandidatesDatagrid = (props) => {
 
   switch (loggedInUserRole) {
     case 'Reception':
-      rows = receptionistRows
+      rows = tableData
       columns = receptionistcolumns
       title = 'Pending Candidates'
       rightBtnText = 'Authorize'
@@ -633,6 +660,9 @@ const PendingCandidatesDatagrid = (props) => {
       case 'Save Details':
         updatedUserDetails()
         break
+      case 'Authorize':
+        authorizeUser(selectedCandidate, 'notMain')
+        break
       default:
         break
     }
@@ -653,7 +683,6 @@ const PendingCandidatesDatagrid = (props) => {
     bmi = weight / Math.pow(heightInMetres, 2)
 
     setBMI(bmi)
-    console.log(BMI)
   }
   // END OF FUNCTION TO CALCULATE BMI
 
@@ -669,6 +698,9 @@ const PendingCandidatesDatagrid = (props) => {
   useEffect(() => {
     calculateBmi()
   }, [userDetails?.height, userDetails?.weight])
+
+  // USEEFFECT TO UPDATE SELECTED ROW
+  useEffect(() => {}, [selectedCandidate])
 
   return (
     <div className='datagridWraper'>
@@ -825,14 +857,14 @@ const PendingCandidatesDatagrid = (props) => {
           </div>
         )}
         <div className='bottomButtons'>
-          {leftBtnText && (
+          {/* {leftBtnText && (
             <div
               className='authorize sendDetails'
               onClick={(e) => handleBtnClick(e)}
             >
               {leftBtnText}
             </div>
-          )}
+          )} */}
           {rightBtnText?.length > 0 && (
             <div className='authorize' onClick={(e) => handleBtnClick(e)}>
               {rightBtnText}
@@ -852,7 +884,9 @@ const PendingCandidatesDatagrid = (props) => {
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           rowsPerPageOptions={[5, 10, 20]}
           onRowClick={(row, e) => handleRowClick(row, e)}
+          getRowId={(row) => row.candidateId}
           pagination
+          rowSelection={false}
         />
       </Box>
     </div>

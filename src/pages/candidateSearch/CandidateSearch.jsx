@@ -1,7 +1,6 @@
 import { Autocomplete, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import Sidebar from '../../components/sidebar/Sidebar'
-import ErrorComponent from '../../components/error/Error'
 
 import Topber from '../../components/topbar/Topber'
 import './candidateSearch.scss'
@@ -10,6 +9,7 @@ import CandidateSearchDatagrid from '../../components/candidateSearchDatagrid/Ca
 import { useSelector } from 'react-redux'
 import { publicRequest } from '../../functions/requestMethods'
 import { ToastContainer, toast } from 'react-toastify'
+import ErrorComponent from '../../components/error/Error'
 import Loading from '../../components/loading/Loading'
 import { RxReload } from 'react-icons/rx'
 
@@ -126,8 +126,6 @@ const CandidateSearch = () => {
           },
         }
       )
-      console.log(clientId)
-      console.log(phoneNumber)
 
       if (res?.data?.data?.length === 0) {
         throw new Error('Candidate not found')

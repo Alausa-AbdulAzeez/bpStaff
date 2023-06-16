@@ -15,7 +15,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function AlertDialogSlide(props) {
   const { open, handleClose } = props
-  const isLoggedIn = localStorage.getItem('isLoggedIn')
   const navigate = useNavigate()
   //   const [open, setOpen] = React.useState(false)
 
@@ -27,9 +26,9 @@ export default function AlertDialogSlide(props) {
   //     setOpen(false)
   //   }
 
-  useEffect(() => {
-    console.log(isLoggedIn)
-  }, [isLoggedIn])
+  // useEffect(() => {
+  //   console.log(isLoggedIn)
+  // }, [isLoggedIn])
 
   return (
     <div>
