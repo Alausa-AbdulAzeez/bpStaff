@@ -8,110 +8,116 @@ import {
   Select,
   TextField,
   Typography,
-} from '@mui/material'
-import { Box } from '@mui/system'
-import { DataGrid } from '@mui/x-data-grid'
-import React, { useEffect, useRef, useState } from 'react'
-import { MdCancel } from 'react-icons/md'
-import { useSelector } from 'react-redux'
-import SimpleBackdrop from '../backdrop/Backdrop'
-import './pendingCandidatesDatagrid.scss'
-import { FaAngleDown } from 'react-icons/fa'
+} from "@mui/material";
+import { Box } from "@mui/system";
+import { DataGrid } from "@mui/x-data-grid";
+import React, { useEffect, useRef, useState } from "react";
+import { MdCancel } from "react-icons/md";
+import { useSelector } from "react-redux";
+import SimpleBackdrop from "../backdrop/Backdrop";
+import "./pendingCandidatesDatagrid.scss";
+import { FaAngleDown } from "react-icons/fa";
 import {
   publicRequest,
   publicRequestWithHeaders,
-} from '../../functions/requestMethods'
-import { toast } from 'react-toastify'
+} from "../../functions/requestMethods";
+import { toast } from "react-toastify";
 
 const PendingCandidatesDatagrid = (props) => {
   // BMI
-  const [BMI, setBMI] = useState('')
+  const [BMI, setBMI] = useState("");
 
   // TOAST ID
-  const toastId = useRef(null)
+  const toastId = useRef(null);
 
   // SELECTED CANDIDATE AFTER ROW CLICK
-  const [selectedCandidate, setSelecedCandidate] = useState({})
+  const [selectedCandidate, setSelecedCandidate] = useState({});
 
   // USER DETAILS
   const [userDetails, setUserDetails] = useState({
-    candidateId: 5,
-    clientid: '1',
-    height: '',
-    bloodPressure: '',
-    weight: '',
-    age: '',
-    bmi: BMI,
-    gender: '',
-    state: '',
-  })
+    gender: "",
+    age: "",
+    temperature: "",
+    weight: "",
+    height: "",
+    bmi: "",
+    bloodPressure: "",
+    state: "",
+    clientid: "",
+    candidateId: "",
+  });
   // TABLE ROWS PER PAGE
-  const [pageSize, setPageSize] = useState(5)
+  const [pageSize, setPageSize] = useState(5);
 
   // INITIAL POSITION OF SLIDE
-  const [position, setPosition] = useState('-100%')
+  const [position, setPosition] = useState("-100%");
 
   // TABLE DATA
-  const tableData = props?.tableData
-  let rows
-  let columns
-  let title
+  const tableData = props?.tableData;
+  let rows;
+  let columns;
+  let title;
 
   // SLIDE BUTTONS
-  let leftBtnText
-  let rightBtnText
+  let leftBtnText;
+  let rightBtnText;
 
   // LOGGED IN USER RLOE
-  const loggedInUserRole = props.userDetails?.data?.role
+  const loggedInUserRole = props.userDetails?.data?.role;
 
   // LOGGED IN USER TOKEN
-  const { token } = useSelector((state) => state?.user?.currentUser?.data)
+  const { token } = useSelector((state) => state?.user?.currentUser?.data);
 
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   // SET SIDE INFO POSITION
   const handleSetPosition = () => {
-    setPosition('0')
-  }
+    setPosition("0");
+  };
   // END OF SET SIDE INFO POSITION
 
   // HANDLE ROW CLICK
   const handleRowClick = (row, e) => {
-    setSelecedCandidate(row?.row)
+    setSelecedCandidate(row?.row);
+    setUserDetails({
+      ...userDetails,
+      clientid: row?.row.clientId,
+      candidateId: row?.row.candidateId,
+    });
 
-    if (e.target.textContent !== 'Authorize') {
-      if (position !== '0') {
-        setPosition('0')
+    if (e.target.textContent !== "Authorize") {
+      if (position !== "0") {
+        setPosition("0");
       }
     }
-  }
+  };
   // END OF HANDLE ROW CLICK
 
   // HANDLE ROW CLICK
   const handleHideSlide = () => {
-    setPosition('-100%')
-  }
+    setPosition("-100%");
+  };
   // END OF HANDLE ROW CLICK
 
   // FUNCTION TO HANDLE CANDIDATE AUTHORIZATION
   const authorizeUser = async (params, type) => {
-    if (type === 'main') {
-      console.log(params?.row?.candidateId)
+    if (type === "main") {
+      console.log(params?.row?.candidateId);
     }
-    if (type === 'notMain') {
-      console.log(selectedCandidate)
+    if (type === "notMain") {
+      console.log(selectedCandidate);
     }
-    toastId.current = toast('Please wait...', {
+    toastId.current = toast("Please wait...", {
       autoClose: 3000,
       isLoading: true,
-    })
+    });
 
     let selectedCandidateId =
-      params?.row?.candidateId || selectedCandidate?.candidateId
+      params?.row?.candidateId || selectedCandidate?.candidateId;
     try {
       await publicRequest
         .put(
@@ -119,695 +125,717 @@ const PendingCandidatesDatagrid = (props) => {
           {},
           {
             headers: {
-              Accept: '*',
+              Accept: "*",
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           }
         )
         .then(() => {
           toast.update(toastId.current, {
-            render: 'Candidate can proceed to the next stage',
-            type: 'success',
+            render: "Candidate can proceed to the next stage",
+            type: "success",
             isLoading: false,
             autoClose: 3000,
-          })
-          props?.setReloadTable((prev) => !prev)
-        })
+          });
+          props?.setReloadTable((prev) => !prev);
+        });
     } catch (error) {
-      console.log(error)
-      console.log(error.message)
+      console.log(error);
+      console.log(error.message);
       toast.update(toastId.current, {
-        type: 'error',
+        type: "error",
         autoClose: 3000,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
           error?.response?.data?.description ||
           error?.message ||
-          'Something went wrong, please try again'
+          "Something went wrong, please try again"
         }`,
-      })
+      });
     }
-  }
+  };
   // END OF FUNCTION TO HANDLE CANDIDATE AUTHORIZATION
 
-  const receptionistcolumns = [
+  const defaultColumns = [
     {
-      field: 'candidateName',
-      headerName: 'Candidate Name',
+      field: "candidateName",
+      headerName: "Candidate Name",
       width: 250,
       editable: false,
     },
-    { field: 'clientName', headerName: 'Client Name', width: 250 },
+    { field: "clientName", headerName: "Client Name", width: 250 },
     {
-      field: 'testcategory',
-      headerName: 'Test Category',
+      field: "testcategory",
+      headerName: "Test Category",
       width: 200,
       editable: false,
     },
     {
-      field: 'action',
-      headerName: 'Authorize',
+      field: "action",
+      headerName: "Authorize",
       width: 130,
       renderCell: (params) => {
         return (
           <>
-            <div
-              className='notAuthorized'
-              onClick={() => authorizeUser(params, 'main')}
-            >
-              Authorize
-            </div>
+            {loggedInUserRole === "Reception" && (
+              <div
+                className="notAuthorized"
+                onClick={() => authorizeUser(params, "main")}
+              >
+                Authorize
+              </div>
+            )}
+            {loggedInUserRole === "Phlebotomy" && (
+              <div className="notAuthorized">View</div>
+            )}
           </>
-        )
+        );
       },
     },
 
     {
-      field: 'role',
-      headerName: 'Attended to',
+      field: "role",
+      headerName: "Attended to",
       width: 150,
       renderCell: () => {
         return (
           <>
-            <div className='pendingCandidatesNotAttendedTo'>False</div>
+            <div className="pendingCandidatesNotAttendedTo">False</div>
           </>
-        )
+        );
       },
     },
-  ]
+  ];
 
   const phlebotomistcolumns = [
     {
-      field: 'lastName',
-      headerName: 'Candidate Name',
+      field: "lastName",
+      headerName: "Candidate Name",
       width: 250,
       editable: false,
     },
-    { field: 'id', headerName: 'Company Name', width: 190 },
+    { field: "id", headerName: "Company Name", width: 190 },
     {
-      field: 'firstName',
-      headerName: 'Number of tests',
+      field: "firstName",
+      headerName: "Number of tests",
       width: 180,
       editable: false,
     },
 
-    { field: 'date', headerName: 'Appointment Date', width: 220 },
+    { field: "date", headerName: "Appointment Date", width: 220 },
 
     {
-      field: 'role',
-      headerName: 'Attended to',
+      field: "role",
+      headerName: "Attended to",
       width: 180,
       renderCell: () => {
         return (
           <>
-            <div className='pendingCandidatesNotAttendedTo'>False</div>
+            <div className="pendingCandidatesNotAttendedTo">False</div>
           </>
-        )
+        );
       },
     },
-  ]
+  ];
 
-  const phlebotomistRows = [
-    {
-      id: 1,
-      lastName: 'Snow',
-      firstName: '1',
-      date: '1-March-2023',
-      age: 35,
-      attendedTo: 'false',
-    },
-    {
-      id: 2,
-      lastName: 'Lannister',
-      date: '1-March-2023',
-      firstName: '1',
-      age: 42,
-      attendedTo: 'false',
-    },
-    {
-      id: 3,
-      lastName: 'Lannister',
-      firstName: '3',
-      date: '1-March-2023',
-      age: 45,
-      attendedTo: 'false',
-    },
-    {
-      id: 4,
-      lastName: 'Stark',
-      firstName: '3',
-      date: '1-March-2023',
-      age: 16,
-      attendedTo: 'false',
-    },
-    {
-      id: 5,
-      lastName: 'Targaryen',
-      firstName: '2',
-      age: null,
-      date: '1-March-2023',
-      attendedTo: 'true',
-    },
-    {
-      id: 6,
-      lastName: 'Melisandre',
-      firstName: '2',
-      age: 150,
-      date: '1-March-2023',
-      attendedTo: 'true',
-    },
-    {
-      id: 7,
-      lastName: 'Clifford',
-      firstName: '3',
-      age: 44,
-      attendedTo: 'true',
-      date: '1-March-2023',
-    },
-    {
-      id: 8,
-      lastName: 'Frances',
-      firstName: '3',
-      age: 36,
-      attendedTo: 'true',
-    },
-    { id: 9, lastName: 'Roxie', firstName: '3', age: 65, attendedTo: 'true' },
-  ]
   const labScientistcolumns = [
     {
-      field: 'lastName',
-      headerName: 'Candidate Name',
+      field: "lastName",
+      headerName: "Candidate Name",
       width: 250,
       editable: false,
     },
-    { field: 'id', headerName: 'Company Name', width: 190 },
+    { field: "id", headerName: "Company Name", width: 190 },
     {
-      field: 'firstName',
-      headerName: 'Number of tests',
+      field: "firstName",
+      headerName: "Number of tests",
       width: 180,
       editable: false,
     },
 
-    { field: 'date', headerName: 'Appointment Date', width: 220 },
+    { field: "date", headerName: "Appointment Date", width: 220 },
 
     {
-      field: 'role',
-      headerName: 'Attended to',
+      field: "role",
+      headerName: "Attended to",
       width: 180,
       renderCell: () => {
         return (
           <>
-            <div className='pendingCandidatesAttendedTo'>True</div>
+            <div className="pendingCandidatesAttendedTo">True</div>
           </>
-        )
+        );
       },
     },
-  ]
+  ];
 
   const labScientistRows = [
     {
       id: 1,
-      lastName: 'Snow',
-      firstName: '1',
-      date: '1-March-2023',
+      lastName: "Snow",
+      firstName: "1",
+      date: "1-March-2023",
       age: 35,
-      attendedTo: 'false',
+      attendedTo: "false",
     },
     {
       id: 2,
-      lastName: 'Lannister',
-      date: '1-March-2023',
-      firstName: '1',
+      lastName: "Lannister",
+      date: "1-March-2023",
+      firstName: "1",
       age: 42,
-      attendedTo: 'false',
+      attendedTo: "false",
     },
     {
       id: 3,
-      lastName: 'Lannister',
-      firstName: '3',
-      date: '1-March-2023',
+      lastName: "Lannister",
+      firstName: "3",
+      date: "1-March-2023",
       age: 45,
-      attendedTo: 'false',
+      attendedTo: "false",
     },
     {
       id: 4,
-      lastName: 'Stark',
-      firstName: '3',
-      date: '1-March-2023',
+      lastName: "Stark",
+      firstName: "3",
+      date: "1-March-2023",
       age: 16,
-      attendedTo: 'false',
+      attendedTo: "false",
     },
     {
       id: 5,
-      lastName: 'Targaryen',
-      firstName: '2',
+      lastName: "Targaryen",
+      firstName: "2",
       age: null,
-      date: '1-March-2023',
-      attendedTo: 'true',
+      date: "1-March-2023",
+      attendedTo: "true",
     },
     {
       id: 6,
-      lastName: 'Melisandre',
-      firstName: '2',
+      lastName: "Melisandre",
+      firstName: "2",
       age: 150,
-      date: '1-March-2023',
-      attendedTo: 'true',
+      date: "1-March-2023",
+      attendedTo: "true",
     },
     {
       id: 7,
-      lastName: 'Clifford',
-      firstName: '3',
+      lastName: "Clifford",
+      firstName: "3",
       age: 44,
-      attendedTo: 'true',
-      date: '1-March-2023',
+      attendedTo: "true",
+      date: "1-March-2023",
     },
     {
       id: 8,
-      lastName: 'Frances',
-      firstName: '3',
+      lastName: "Frances",
+      firstName: "3",
       age: 36,
-      attendedTo: 'true',
+      attendedTo: "true",
     },
-    { id: 9, lastName: 'Roxie', firstName: '3', age: 65, attendedTo: 'true' },
-  ]
+    { id: 9, lastName: "Roxie", firstName: "3", age: 65, attendedTo: "true" },
+  ];
 
   const qualityAssuranceColumns = [
     {
-      field: 'lastName',
-      headerName: 'Candidate Name',
+      field: "lastName",
+      headerName: "Candidate Name",
       width: 250,
       editable: false,
     },
-    { field: 'id', headerName: 'Company Name', width: 190 },
+    { field: "id", headerName: "Company Name", width: 190 },
 
-    { field: 'date', headerName: 'Appointment Date', width: 180 },
+    { field: "date", headerName: "Appointment Date", width: 180 },
 
     {
-      field: 'role',
-      headerName: 'Report Status',
+      field: "role",
+      headerName: "Report Status",
       width: 160,
       renderCell: () => {
         return (
           <>
-            <div className='reportSent'>Sent</div>
+            <div className="reportSent">Sent</div>
           </>
-        )
+        );
       },
     },
     {
-      field: 'timeSent',
-      headerName: 'Time Sent',
+      field: "timeSent",
+      headerName: "Time Sent",
       width: 145,
     },
     {
-      field: 'timeUpdated',
-      headerName: 'Time Updated',
+      field: "timeUpdated",
+      headerName: "Time Updated",
       width: 145,
     },
-  ]
+  ];
 
   const qualityAssuranceRows = [
     {
       id: 1,
-      lastName: 'Snow',
-      firstName: '1',
-      date: '1-March-2023',
+      lastName: "Snow",
+      firstName: "1",
+      date: "1-March-2023",
       age: 35,
-      attendedTo: 'true',
+      attendedTo: "true",
     },
     {
       id: 2,
-      lastName: 'Lannister',
-      date: '1-March-2023',
-      firstName: '1',
+      lastName: "Lannister",
+      date: "1-March-2023",
+      firstName: "1",
       age: 42,
-      attendedTo: 'true',
+      attendedTo: "true",
     },
     {
       id: 3,
-      lastName: 'Lannister',
-      firstName: '3',
-      date: '1-March-2023',
+      lastName: "Lannister",
+      firstName: "3",
+      date: "1-March-2023",
       age: 45,
-      attendedTo: 'true',
+      attendedTo: "true",
     },
     {
       id: 4,
-      lastName: 'Stark',
-      firstName: '3',
-      date: '1-March-2023',
+      lastName: "Stark",
+      firstName: "3",
+      date: "1-March-2023",
       age: 16,
-      attendedTo: 'true',
+      attendedTo: "true",
     },
     {
       id: 5,
-      lastName: 'Targaryen',
-      firstName: '2',
+      lastName: "Targaryen",
+      firstName: "2",
       age: null,
-      date: '1-March-2023',
-      attendedTo: 'true',
+      date: "1-March-2023",
+      attendedTo: "true",
     },
     {
       id: 6,
-      lastName: 'Melisandre',
-      firstName: '2',
+      lastName: "Melisandre",
+      firstName: "2",
       age: 150,
-      date: '1-March-2023',
-      attendedTo: 'true',
+      date: "1-March-2023",
+      attendedTo: "true",
     },
     {
       id: 7,
-      lastName: 'Clifford',
-      firstName: '3',
+      lastName: "Clifford",
+      firstName: "3",
       age: 44,
-      attendedTo: 'true',
-      date: '1-March-2023',
+      attendedTo: "true",
+      date: "1-March-2023",
     },
     {
       id: 8,
-      lastName: 'Frances',
-      firstName: '3',
+      lastName: "Frances",
+      firstName: "3",
       age: 36,
-      attendedTo: 'true',
+      attendedTo: "true",
     },
-    { id: 9, lastName: 'Roxie', firstName: '3', age: 65, attendedTo: 'true' },
-  ]
+    { id: 9, lastName: "Roxie", firstName: "3", age: 65, attendedTo: "true" },
+  ];
   const reportOfficerColumns = [
     {
-      field: 'lastName',
-      headerName: 'Candidate Name',
+      field: "lastName",
+      headerName: "Candidate Name",
       width: 250,
       editable: false,
     },
-    { field: 'id', headerName: 'Company Name', width: 190 },
+    { field: "id", headerName: "Company Name", width: 190 },
 
-    { field: 'date', headerName: 'Appointment Date', width: 180 },
+    { field: "date", headerName: "Appointment Date", width: 180 },
 
     {
-      field: 'role',
-      headerName: 'Report Status',
+      field: "role",
+      headerName: "Report Status",
       width: 160,
       renderCell: () => {
         return (
           <>
-            <div className='reportSent'>Sent</div>
+            <div className="reportSent">Sent</div>
           </>
-        )
+        );
       },
     },
     {
-      field: 'timeSent',
-      headerName: 'Time Sent',
+      field: "timeSent",
+      headerName: "Time Sent",
       width: 145,
     },
     {
-      field: 'timeUpdated',
-      headerName: 'Time Updated',
+      field: "timeUpdated",
+      headerName: "Time Updated",
       width: 145,
     },
-  ]
+  ];
 
   const reportOfficerRows = [
     {
       id: 1,
-      lastName: 'Snow',
-      firstName: '1',
-      date: '1-March-2023',
+      lastName: "Snow",
+      firstName: "1",
+      date: "1-March-2023",
       age: 35,
-      attendedTo: 'true',
+      attendedTo: "true",
     },
     {
       id: 2,
-      lastName: 'Lannister',
-      date: '1-March-2023',
-      firstName: '1',
+      lastName: "Lannister",
+      date: "1-March-2023",
+      firstName: "1",
       age: 42,
-      attendedTo: 'true',
+      attendedTo: "true",
     },
     {
       id: 3,
-      lastName: 'Lannister',
-      firstName: '3',
-      date: '1-March-2023',
+      lastName: "Lannister",
+      firstName: "3",
+      date: "1-March-2023",
       age: 45,
-      attendedTo: 'true',
+      attendedTo: "true",
     },
     {
       id: 4,
-      lastName: 'Stark',
-      firstName: '3',
-      date: '1-March-2023',
+      lastName: "Stark",
+      firstName: "3",
+      date: "1-March-2023",
       age: 16,
-      attendedTo: 'true',
+      attendedTo: "true",
     },
     {
       id: 5,
-      lastName: 'Targaryen',
-      firstName: '2',
+      lastName: "Targaryen",
+      firstName: "2",
       age: null,
-      date: '1-March-2023',
-      attendedTo: 'true',
+      date: "1-March-2023",
+      attendedTo: "true",
     },
     {
       id: 6,
-      lastName: 'Melisandre',
-      firstName: '2',
+      lastName: "Melisandre",
+      firstName: "2",
       age: 150,
-      date: '1-March-2023',
-      attendedTo: 'true',
+      date: "1-March-2023",
+      attendedTo: "true",
     },
     {
       id: 7,
-      lastName: 'Clifford',
-      firstName: '3',
+      lastName: "Clifford",
+      firstName: "3",
       age: 44,
-      attendedTo: 'true',
-      date: '1-March-2023',
+      attendedTo: "true",
+      date: "1-March-2023",
     },
     {
       id: 8,
-      lastName: 'Frances',
-      firstName: '3',
+      lastName: "Frances",
+      firstName: "3",
       age: 36,
-      attendedTo: 'true',
+      attendedTo: "true",
     },
-    { id: 9, lastName: 'Roxie', firstName: '3', age: 65, attendedTo: 'true' },
-  ]
+    { id: 9, lastName: "Roxie", firstName: "3", age: 65, attendedTo: "true" },
+  ];
 
   switch (loggedInUserRole) {
-    case 'Reception':
-      rows = tableData
-      columns = receptionistcolumns
-      title = 'Pending Candidates'
-      rightBtnText = 'Authorize'
-      break
+    case "Reception":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Pending Candidates";
+      rightBtnText = "Authorize";
+      break;
 
-    case 'phlebotomist':
-      rows = phlebotomistRows
-      columns = phlebotomistcolumns
-      title = 'Pending Candidates'
-      leftBtnText = 'Save Details'
-      // rightBtnText = 'Save Details'
-      break
-    case 'labScientist':
-      rows = labScientistRows
-      columns = labScientistcolumns
-      title = 'Pending Candidates'
-      leftBtnText = 'Send Result'
-      rightBtnText = 'Save Result'
-      break
-    case 'qualityAssurance':
-      rows = qualityAssuranceRows
-      columns = qualityAssuranceColumns
-      title = 'Candidates'
-      rightBtnText = 'Approve'
-      break
+    case "Phlebotomy":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Pending Candidates";
+      rightBtnText = "Save Details";
+      break;
+    case "labScientist":
+      rows = labScientistRows;
+      columns = labScientistcolumns;
+      title = "Pending Candidates";
+      leftBtnText = "Send Result";
+      rightBtnText = "Save Result";
+      break;
+    case "qualityAssurance":
+      rows = qualityAssuranceRows;
+      columns = qualityAssuranceColumns;
+      title = "Candidates";
+      rightBtnText = "Approve";
+      break;
 
-    case 'reportOfficer':
-      rows = reportOfficerRows
-      columns = reportOfficerColumns
-      title = 'Candidates'
-      leftBtnText = 'Send Report'
-      rightBtnText = 'Preview Report'
-      break
+    case "reportOfficer":
+      rows = reportOfficerRows;
+      columns = reportOfficerColumns;
+      title = "Candidates";
+      leftBtnText = "Send Report";
+      rightBtnText = "Preview Report";
+      break;
 
     default:
-      break
+      break;
   }
   // FUNCTION TO SEND UPDATED USER DETAILS TO THE BACKEND
-  const updatedUserDetails = async (candidateId = 5, clientId = 1) => {
-    console.log(userDetails)
+  const updatedUserDetails = async () => {
+    const { candidateId, clientId } = selectedCandidate;
+    console.log(selectedCandidate);
+    console.log(candidateId, clientId);
+    console.log(userDetails);
+
+    toastId.current = toast("Please wait...", {
+      isLoading: true,
+    });
+
+    const keys = [
+      "height",
+      "bloodPressure",
+      "weight",
+      "age",
+      "gender",
+      "temperature",
+    ];
+
     try {
-      const res = await publicRequestWithHeaders.put(
-        `/Candidate/UInfo?Candidateid=${candidateId}&Clientid=${clientId}`,
-        userDetails
-      )
-      console.log(res)
+      const found = keys?.find((key) => {
+        return userDetails[key] === "";
+      });
+
+      if (!found) {
+        await publicRequest
+          .put(
+            `/Candidate/UInfo?Candidateid=${Number(
+              candidateId
+            )}&Clientid=${Number(clientId)}`,
+            userDetails,
+            {
+              headers: {
+                Accept: "*",
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          // .then(() => {
+          //   publicRequest.put(
+          //     `Candidate/Authorize/${candidateId}`,
+          //     {},
+          //     {
+          //       headers: {
+          //         Accept: "*",
+          //         Authorization: `Bearer ${token}`,
+          //         "Content-Type": "application/json",
+          //       },
+          //     }
+          //   );
+          // })
+          .then(() => {
+            toast.update(toastId.current, {
+              render: "Candidate can proceed to the next stage",
+              type: "success",
+              isLoading: false,
+              autoClose: 3000,
+            });
+            props?.setReloadTable((prev) => !prev);
+          });
+      } else {
+        console.log(found);
+        throw Error(`Please fill all fields, the "${found}" field is empty`);
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      console.log(error.message);
+      toast.update(toastId.current, {
+        type: "error",
+        autoClose: 3000,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
+          error?.message ||
+          "Something went wrong, please try again"
+        }`,
+      });
     }
-  }
+  };
 
   // HANDLE LEFT AND RIGHT BUTTON CLICK
   const handleBtnClick = (e) => {
+    e.preventDefault();
     switch (e.target.textContent) {
-      case 'Preview Report':
-        setOpen(true)
-        console.log(e.target.textContent)
-        break
-      case 'Save Details':
-        updatedUserDetails()
-        break
-      case 'Authorize':
-        authorizeUser(selectedCandidate, 'notMain')
-        break
+      case "Preview Report":
+        setOpen(true);
+        console.log(e.target.textContent);
+        break;
+      case "Save Details":
+        updatedUserDetails();
+        break;
+      case "Authorize":
+        authorizeUser(selectedCandidate, "notMain");
+        break;
       default:
-        break
+        break;
     }
-  }
+  };
   // FUNCTION TO CALCULATE BMI
   const calculateBmi = () => {
-    let height = Number(userDetails?.height)
-    let weight = Number(userDetails?.weight)
-    let bmi
-    let heightInMetres
+    let height = Number(userDetails?.height);
+    let weight = Number(userDetails?.weight);
+    let bmi;
+    let heightInMetres;
 
     // CHECK IF HEIGHT AND WEIGHT ARE AVAILABLE
-    userDetails?.height && userDetails?.weight
+    userDetails?.height && userDetails?.weight;
 
     // convert Number( to) metres
-    heightInMetres = Number(height) / 100
+    heightInMetres = Number(height) / 100;
 
-    bmi = weight / Math.pow(heightInMetres, 2)
+    bmi = weight / Math.pow(heightInMetres, 2);
+    setUserDetails({ ...userDetails, bmi: bmi });
 
-    setBMI(bmi)
-  }
+    setBMI(bmi);
+  };
   // END OF FUNCTION TO CALCULATE BMI
 
   // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
   const handleCandidatePropertyChange = (e, dataType) => {
-    setUserDetails({ ...userDetails, [dataType]: e.target.value })
-    console.log(userDetails)
-  }
+    setUserDetails({ ...userDetails, [dataType]: e.target.value });
+    console.log(userDetails);
+  };
 
   // END OF FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
 
   // use effect to update bmi
   useEffect(() => {
-    calculateBmi()
-  }, [userDetails?.height, userDetails?.weight])
+    calculateBmi();
+  }, [userDetails?.height, userDetails?.weight]);
 
   // USEEFFECT TO UPDATE SELECTED ROW
-  useEffect(() => {}, [selectedCandidate])
+  useEffect(() => {}, [selectedCandidate]);
+
+  // USEEFFECT TO UPDATE USER DETAILS
+  useEffect(() => {
+    console.log(userDetails);
+  }, [userDetails]);
 
   return (
-    <div className='datagridWraper'>
+    <div className="datagridWraper">
       <SimpleBackdrop open={open} handleClose={handleClose} />
 
-      <div className='slide' style={{ right: position }}>
-        <div className='slideTop'>
-          <div className='cancelconWrapper' onClick={handleHideSlide}>
-            <MdCancel className='cancelIcon' />
+      <form className="slide" style={{ right: position }}>
+        <div className="slideTop">
+          <div className="cancelconWrapper" onClick={handleHideSlide}>
+            <MdCancel className="cancelIcon" />
           </div>
-          <div className='initials'>AA</div>
-          <div className='slideFullname'>Alausa Abdulazeez</div>
+          <div className="initials">
+            {selectedCandidate?.candidateName &&
+              selectedCandidate?.candidateName[0]?.toUpperCase()}
+          </div>
+          <div className="slideFullname">
+            {selectedCandidate?.candidateName?.toUpperCase()}
+          </div>
         </div>
-        <div className='companyName h3'>
+        <div className="companyName h3">
           <h3>Company Name</h3>
-          <p>Chicken Republic</p>
+          <p>{selectedCandidate?.clientName}</p>
         </div>
 
-        <div className='phoneNo h3'>
+        <div className="phoneNo h3">
           <h3>Candidate Phone Number</h3>
-          <p>+23456789010</p>
+          <p>{selectedCandidate?.phoneNumber}</p>
         </div>
-        <div className='numberOfTests h3'>
-          <h3>Number of Tests</h3>
-          <p>3</p>
+        <div className="numberOfTests h3">
+          <h3>{"Candidate's Email"}</h3>
+          <p>{selectedCandidate?.email}</p>
         </div>
-        {loggedInUserRole === 'receptionist' && (
-          <div className='listOfTests'>
-            <div className='singleTest'></div>
-            <h3>Number of Tests</h3>
-            <p>
-              1. <span>Malaria test</span>
-            </p>
+        {loggedInUserRole === "receptionist" && (
+          <div className="numberOfTests h3">
+            <h3>{"Candidate's Adderess"}</h3>
+            <p>{selectedCandidate?.address}</p>
           </div>
         )}
-        {loggedInUserRole === 'phlebotomist' && (
-          <div className='basicDetailsWrapper'>
-            <FormControl className='genderSelect'>
-              <InputLabel id='demo-simple-select-label'>Gender</InputLabel>
+        {loggedInUserRole === "Phlebotomy" && (
+          <div className="basicDetailsWrapper">
+            <FormControl className="genderSelect">
+              <InputLabel id="demo-simple-select-label">Gender</InputLabel>
               <Select
-                labelId='demo-simple-select-label'
-                id='demo-simple-select'
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
                 value={userDetails?.gender}
-                label='Company name'
-                onChange={(e) => handleCandidatePropertyChange(e, 'gender')}
+                label="Company name"
+                required
+                onChange={(e) => handleCandidatePropertyChange(e, "gender")}
               >
-                <MenuItem value={'M'}>M</MenuItem>
-                <MenuItem value={'F'}>F</MenuItem>
+                <MenuItem value={"M"}>M</MenuItem>
+                <MenuItem value={"F"}>F</MenuItem>
               </Select>
             </FormControl>
             <TextField
-              id='outlined-search'
-              label='Age'
-              type='string'
-              className='candidateName basicCandidateDetailsInput'
-              onChange={(e) => handleCandidatePropertyChange(e, 'age')}
+              id="outlined-search"
+              label="Age"
+              type="string"
+              required={true}
+              className="candidateName basicCandidateDetailsInput"
+              onChange={(e) => handleCandidatePropertyChange(e, "age")}
             />
             <TextField
-              id='outlined-search'
-              label='Temperature'
-              type='string'
-              className='candidateName basicCandidateDetailsInput'
+              id="outlined-search"
+              label="Temperature"
+              type="string"
+              required
+              className="candidateName basicCandidateDetailsInput"
               // onChange={(e) => handleCandidatePropertyChange(e, 'temperature')}
             />
             <TextField
-              id='outlined-search'
-              label='Weight'
-              type='string'
-              className='candidateName basicCandidateDetailsInput'
-              onChange={(e) => handleCandidatePropertyChange(e, 'weight')}
+              id="outlined-search"
+              label="Weight"
+              type="string"
+              className="candidateName basicCandidateDetailsInput"
+              onChange={(e) => handleCandidatePropertyChange(e, "weight")}
               value={userDetails?.weight}
+              required
             />
             <TextField
-              id='outlined-search'
-              label='Height'
-              type='number'
-              className='candidateName basicCandidateDetailsInput'
-              onChange={(e) => handleCandidatePropertyChange(e, 'height')}
+              id="outlined-search"
+              label="Height"
+              type="number"
+              className="candidateName basicCandidateDetailsInput"
+              onChange={(e) => handleCandidatePropertyChange(e, "height")}
               value={userDetails?.height}
+              required
             />
             <TextField
-              id='outlined-search'
-              label='BMI'
-              type='number'
+              id="outlined-search"
+              label="BMI"
+              type="number"
               value={BMI}
-              className='candidateName basicCandidateDetailsInput'
+              className="candidateName basicCandidateDetailsInput"
               InputLabelProps={{ shrink: true }}
             />
             <TextField
-              id='outlined-search'
-              label='Blood Pressure'
-              type='search'
-              className='candidateName basicCandidateDetailsInput'
+              id="outlined-search"
+              label="Blood Pressure"
+              type="search"
+              className="candidateName basicCandidateDetailsInput"
               onChange={(e) =>
-                handleCandidatePropertyChange(e, 'bloodPressure')
+                handleCandidatePropertyChange(e, "bloodPressure")
               }
+              required
             />
           </div>
         )}
-        {loggedInUserRole === 'labScientist' && (
+        {loggedInUserRole === "labScientist" && (
           <>
-            <div className='qualityAssuranceAccordionWrapper'>
+            <div className="qualityAssuranceAccordionWrapper">
               <Accordion>
                 <AccordionSummary
                   expandIcon={<FaAngleDown />}
-                  aria-controls='panel2a-content'
-                  id='panel2a-header'
+                  aria-controls="panel2a-content"
+                  id="panel2a-header"
                 >
                   <Typography>Candidate Details</Typography>
                 </AccordionSummary>
@@ -820,29 +848,29 @@ const PendingCandidatesDatagrid = (props) => {
                 </AccordionDetails>
               </Accordion>
             </div>
-            <div className='basicDetailsWrapper'>
+            <div className="basicDetailsWrapper">
               <TextField
-                id='outlined-search'
-                label='PCV'
-                type='search'
-                className='candidateName basicCandidateDetailsInput'
+                id="outlined-search"
+                label="PCV"
+                type="search"
+                className="candidateName basicCandidateDetailsInput"
               />
               <TextField
-                id='outlined-search'
-                label='Blood Pressure'
-                type='search'
-                className='candidateName basicCandidateDetailsInput'
+                id="outlined-search"
+                label="Blood Pressure"
+                type="search"
+                className="candidateName basicCandidateDetailsInput"
               />
             </div>
           </>
         )}
-        {loggedInUserRole === 'qualityAssurance' && (
-          <div className='qualityAssuranceAccordionWrapper'>
+        {loggedInUserRole === "qualityAssurance" && (
+          <div className="qualityAssuranceAccordionWrapper">
             <Accordion>
               <AccordionSummary
                 expandIcon={<FaAngleDown />}
-                aria-controls='panel2a-content'
-                id='panel2a-header'
+                aria-controls="panel2a-content"
+                id="panel2a-header"
               >
                 <Typography>Test Details</Typography>
               </AccordionSummary>
@@ -856,7 +884,7 @@ const PendingCandidatesDatagrid = (props) => {
             </Accordion>
           </div>
         )}
-        <div className='bottomButtons'>
+        <div className="bottomButtons">
           {/* {leftBtnText && (
             <div
               className='authorize sendDetails'
@@ -866,13 +894,13 @@ const PendingCandidatesDatagrid = (props) => {
             </div>
           )} */}
           {rightBtnText?.length > 0 && (
-            <div className='authorize' onClick={(e) => handleBtnClick(e)}>
+            <div className="authorize" onClick={(e) => handleBtnClick(e)}>
               {rightBtnText}
             </div>
           )}
         </div>
-      </div>
-      <Box sx={{ height: 350, width: '100%' }}>
+      </form>
+      <Box sx={{ height: 350, width: "100%" }}>
         <h3>{title}</h3>
         <DataGrid
           rows={rows}
@@ -890,7 +918,7 @@ const PendingCandidatesDatagrid = (props) => {
         />
       </Box>
     </div>
-  )
-}
+  );
+};
 
-export default PendingCandidatesDatagrid
+export default PendingCandidatesDatagrid;
