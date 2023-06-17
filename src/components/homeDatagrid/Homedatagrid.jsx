@@ -68,129 +68,6 @@ const Homedatagrid = (props) => {
     // },
   ];
 
-  const phlebotomistcolumns = [
-    {
-      field: "lastName",
-      headerName: "Candidate Name",
-      width: 250,
-      editable: false,
-    },
-    { field: "id", headerName: "Company Name", width: 190 },
-    {
-      field: "firstName",
-      headerName: "Number of tests",
-      width: 180,
-      editable: false,
-    },
-
-    { field: "date", headerName: "Appointment Date", width: 220 },
-
-    {
-      field: "role",
-      headerName: "Attended to",
-      width: 180,
-      renderCell: () => {
-        return (
-          <>
-            <div className="homeNotAttendedTo">False</div>
-          </>
-        );
-      },
-    },
-  ];
-
-  const labScientistColumns = [
-    {
-      field: "lastName",
-      headerName: "Candidate Name",
-      width: 250,
-      editable: false,
-    },
-    { field: "id", headerName: "Company Name", width: 190 },
-    {
-      field: "firstName",
-      headerName: "Number of tests",
-      width: 180,
-      editable: false,
-    },
-
-    { field: "date", headerName: "Appointment Date", width: 220 },
-
-    {
-      field: "role",
-      headerName: "Attended to",
-      width: 180,
-      renderCell: () => {
-        return (
-          <>
-            <div className="homeAttendedTo">True</div>
-          </>
-        );
-      },
-    },
-  ];
-
-  const labScientistRows = [
-    {
-      id: 1,
-      lastName: "Snow",
-      firstName: "1",
-      date: "1-March-2023",
-      age: 35,
-      attendedTo: "true",
-    },
-    {
-      id: 2,
-      lastName: "Lannister",
-      date: "1-March-2023",
-      firstName: "1",
-      age: 42,
-      attendedTo: "true",
-    },
-    {
-      id: 3,
-      lastName: "Lannister",
-      firstName: "3",
-      date: "1-March-2023",
-      age: 45,
-      attendedTo: "true",
-    },
-    {
-      id: 4,
-      lastName: "Stark",
-      firstName: "3",
-      date: "1-March-2023",
-      age: 16,
-      attendedTo: "true",
-    },
-    {
-      id: 5,
-      lastName: "Targaryen",
-      firstName: "2",
-      age: null,
-      date: "1-March-2023",
-      attendedTo: "true",
-    },
-    {
-      id: 6,
-      lastName: "Melisandre",
-      firstName: "2",
-      age: 150,
-      date: "1-March-2023",
-      attendedTo: "true",
-    },
-    {
-      id: 7,
-      lastName: "Clifford",
-      firstName: "3",
-      age: 44,
-      attendedTo: "true",
-      date: "1-March-2023",
-    },
-    { id: 8, lastName: "Frances", firstName: "3", age: 36, attendedTo: "true" },
-    { id: 9, lastName: "Roxie", firstName: "3", age: 65, attendedTo: "true" },
-  ];
-
   switch (loggedInUserRole) {
     case "Reception":
       rows = tableData;
@@ -202,9 +79,9 @@ const Homedatagrid = (props) => {
       columns = defaultColumns;
       title = "Candidates";
       break;
-    case "labScientist":
-      rows = labScientistRows;
-      columns = labScientistColumns;
+    case "Main lab 1":
+      rows = tableData;
+      columns = defaultColumns;
       title = "Candidates";
       break;
 

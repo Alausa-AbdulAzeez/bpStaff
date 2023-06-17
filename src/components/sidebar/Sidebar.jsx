@@ -35,7 +35,7 @@ const Sidebar = () => {
       sidebarInfo = phlebotomistData;
 
       break;
-    case "labScientist":
+    case "Main lab 1":
       sidebarInfo = labScientistData;
 
       break;

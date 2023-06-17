@@ -555,11 +555,10 @@ const PendingCandidatesDatagrid = (props) => {
       title = "Pending Candidates";
       rightBtnText = "Save Details";
       break;
-    case "labScientist":
-      rows = labScientistRows;
-      columns = labScientistcolumns;
+    case "Main lab 1":
+      rows = tableData;
+      columns = defaultColumns;
       title = "Pending Candidates";
-      leftBtnText = "Send Result";
       rightBtnText = "Save Result";
       break;
     case "qualityAssurance":

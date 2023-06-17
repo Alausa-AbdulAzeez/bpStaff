@@ -46,7 +46,7 @@ const Home = () => {
       data = phlebotomistDashboardData;
 
       break;
-    case "labScientist":
+    case "Main lab 1":
       data = labScientistDashboardData;
 
       break;

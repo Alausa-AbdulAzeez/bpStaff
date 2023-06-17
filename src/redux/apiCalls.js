@@ -45,11 +45,16 @@ export const login = async (dispatch, user, navigate, toastId) => {
   } catch (error) {
     console.log(error);
     // dispatch(loginFailure())
-    toast.error(
-      error.response?.data?.title ||
-        error.response?.data?.description ||
+    toast.update(toastId.current, {
+      type: "error",
+      autoClose: 3000,
+      isLoading: false,
+      render: `${
+        error?.response?.data?.title ||
+        error?.response?.data?.description ||
         error?.message ||
         "Something went wrong, please try again"
-    );
+      }`,
+    });
   }
 };
