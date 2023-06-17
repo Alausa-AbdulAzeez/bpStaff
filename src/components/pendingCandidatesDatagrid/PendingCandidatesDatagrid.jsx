@@ -35,16 +35,16 @@ const PendingCandidatesDatagrid = (props) => {
 
   // USER DETAILS
   const [userDetails, setUserDetails] = useState({
-    gender: "",
-    age: "",
-    temperature: "",
-    weight: "",
-    height: "",
-    bmi: "",
-    bloodPressure: "",
-    state: "",
-    clientid: "",
     candidateId: "",
+    clientid: "",
+    height: "",
+    bloodPressure: "",
+    weight: "",
+    age: "",
+    bmi: "",
+    gender: "",
+    // temperature: "",
+    state: "",
   });
   // TABLE ROWS PER PAGE
   const [pageSize, setPageSize] = useState(5);
@@ -187,7 +187,8 @@ const PendingCandidatesDatagrid = (props) => {
                 Authorize
               </div>
             )}
-            {loggedInUserRole === "Phlebotomy" && (
+            {(loggedInUserRole === "Phlebotomy" ||
+              loggedInUserRole === "MainLab1") && (
               <div className="notAuthorized">View</div>
             )}
           </>
@@ -207,135 +208,6 @@ const PendingCandidatesDatagrid = (props) => {
         );
       },
     },
-  ];
-
-  const phlebotomistcolumns = [
-    {
-      field: "lastName",
-      headerName: "Candidate Name",
-      width: 250,
-      editable: false,
-    },
-    { field: "id", headerName: "Company Name", width: 190 },
-    {
-      field: "firstName",
-      headerName: "Number of tests",
-      width: 180,
-      editable: false,
-    },
-
-    { field: "date", headerName: "Appointment Date", width: 220 },
-
-    {
-      field: "role",
-      headerName: "Attended to",
-      width: 180,
-      renderCell: () => {
-        return (
-          <>
-            <div className="pendingCandidatesNotAttendedTo">False</div>
-          </>
-        );
-      },
-    },
-  ];
-
-  const labScientistcolumns = [
-    {
-      field: "lastName",
-      headerName: "Candidate Name",
-      width: 250,
-      editable: false,
-    },
-    { field: "id", headerName: "Company Name", width: 190 },
-    {
-      field: "firstName",
-      headerName: "Number of tests",
-      width: 180,
-      editable: false,
-    },
-
-    { field: "date", headerName: "Appointment Date", width: 220 },
-
-    {
-      field: "role",
-      headerName: "Attended to",
-      width: 180,
-      renderCell: () => {
-        return (
-          <>
-            <div className="pendingCandidatesAttendedTo">True</div>
-          </>
-        );
-      },
-    },
-  ];
-
-  const labScientistRows = [
-    {
-      id: 1,
-      lastName: "Snow",
-      firstName: "1",
-      date: "1-March-2023",
-      age: 35,
-      attendedTo: "false",
-    },
-    {
-      id: 2,
-      lastName: "Lannister",
-      date: "1-March-2023",
-      firstName: "1",
-      age: 42,
-      attendedTo: "false",
-    },
-    {
-      id: 3,
-      lastName: "Lannister",
-      firstName: "3",
-      date: "1-March-2023",
-      age: 45,
-      attendedTo: "false",
-    },
-    {
-      id: 4,
-      lastName: "Stark",
-      firstName: "3",
-      date: "1-March-2023",
-      age: 16,
-      attendedTo: "false",
-    },
-    {
-      id: 5,
-      lastName: "Targaryen",
-      firstName: "2",
-      age: null,
-      date: "1-March-2023",
-      attendedTo: "true",
-    },
-    {
-      id: 6,
-      lastName: "Melisandre",
-      firstName: "2",
-      age: 150,
-      date: "1-March-2023",
-      attendedTo: "true",
-    },
-    {
-      id: 7,
-      lastName: "Clifford",
-      firstName: "3",
-      age: 44,
-      attendedTo: "true",
-      date: "1-March-2023",
-    },
-    {
-      id: 8,
-      lastName: "Frances",
-      firstName: "3",
-      age: 36,
-      attendedTo: "true",
-    },
-    { id: 9, lastName: "Roxie", firstName: "3", age: 65, attendedTo: "true" },
   ];
 
   const qualityAssuranceColumns = [
@@ -555,7 +427,7 @@ const PendingCandidatesDatagrid = (props) => {
       title = "Pending Candidates";
       rightBtnText = "Save Details";
       break;
-    case "Main lab 1":
+    case "MainLab1":
       rows = tableData;
       columns = defaultColumns;
       title = "Pending Candidates";
@@ -619,19 +491,6 @@ const PendingCandidatesDatagrid = (props) => {
               },
             }
           )
-          // .then(() => {
-          //   publicRequest.put(
-          //     `Candidate/Authorize/${candidateId}`,
-          //     {},
-          //     {
-          //       headers: {
-          //         Accept: "*",
-          //         Authorization: `Bearer ${token}`,
-          //         "Content-Type": "application/json",
-          //       },
-          //     }
-          //   );
-          // })
           .then(() => {
             toast.update(toastId.current, {
               render: "Candidate can proceed to the next stage",
@@ -694,7 +553,7 @@ const PendingCandidatesDatagrid = (props) => {
     heightInMetres = Number(height) / 100;
 
     bmi = weight / Math.pow(heightInMetres, 2);
-    setUserDetails({ ...userDetails, bmi: bmi });
+    setUserDetails({ ...userDetails, bmi: bmi?.toString() });
 
     setBMI(bmi);
   };
@@ -787,7 +646,7 @@ const PendingCandidatesDatagrid = (props) => {
               type="string"
               required
               className="candidateName basicCandidateDetailsInput"
-              // onChange={(e) => handleCandidatePropertyChange(e, 'temperature')}
+              // onChange={(e) => handleCandidatePropertyChange(e, "temperature")}
             />
             <TextField
               id="outlined-search"
@@ -827,7 +686,7 @@ const PendingCandidatesDatagrid = (props) => {
             />
           </div>
         )}
-        {loggedInUserRole === "labScientist" && (
+        {loggedInUserRole === "MainLab1" && (
           <>
             <div className="qualityAssuranceAccordionWrapper">
               <Accordion>

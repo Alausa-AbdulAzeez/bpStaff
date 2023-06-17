@@ -246,7 +246,7 @@ const CandidateSearchDatagrid = (props) => {
       // leftBtnText = "Send Details";
       rightBtnText = "Save Details";
       break;
-    case "Main lab 1":
+    case "MainLab1":
       rows = tableData;
       columns = defaultColumns;
       title = "Candidates";

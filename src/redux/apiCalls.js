@@ -23,12 +23,13 @@ export const login = async (dispatch, user, navigate, toastId) => {
           toast.update(toastId.current, {
             render: "Login succesful! Please wait while we redirect you.",
             type: "success",
-            autoClose: 3000,
+            autoClose: 2000,
             isLoading: false,
           });
-          setInterval(() => {
-            navigate("/");
-          }, 2500);
+          navigate("/");
+          // setInterval(() => {
+          //   // redirect('/')
+          // }, 2500);
         } else {
           dispatch(loginSuccess(res?.data));
           navigate("/changePassword");
