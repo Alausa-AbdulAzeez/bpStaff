@@ -24,6 +24,14 @@ import {
 import { toast } from "react-toastify";
 
 const PendingCandidatesDatagrid = (props) => {
+  // SELECTED CANDIDATE TESTS
+  const [candidateTests, setCandidateTests] = useState([]);
+  const [loadingCandedateTests, setLoadingCandedateTests] = useState(false);
+  const [candedateTestsError, setCandedateTestsError] = useState(false);
+
+  // SELECTED CANDIDATE RESULTS
+  const [candidateResults, setCandidateResults] = useState([]);
+
   // BMI
   const [BMI, setBMI] = useState("");
 
@@ -64,6 +72,9 @@ const PendingCandidatesDatagrid = (props) => {
 
   // LOGGED IN USER RLOE
   const loggedInUserRole = props.userDetails?.data?.role;
+
+  // LOGGED IN USER
+  const userName = props.userDetails?.data?.profile?.fullName;
 
   // LOGGED IN USER TOKEN
   const { token } = useSelector((state) => state?.user?.currentUser?.data);
@@ -567,18 +578,72 @@ const PendingCandidatesDatagrid = (props) => {
 
   // END OF FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
 
+  // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
+  const handleTestInputChange = (e, data) => {
+    console.log(data);
+  };
+
+  // END OF FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
+
   // use effect to update bmi
   useEffect(() => {
     calculateBmi();
   }, [userDetails?.height, userDetails?.weight]);
 
   // USEEFFECT TO UPDATE SELECTED ROW
-  useEffect(() => {}, [selectedCandidate]);
+  useEffect(() => {
+    if (selectedCandidate?.candidateId) {
+      let resultList = [];
+      const getCandidatetTests = async () => {
+        console.log(selectedCandidate);
+        setLoadingCandedateTests(true);
+        try {
+          await publicRequest
+            .get(`Candidate/test/${selectedCandidate?.candidateId}`)
+            .then((res) => {
+              console.log(res);
+              setCandidateTests(res?.data?.data?.tests);
+              setLoadingCandedateTests(false);
+
+              for (
+                let index = 0;
+                index < res?.data?.data?.tests.length;
+                index++
+              ) {
+                resultList = [
+                  ...resultList,
+                  {
+                    candidateId: selectedCandidate?.candidateId,
+                    testId: res?.data?.data?.tests[0]?.testId,
+                    testCategoryId: 0,
+                    result: "",
+                    department: 3,
+                    uploadedBy: userName,
+                    clientId: selectedCandidate?.clientid,
+                  },
+                ];
+              }
+              console.log(resultList);
+            });
+        } catch (error) {
+          console.log(error);
+          setCandedateTestsError(true);
+        }
+      };
+
+      getCandidatetTests();
+    }
+  }, [selectedCandidate]);
 
   // USEEFFECT TO UPDATE USER DETAILS
   useEffect(() => {
     console.log(userDetails);
   }, [userDetails]);
+
+  // USEEFFECT TO UPDATE CANDIDATE TESTS
+  useEffect(() => {
+    console.log(candidateTests);
+  }, [candidateTests]);
 
   return (
     <div className="datagridWraper">
@@ -707,18 +772,23 @@ const PendingCandidatesDatagrid = (props) => {
               </Accordion>
             </div>
             <div className="basicDetailsWrapper">
-              <TextField
-                id="outlined-search"
-                label="PCV"
-                type="search"
-                className="candidateName basicCandidateDetailsInput"
-              />
-              <TextField
-                id="outlined-search"
-                label="Blood Pressure"
-                type="search"
-                className="candidateName basicCandidateDetailsInput"
-              />
+              {loadingCandedateTests || candedateTestsError
+                ? loadingCandedateTests
+                  ? "Loading..."
+                  : "An error occured, please try again"
+                : candidateTests?.map((candidateTest) => {
+                    return (
+                      <TextField
+                        id={candidateTest?.id}
+                        label={candidateTest?.test}
+                        type="search"
+                        className="candidateName basicCandidateDetailsInput"
+                        onChange={(e) =>
+                          handleTestInputChange(e, candidateTest)
+                        }
+                      />
+                    );
+                  })}
             </div>
           </>
         )}
