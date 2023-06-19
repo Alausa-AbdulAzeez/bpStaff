@@ -15,7 +15,6 @@ import { RxReload } from 'react-icons/rx'
 
 const CandidateSearch = () => {
   // MISCELLANEOUS
-  const [searched, setSearched] = useState(false)
   const toastId = React.useRef(null)
 
   // GET CURRENT LOGGED IN USER
@@ -105,7 +104,6 @@ const CandidateSearch = () => {
 
   // FUNCTION TO HANDLE PHONE NUMBER CHANGE
   const handlePhoneNumberChange = (e) => {
-    // console.log(e.target?.value)
     setPhoneNumber(e.target?.value)
   }
   // END OF FUNCTION TO HANDLE PHONE NUMBER CHANGE
