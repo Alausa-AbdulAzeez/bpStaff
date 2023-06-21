@@ -11,17 +11,20 @@ import Topber from '../../components/topbar/Topber'
 import './reports.scss'
 import searchImg from '../../utils/images/searchImg.png'
 import ReportsDatagrid from '../../components/reportsDatagrid/ReportsDatagrid'
+import { useSelector } from 'react-redux'
 
 const Reports = (props) => {
   const [searched, setSearched] = useState(false)
-  const loggedInUserRole = props.userDetails?.role
+  // GET CURRENT LOGGED IN USER
+  const { currentUser } = useSelector((state) => state?.user)
+  const loggedInUserRole = currentUser?.data?.role
+  const userName = currentUser?.data?.profile?.fullName
 
-  console.log(props)
   return (
     <div className='reportsWrapper'>
       <Sidebar loggedInUserRole={loggedInUserRole} />
       <div className='reportsRight'>
-        <Topber userName={props.userDetails.name} />
+        <Topber userName={userName} />
         <div className='reportsMainWrapper'>
           <div className='reportsMainTop'>
             <h3 className='reportsMainTopTitle'>Search</h3>
@@ -59,7 +62,7 @@ const Reports = (props) => {
                 <h3>Nothing to see here, yet</h3>
               </>
             )}
-            {<ReportsDatagrid userDetails={props.userDetails} />}
+            {<ReportsDatagrid userDetails={currentUser} />}
           </div>
         </div>
       </div>

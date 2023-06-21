@@ -216,7 +216,8 @@ const PendingCandidatesDatagrid = (props) => {
               </div>
             )}
             {(loggedInUserRole === 'Phlebotomy' ||
-              loggedInUserRole === 'MainLab1') && (
+              loggedInUserRole === 'MainLab1' ||
+              loggedInUserRole === 'Quality assurance') && (
               <div className='notAuthorized'>View</div>
             )}
           </>
@@ -236,108 +237,6 @@ const PendingCandidatesDatagrid = (props) => {
         )
       },
     },
-  ]
-
-  const reportOfficerColumns = [
-    {
-      field: 'lastName',
-      headerName: 'Candidate Name',
-      width: 250,
-      editable: false,
-    },
-    { field: 'id', headerName: 'Company Name', width: 190 },
-
-    { field: 'date', headerName: 'Appointment Date', width: 180 },
-
-    {
-      field: 'role',
-      headerName: 'Report Status',
-      width: 160,
-      renderCell: () => {
-        return (
-          <>
-            <div className='reportSent'>Sent</div>
-          </>
-        )
-      },
-    },
-    {
-      field: 'timeSent',
-      headerName: 'Time Sent',
-      width: 145,
-    },
-    {
-      field: 'timeUpdated',
-      headerName: 'Time Updated',
-      width: 145,
-    },
-  ]
-
-  const reportOfficerRows = [
-    {
-      id: 1,
-      lastName: 'Snow',
-      firstName: '1',
-      date: '1-March-2023',
-      age: 35,
-      attendedTo: 'true',
-    },
-    {
-      id: 2,
-      lastName: 'Lannister',
-      date: '1-March-2023',
-      firstName: '1',
-      age: 42,
-      attendedTo: 'true',
-    },
-    {
-      id: 3,
-      lastName: 'Lannister',
-      firstName: '3',
-      date: '1-March-2023',
-      age: 45,
-      attendedTo: 'true',
-    },
-    {
-      id: 4,
-      lastName: 'Stark',
-      firstName: '3',
-      date: '1-March-2023',
-      age: 16,
-      attendedTo: 'true',
-    },
-    {
-      id: 5,
-      lastName: 'Targaryen',
-      firstName: '2',
-      age: null,
-      date: '1-March-2023',
-      attendedTo: 'true',
-    },
-    {
-      id: 6,
-      lastName: 'Melisandre',
-      firstName: '2',
-      age: 150,
-      date: '1-March-2023',
-      attendedTo: 'true',
-    },
-    {
-      id: 7,
-      lastName: 'Clifford',
-      firstName: '3',
-      age: 44,
-      attendedTo: 'true',
-      date: '1-March-2023',
-    },
-    {
-      id: 8,
-      lastName: 'Frances',
-      firstName: '3',
-      age: 36,
-      attendedTo: 'true',
-    },
-    { id: 9, lastName: 'Roxie', firstName: '3', age: 65, attendedTo: 'true' },
   ]
 
   switch (loggedInUserRole) {
@@ -368,9 +267,9 @@ const PendingCandidatesDatagrid = (props) => {
       leftBtnText = 'Reject'
       break
 
-    case 'reportOfficer':
-      rows = reportOfficerRows
-      columns = reportOfficerColumns
+    case 'Report':
+      rows = tableData
+      columns = defaultColumns
       title = 'Candidates'
       leftBtnText = 'Send Report'
       rightBtnText = 'Preview Report'
@@ -446,6 +345,52 @@ const PendingCandidatesDatagrid = (props) => {
     } catch (error) {
       console.log(error)
       console.log(error.message)
+      toast.update(toastId.current, {
+        type: 'error',
+        autoClose: 3000,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
+          error?.message ||
+          'Something went wrong, please try again'
+        }`,
+      })
+    }
+  }
+  // END OF FUNCTION TO SEND RESULT TO QA
+
+  // FUNCTION TO SEND RESULT TO QA
+  const approveResult = async () => {
+    const { candidateId } = selectedCandidate
+    toastId.current = toast('Please wait...', {
+      isLoading: true,
+    })
+
+    try {
+      await publicRequest
+        .put(
+          `Candidate/Authorize/${candidateId}`,
+          {},
+          {
+            headers: {
+              Accept: '*',
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+
+        .then(() => {
+          toast.update(toastId.current, {
+            render: 'Result sent to QA for review',
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+          })
+          props?.setReloadTable((prev) => !prev)
+        })
+    } catch (error) {
       toast.update(toastId.current, {
         type: 'error',
         autoClose: 3000,
@@ -563,7 +508,7 @@ const PendingCandidatesDatagrid = (props) => {
         setOpenDialogueWithInfo(true)
         break
       case 'Approve':
-        setOpenDialogueWithInfo(true)
+        approveResult()
         break
       default:
         break
@@ -672,14 +617,10 @@ const PendingCandidatesDatagrid = (props) => {
   }, [selectedCandidate])
 
   // USEEFFECT TO UPDATE USER DETAILS
-  useEffect(() => {
-    console.log(userDetails)
-  }, [userDetails])
+  useEffect(() => {}, [userDetails])
 
   // USEEFFECT TO UPDATE CANDIDATE TESTS
-  useEffect(() => {
-    console.log(candidateTests)
-  }, [candidateTests])
+  useEffect(() => {}, [candidateTests])
 
   return (
     <div className='datagridWraper'>

@@ -483,7 +483,7 @@ const ReportsDatagrid = (props) => {
       title = 'Candidates'
       rightBtnText = 'Preview Report'
       break
-    case 'reportOfficer':
+    case 'Report':
       rows = qualityAssuranceRows
       columns = qualityAssuranceColumns
       title = 'Candidates'

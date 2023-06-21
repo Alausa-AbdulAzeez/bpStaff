@@ -157,6 +157,12 @@ const CandidateSearchDatagrid = (props) => {
       title = 'Candidates'
       rightBtnText = 'Approve'
       break
+    case 'Report':
+      rows = tableData
+      columns = defaultColumns
+      title = 'Candidates'
+      rightBtnText = 'Approve'
+      break
 
     default:
       break

@@ -89,6 +89,11 @@ const Homedatagrid = (props) => {
       columns = defaultColumns
       title = 'Candidates'
       break
+    case 'Report':
+      rows = tableData
+      columns = defaultColumns
+      title = 'Candidates'
+      break
 
     default:
       break

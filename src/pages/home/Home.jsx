@@ -52,7 +52,7 @@ const Home = () => {
     case 'Quality assurance':
       data = qualityAssuranceDashboardData
       break
-    case 'reportOfficer':
+    case 'Report':
       data = reportOfficerDashboardData
 
       break

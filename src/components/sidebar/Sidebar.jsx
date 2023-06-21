@@ -43,7 +43,7 @@ const Sidebar = () => {
       sidebarInfo = qualityAssuranceData
 
       break
-    case 'reportOfficer':
+    case 'Report':
       sidebarInfo = reportOfficerData
       break
 

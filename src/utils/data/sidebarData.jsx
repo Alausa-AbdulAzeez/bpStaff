@@ -158,6 +158,11 @@ export const reportOfficerData = [
     ulTitle: 'LIST',
     listItems: [
       {
+        title: 'Candidate Search',
+        link: '/candidateSearch',
+        icon: <AiOutlineSearch className='sidebarIcon' />,
+      },
+      {
         title: 'Pending Candidates',
         link: '/pendingCandidates',
         icon: <MdPendingActions className='sidebarIcon' />,
