@@ -55,15 +55,6 @@ const PendingCandidatesDatagrid = (props) => {
     state: '',
   })
 
-  // TEST DETAILS
-  const testDetails = [
-    'candidateId',
-    'testId',
-    'result',
-    'department',
-    'uploadedBy',
-    'clientId',
-  ]
   // TABLE ROWS PER PAGE
   const [pageSize, setPageSize] = useState(5)
 
@@ -454,11 +445,12 @@ const PendingCandidatesDatagrid = (props) => {
       title = 'Pending Candidates'
       rightBtnText = 'Save Result'
       break
-    case 'qualityAssurance':
-      rows = qualityAssuranceRows
-      columns = qualityAssuranceColumns
+    case 'Quality assurance':
+      rows = tableData
+      columns = defaultColumns
       title = 'Candidates'
       rightBtnText = 'Approve'
+      leftBtnText = 'Reject'
       break
 
     case 'reportOfficer':
@@ -475,7 +467,7 @@ const PendingCandidatesDatagrid = (props) => {
 
   // FUNCTION TO SEND RESULT TO QA
   const saveResult = async () => {
-    console.log(candidateResults)
+    const { candidateId } = selectedCandidate
     toastId.current = toast('Please wait...', {
       isLoading: true,
     })
@@ -510,19 +502,19 @@ const PendingCandidatesDatagrid = (props) => {
               'Content-Type': 'application/json',
             },
           })
-          // .then(() => {
-          //   publicRequest.put(
-          //     `Candidate/Authorize/${candidateId}`,
-          //     {},
-          //     {
-          //       headers: {
-          //         Accept: "*",
-          //         Authorization: `Bearer ${token}`,
-          //         "Content-Type": "application/json",
-          //       },
-          //     }
-          //   );
-          // })
+          .then(() => {
+            publicRequest.put(
+              `Candidate/Authorize/${candidateId}`,
+              {},
+              {
+                headers: {
+                  Accept: '*',
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'application/json',
+                },
+              }
+            )
+          })
           .then(() => {
             toast.update(toastId.current, {
               render: 'Result sent to QA for review',
@@ -937,14 +929,11 @@ const PendingCandidatesDatagrid = (props) => {
           </div>
         )}
         <div className='bottomButtons'>
-          {/* {leftBtnText && (
-            <div
-              className='authorize sendDetails'
-              onClick={(e) => handleBtnClick(e)}
-            >
+          {leftBtnText && (
+            <div className=' rejectResult' onClick={(e) => handleBtnClick(e)}>
               {leftBtnText}
             </div>
-          )} */}
+          )}
           {rightBtnText?.length > 0 && (
             <div className='authorize' onClick={(e) => handleBtnClick(e)}>
               {rightBtnText}
