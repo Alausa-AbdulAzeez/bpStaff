@@ -54,6 +54,16 @@ const PendingCandidatesDatagrid = (props) => {
     // temperature: "",
     state: '',
   })
+
+  // TEST DETAILS
+  const testDetails = [
+    'candidateId',
+    'testId',
+    'result',
+    'department',
+    'uploadedBy',
+    'clientId',
+  ]
   // TABLE ROWS PER PAGE
   const [pageSize, setPageSize] = useState(5)
 
@@ -463,7 +473,7 @@ const PendingCandidatesDatagrid = (props) => {
       break
   }
 
-  // FUNCTION TO SEND UPDATED USER DETAILS TO THE BACKEND (PHLEB)
+  // FUNCTION TO SEND RESULT TO QA
   const saveResult = async () => {
     console.log(candidateResults)
     toastId.current = toast('Please wait...', {
@@ -480,9 +490,16 @@ const PendingCandidatesDatagrid = (props) => {
     ]
 
     try {
-      const found = keys?.find((key) => {
-        return userDetails[key] === '' || undefined
-      })
+      let found
+      for (let index = 0; index < candidateResults.length; index++) {
+        found = keys?.find((key) => {
+          console.log(candidateResults[0]['candidateId'])
+          return (
+            candidateResults[index][key] === '' ||
+            candidateResults[index][key] === undefined
+          )
+        })
+      }
 
       if (!found) {
         await publicRequest
@@ -535,6 +552,10 @@ const PendingCandidatesDatagrid = (props) => {
       })
     }
   }
+  // END OF FUNCTION TO SEND RESULT TO QA
+
+  // FUNCTION TO SEND UPDATED USER DETAILS TO THE BACKEND (PHLEB)
+
   const updatedUserDetails = async () => {
     const { candidateId, clientId } = selectedCandidate
 
@@ -728,6 +749,7 @@ const PendingCandidatesDatagrid = (props) => {
             })
         } catch (error) {
           console.log(error)
+          setLoadingCandedateTests(false)
           setCandedateTestsError(true)
         }
       }
