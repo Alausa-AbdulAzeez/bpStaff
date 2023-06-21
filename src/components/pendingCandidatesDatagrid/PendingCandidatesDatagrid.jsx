@@ -486,7 +486,7 @@ const PendingCandidatesDatagrid = (props) => {
 
       if (!found) {
         await publicRequest
-          .post(`/api/Result/create`, candidateResults, {
+          .post(`/Result/create`, candidateResults, {
             headers: {
               Accept: '*',
               Authorization: `Bearer ${token}`,
