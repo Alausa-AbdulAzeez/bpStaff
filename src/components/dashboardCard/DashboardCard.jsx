@@ -12,9 +12,32 @@ const DashboardCard = (props) => {
       className='dashboardCardWrapper'
       style={{ backgroundColor: cardInfo.backgroundColor }}
     >
-      <p>{cardInfo.title}</p>
-      {/* <h1>{cardInfo.name} </h1> */}
-      {cardInfo.isMoney ? <h1>{props.userName} </h1> : <h1>100+ </h1>}
+      <p className='title'>{cardInfo.title}</p>
+
+      <div className='imgWrapper'>
+        {cardInfo.isProfile && <h1>{props.userName}</h1>}
+        {cardInfo.isCandidateSearch && (
+          <img
+            src='https://cdn4.iconfinder.com/data/icons/general08/png/128/binoculars.png'
+            alt='binoculars'
+            className='candidateSearch'
+          />
+        )}
+        {cardInfo.isPendingCandidates && (
+          <img
+            src='https://cdn3.iconfinder.com/data/icons/softwaredemo/PNG/128x128/Hourglass.png'
+            alt='binoculars'
+            className='candidateSearch'
+          />
+        )}
+        {cardInfo.isViewClients && (
+          <img
+            src='https://cdn0.iconfinder.com/data/icons/business-and-management-flat-8/24/PARTNER_team_friends_partners-128.png'
+            alt='binoculars'
+            className='candidateSearch'
+          />
+        )}
+      </div>
       <div className='cardBottom'>
         <Link to={cardInfo.link} className='cardBottomText'>
           {cardInfo.linkText}

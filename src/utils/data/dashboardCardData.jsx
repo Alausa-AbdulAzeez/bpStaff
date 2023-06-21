@@ -8,6 +8,7 @@ export const receptionistDashboardData = [
   {
     title: 'Candidate Search',
     isMoney: false,
+    isCandidateSearch: true,
     link: 'candidateSearch',
     linkText: 'View Candidates',
     backgroundColor: '#ece8ff7b',
@@ -20,6 +21,7 @@ export const receptionistDashboardData = [
   },
   {
     title: 'Pending Candidates',
+    isPendingCandidates: true,
     isMoney: false,
     link: 'pendingCandidates',
     linkText: 'View pending candidates',
@@ -35,6 +37,7 @@ export const receptionistDashboardData = [
   {
     title: 'View Clients',
     isMoney: false,
+    isViewClients: true,
     link: 'viewClients',
     linkText: 'View all clients',
     backgroundColor: '#FF8C3938',
@@ -49,6 +52,7 @@ export const receptionistDashboardData = [
   {
     title: 'Profile',
     isMoney: true,
+    isProfile: true,
     link: '/profile',
     linkText: 'View profile',
     backgroundColor: '#3971ff24',
@@ -66,6 +70,7 @@ export const phlebotomistDashboardData = [
   {
     title: 'Candidate Search',
     isMoney: false,
+    isCandidateSearch: true,
     link: 'candidateSearch',
     linkText: 'View Candidates',
     backgroundColor: '#ece8ff7b',
@@ -79,6 +84,7 @@ export const phlebotomistDashboardData = [
   {
     title: 'Pending Candidates',
     isMoney: false,
+    isPendingCandidates: true,
     link: 'pendingCandidates',
     linkText: 'View pending candidates',
     backgroundColor: '#33a23e24',
@@ -93,6 +99,7 @@ export const phlebotomistDashboardData = [
   {
     title: 'View Clients',
     isMoney: false,
+    isViewClients: true,
     link: 'viewClients',
     linkText: 'View all clients',
     backgroundColor: '#FF8C3938',
@@ -108,6 +115,7 @@ export const phlebotomistDashboardData = [
     title: 'Profile',
     isMoney: true,
     link: '/profile',
+    isProfile: true,
     linkText: 'View profile',
     backgroundColor: '#3971ff24',
     name: 'Olamide',
@@ -123,9 +131,11 @@ export const phlebotomistDashboardData = [
 export const labScientistDashboardData = [
   {
     title: 'Candidate Search',
+
     isMoney: false,
     link: 'candidateSearch',
     linkText: 'View Candidates',
+    isCandidateSearch: true,
     backgroundColor: '#ece8ff7b',
     icon: (
       <AiOutlineSearch
@@ -137,6 +147,7 @@ export const labScientistDashboardData = [
   {
     title: 'Pending Candidates',
     isMoney: false,
+    isPendingCandidates: true,
     link: 'pendingCandidates',
     linkText: 'View pending candidates',
     backgroundColor: '#33a23e24',
@@ -151,6 +162,7 @@ export const labScientistDashboardData = [
   {
     title: 'View Clients',
     isMoney: false,
+    isViewClients: true,
     link: 'viewClients',
     linkText: 'View all clients',
     backgroundColor: '#FF8C3938',
@@ -165,6 +177,7 @@ export const labScientistDashboardData = [
   {
     title: 'Profile',
     isMoney: true,
+    isProfile: true,
     link: '/profile',
     linkText: 'View profile',
     backgroundColor: '#3971ff24',
@@ -183,6 +196,7 @@ export const qualityAssuranceDashboardData = [
     title: 'Candidate Search',
     isMoney: false,
     link: 'candidateSearch',
+    isCandidateSearch: true,
     linkText: 'View Candidates',
     backgroundColor: '#ece8ff7b',
     icon: (
@@ -196,6 +210,7 @@ export const qualityAssuranceDashboardData = [
     title: 'Pending Candidates',
     isMoney: false,
     link: 'pendingCandidates',
+    isPendingCandidates: true,
     linkText: 'View pending candidates',
     backgroundColor: '#33a23e24',
 
@@ -210,6 +225,7 @@ export const qualityAssuranceDashboardData = [
     title: 'View Clients',
     isMoney: false,
     link: 'viewClients',
+    isViewClients: true,
     linkText: 'View all clients',
     backgroundColor: '#FF8C3938',
 
@@ -224,6 +240,7 @@ export const qualityAssuranceDashboardData = [
     title: 'Profile',
     isMoney: true,
     link: '/profile',
+    isProfile: true,
     linkText: 'View profile',
     backgroundColor: '#3971ff24',
     name: 'Bankole',
@@ -240,6 +257,7 @@ export const reportOfficerDashboardData = [
   {
     title: 'Pending Candidates',
     isMoney: false,
+    isPendingCandidates: true,
     link: 'pendingCandidates',
     linkText: 'View pending candidates',
     backgroundColor: '#33a23e24',
@@ -255,6 +273,7 @@ export const reportOfficerDashboardData = [
     title: 'View Clients',
     isMoney: false,
     link: 'viewClients',
+
     linkText: 'View all clients',
     backgroundColor: '#FF8C3938',
 
@@ -269,6 +288,7 @@ export const reportOfficerDashboardData = [
     title: 'Profile',
     isMoney: true,
     link: '/profile',
+    isProfile: true,
     linkText: 'View profile',
     backgroundColor: '#3971ff24',
     name: 'Bankole',
