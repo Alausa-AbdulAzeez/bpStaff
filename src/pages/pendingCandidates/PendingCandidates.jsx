@@ -30,6 +30,7 @@ const PendingCandidates = () => {
 
   // TABLE DATA
   const [tableData, setTableData] = useState([])
+  const [searchedTableData, setSearchedTableData] = useState([])
 
   // LOADING AND ERROR DATA
   const [loading, setLoading] = useState(false)
@@ -51,6 +52,7 @@ const PendingCandidates = () => {
       if (res.data) {
         console.log(res.data)
         setTableData(res.data?.data === '' ? [] : res.data?.data)
+        setSearchedTableData(res.data?.data === '' ? [] : res.data?.data)
         setLoading(false)
       } else {
         console.log(res.data)
@@ -65,10 +67,25 @@ const PendingCandidates = () => {
   }
   // END OF FUNCTION TO GET AND SET PENDING CANDIDATES
 
+  // SEARCH FUNCTIONALITY
+  const handleSearchParamsChange = (e) => {
+    let filteredPendingCandidatesArray
+    console.log(tableData)
+    filteredPendingCandidatesArray = tableData.filter((tableDatum) =>
+      tableDatum?.candidateName?.includes(e.target.value.trim())
+    )
+    setSearchedTableData(filteredPendingCandidatesArray)
+    // console.log(filteredPendingCandidatesArray)
+  }
+  // END OF SEARCH FUNCTIONALITY
+
   // USE EFFECT TO GET ALL CANDIDATES AS THE PAGE LOADS
   useEffect(() => {
     getPendingCandidates()
   }, [])
+
+  // USEEFFECT TO UPDATE TABLE AFTER AUTHORIZING A CANDIATE
+
   useEffect(() => {
     getPendingCandidates()
   }, [reloadTable])
@@ -77,6 +94,9 @@ const PendingCandidates = () => {
   useEffect(() => {
     console.log(reloadTable)
   }, [reloadTable])
+
+  // USEEFFECT TO RELOAD THE TABLE DATA AS SEARCH INPUT CHANGES
+  useEffect(() => {}, [searchedTableData])
 
   return (
     <>
@@ -89,29 +109,15 @@ const PendingCandidates = () => {
             <div className='pendingCandidatesMainTop'>
               <h3 className='pendingCandidatesMainTopTitle'>Search</h3>
               <div className='pendingCandidatesMainTopForm'>
-                {/* <FormControl className='companySelect'>
-      <InputLabel id='demo-simple-select-label'>
-        Company name
-      </InputLabel>
-      <Select
-        labelId='demo-simple-select-label'
-        id='demo-simple-select'
-        //   value={age}
-        label='Company name'
-        //   onChange={handleChange}
-      >
-        <MenuItem value={10}>Union Bank</MenuItem>
-        <MenuItem value={20}>Chicken Republic</MenuItem>
-      </Select>
-    </FormControl> */}
                 <TextField
                   id='outlined-search'
                   label='Candidate name'
                   type='search'
                   className='candidateName'
+                  onChange={(e) => handleSearchParamsChange(e)}
                 />
 
-                <div className='pendingCandidatesBtn'>Search</div>
+                {/* <div className='pendingCandidatesBtn'>Search</div> */}
               </div>
             </div>
             <div className='pendingCandidatesMainBottom'>
@@ -124,7 +130,7 @@ const PendingCandidates = () => {
               ) : (
                 <PendingCandidatesDatagrid
                   userDetails={currentUser}
-                  tableData={tableData}
+                  tableData={searchedTableData}
                   setReloadTable={setReloadTable}
                 />
               )}

@@ -9,7 +9,7 @@ export const receptionistDashboardData = [
     title: 'Candidate Search',
     isMoney: false,
     link: 'candidateSearch',
-    linkText: 'See all laboratories',
+    linkText: 'View Candidates',
     backgroundColor: '#ece8ff7b',
     icon: (
       <AiOutlineSearch
@@ -67,7 +67,7 @@ export const phlebotomistDashboardData = [
     title: 'Candidate Search',
     isMoney: false,
     link: 'candidateSearch',
-    linkText: 'See all laboratories',
+    linkText: 'View Candidates',
     backgroundColor: '#ece8ff7b',
     icon: (
       <AiOutlineSearch
@@ -125,7 +125,7 @@ export const labScientistDashboardData = [
     title: 'Candidate Search',
     isMoney: false,
     link: 'candidateSearch',
-    linkText: 'See all laboratories',
+    linkText: 'View Candidates',
     backgroundColor: '#ece8ff7b',
     icon: (
       <AiOutlineSearch
@@ -183,7 +183,7 @@ export const qualityAssuranceDashboardData = [
     title: 'Candidate Search',
     isMoney: false,
     link: 'candidateSearch',
-    linkText: 'See all laboratories',
+    linkText: 'View Candidates',
     backgroundColor: '#ece8ff7b',
     icon: (
       <AiOutlineSearch
