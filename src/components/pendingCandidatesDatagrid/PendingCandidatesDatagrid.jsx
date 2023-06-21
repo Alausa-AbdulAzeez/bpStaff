@@ -22,8 +22,12 @@ import {
   publicRequestWithHeaders,
 } from '../../functions/requestMethods'
 import { toast } from 'react-toastify'
+import FormDialog from '../DialogueWithInfo'
 
 const PendingCandidatesDatagrid = (props) => {
+  // RESULT DIALOGUE BACKDROP
+  const [openDialogueWithInfo, setOpenDialogueWithInfo] = React.useState(false)
+
   // SELECTED CANDIDATE TESTS
   const [candidateTests, setCandidateTests] = useState([])
   const [loadingCandedateTests, setLoadingCandedateTests] = useState(false)
@@ -80,10 +84,22 @@ const PendingCandidatesDatagrid = (props) => {
   // LOGGED IN USER TOKEN
   const { token } = useSelector((state) => state?.user?.currentUser?.data)
 
+  // LOGOUT BACKDROP
   const [open, setOpen] = React.useState(false)
 
   const handleClose = () => {
     setOpen(false)
+  }
+
+  // SHOW RESULT DIALOGUE
+  const handleOpenDialogueWithInfo = () => {
+    setOpenDialogueWithInfo(true)
+    console.log('aa')
+  }
+
+  // HIDE RESULT DIALOGUE
+  const handleCloseDialogueWithInfo = () => {
+    setOpenDialogueWithInfo(false)
   }
 
   // SET SIDE INFO POSITION
@@ -222,107 +238,6 @@ const PendingCandidatesDatagrid = (props) => {
     },
   ]
 
-  const qualityAssuranceColumns = [
-    {
-      field: 'lastName',
-      headerName: 'Candidate Name',
-      width: 250,
-      editable: false,
-    },
-    { field: 'id', headerName: 'Company Name', width: 190 },
-
-    { field: 'date', headerName: 'Appointment Date', width: 180 },
-
-    {
-      field: 'role',
-      headerName: 'Report Status',
-      width: 160,
-      renderCell: () => {
-        return (
-          <>
-            <div className='reportSent'>Sent</div>
-          </>
-        )
-      },
-    },
-    {
-      field: 'timeSent',
-      headerName: 'Time Sent',
-      width: 145,
-    },
-    {
-      field: 'timeUpdated',
-      headerName: 'Time Updated',
-      width: 145,
-    },
-  ]
-
-  const qualityAssuranceRows = [
-    {
-      id: 1,
-      lastName: 'Snow',
-      firstName: '1',
-      date: '1-March-2023',
-      age: 35,
-      attendedTo: 'true',
-    },
-    {
-      id: 2,
-      lastName: 'Lannister',
-      date: '1-March-2023',
-      firstName: '1',
-      age: 42,
-      attendedTo: 'true',
-    },
-    {
-      id: 3,
-      lastName: 'Lannister',
-      firstName: '3',
-      date: '1-March-2023',
-      age: 45,
-      attendedTo: 'true',
-    },
-    {
-      id: 4,
-      lastName: 'Stark',
-      firstName: '3',
-      date: '1-March-2023',
-      age: 16,
-      attendedTo: 'true',
-    },
-    {
-      id: 5,
-      lastName: 'Targaryen',
-      firstName: '2',
-      age: null,
-      date: '1-March-2023',
-      attendedTo: 'true',
-    },
-    {
-      id: 6,
-      lastName: 'Melisandre',
-      firstName: '2',
-      age: 150,
-      date: '1-March-2023',
-      attendedTo: 'true',
-    },
-    {
-      id: 7,
-      lastName: 'Clifford',
-      firstName: '3',
-      age: 44,
-      attendedTo: 'true',
-      date: '1-March-2023',
-    },
-    {
-      id: 8,
-      lastName: 'Frances',
-      firstName: '3',
-      age: 36,
-      attendedTo: 'true',
-    },
-    { id: 9, lastName: 'Roxie', firstName: '3', age: 65, attendedTo: 'true' },
-  ]
   const reportOfficerColumns = [
     {
       field: 'lastName',
@@ -547,7 +462,6 @@ const PendingCandidatesDatagrid = (props) => {
   // END OF FUNCTION TO SEND RESULT TO QA
 
   // FUNCTION TO SEND UPDATED USER DETAILS TO THE BACKEND (PHLEB)
-
   const updatedUserDetails = async () => {
     const { candidateId, clientId } = selectedCandidate
 
@@ -626,8 +540,9 @@ const PendingCandidatesDatagrid = (props) => {
       })
     }
   }
+  // END OF FUNCTION TO SEND UPDATED USER DETAILS TO THE BACKEND (PHLEB)
 
-  // HANDLE LEFT AND RIGHT BUTTON CLICK
+  // HANDLE FUNCTIONS TO CALL BASED ON BUTTON CLICKED
   const handleBtnClick = (e) => {
     e.preventDefault()
     switch (e.target.textContent) {
@@ -643,6 +558,12 @@ const PendingCandidatesDatagrid = (props) => {
         break
       case 'Save Result':
         saveResult()
+        break
+      case 'Reject':
+        setOpenDialogueWithInfo(true)
+        break
+      case 'Approve':
+        setOpenDialogueWithInfo(true)
         break
       default:
         break
@@ -763,6 +684,10 @@ const PendingCandidatesDatagrid = (props) => {
   return (
     <div className='datagridWraper'>
       <SimpleBackdrop open={open} handleClose={handleClose} />
+      <FormDialog
+        open={openDialogueWithInfo}
+        handleClose={handleCloseDialogueWithInfo}
+      />
 
       <form className='slide' style={{ right: position }}>
         <div className='slideTop'>
