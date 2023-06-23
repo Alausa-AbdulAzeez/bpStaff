@@ -22,28 +22,35 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ADMIN
 alausaabdulazeez@gmail.com
 tayo1
 balogunmicheal3@gmail.com
 Password@123
 
+# FRONTDESK
 {
   "email": "alausaabdulazeez803@gmail.com",
   "password": "Password@32"
 }
 
+# PHLEB
 Username : abdulazeez.alausa@lifeworthhmo.com, 
 Password : Password@32
 
+# MAINLAB1
 Username : alausaabdulazeez1@gmail.com
 Password : Password@32
 
+# QA
 Username : alausa.abdulazeez@gmail.com
 Password : Password@32
 
+# REPORT
 Username : alausa.abdulazeez803@gmail.com
 Password : Password@32
 
-CLIENT
+#CLIENT
 Username :olayinka.oyeyipo@lifeworthhmo.com
 Password : Password123@

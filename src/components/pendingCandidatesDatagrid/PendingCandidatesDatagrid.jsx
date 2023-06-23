@@ -744,10 +744,17 @@ const PendingCandidatesDatagrid = (props) => {
                   <Typography>Candidate Details</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
+                  <Typography>Age -{selectedCandidate?.age} years</Typography>
+                  <Typography>Gender - {selectedCandidate?.gender}</Typography>
+                  <Typography>BMI - {selectedCandidate?.bmi}</Typography>
                   <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
+                    Height - {selectedCandidate?.height}cm
+                  </Typography>
+                  <Typography>
+                    Weight - {selectedCandidate?.weight}kg
+                  </Typography>
+                  <Typography>
+                    bloodPressure - {selectedCandidate?.bloodPressure}mm/Hg
                   </Typography>
                 </AccordionDetails>
               </Accordion>

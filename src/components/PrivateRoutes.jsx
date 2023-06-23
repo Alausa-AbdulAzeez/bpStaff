@@ -20,22 +20,26 @@ const PrivateRoutes = () => {
   useEffect(() => {
     const getAllCandidates = async () => {
       try {
-        const res = await publicRequest.get('/Candidate', {
-          headers: {
-            Accept: '*',
-            Authorization: `Bearer ${token}`,
-          },
-        })
-
-        if (res.data) {
-          console.log(res.data)
-        } else {
-          console.log(res)
-        }
+        await publicRequest
+          .get('/Candidate', {
+            headers: {
+              Accept: '*',
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(async () => {
+            await publicRequest.get('/Candidate/stage', {
+              headers: {
+                Accept: '*',
+                Authorization: `Bearer ${token}`,
+              },
+            })
+          })
       } catch (error) {
         if (
           error?.response?.statusText === 'Unauthorized' ||
-          error?.response?.status === 401
+          error?.response?.status === 401 ||
+          error?.response?.status === 400
         ) {
           dispatch(loggedOut())
 
