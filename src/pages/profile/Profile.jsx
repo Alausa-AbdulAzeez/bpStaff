@@ -3,12 +3,10 @@ import Sidebar from '../../components/sidebar/Sidebar'
 import Topber from '../../components/topbar/Topber'
 import './profile.scss'
 import { useSelector } from 'react-redux'
-import Blur from '../../components/blur/Blur'
 
 const Profile = () => {
   // GET CURRENT LOGGED IN USER
   const { currentUser } = useSelector((state) => state?.user)
-  console.log(currentUser)
   const loggedInUserRole = currentUser?.data?.role
   const { fullName, phoneNumber, email } = currentUser?.data?.profile
 
@@ -36,7 +34,12 @@ const Profile = () => {
               <div className='singleInput'>
                 <p>Email</p>
                 <div className='inputWrapper'>
-                  <input type='email' className='input' value={email} />
+                  <input
+                    type='email'
+                    className='input'
+                    value={email}
+                    disabled
+                  />
                 </div>
               </div>
               <div className='singleInput'>
@@ -58,7 +61,7 @@ const Profile = () => {
                     id='roleSelect'
                     disabled
                     className='input'
-                    value={loggedInUserRole}
+                    defaultValue={loggedInUserRole}
                   >
                     <option value='Admin'>Admin</option>
                     <option value='labScientist'>Lab Scientist</option>
