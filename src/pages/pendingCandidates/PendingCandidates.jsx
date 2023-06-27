@@ -98,6 +98,9 @@ const PendingCandidates = () => {
   // USEEFFECT TO RELOAD THE TABLE DATA AS SEARCH INPUT CHANGES
   useEffect(() => {}, [searchedTableData])
 
+  // USEEFFECT TO RELOAD THE TABLE DATA AS WHEN THE GET PENDIDNG CANDIDATES ENDPOINT IS CALLED
+  useEffect(() => {}, [tableData])
+
   return (
     <>
       <ToastContainer />

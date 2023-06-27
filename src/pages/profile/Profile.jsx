@@ -63,6 +63,7 @@ const Profile = () => {
                     className='input'
                     defaultValue={loggedInUserRole}
                   >
+                    <option value={loggedInUserRole}>{loggedInUserRole}</option>
                     <option value='Admin'>Admin</option>
                     <option value='labScientist'>Lab Scientist</option>
                   </select>

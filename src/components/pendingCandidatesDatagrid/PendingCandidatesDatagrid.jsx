@@ -91,101 +91,6 @@ const PendingCandidatesDatagrid = (props) => {
     setOpen(false)
   }
 
-  // SHOW RESULT DIALOGUE
-  const handleOpenDialogueWithInfo = () => {
-    setOpenDialogueWithInfo(true)
-    console.log('aa')
-  }
-
-  // HIDE RESULT DIALOGUE
-  const handleCloseDialogueWithInfo = () => {
-    setOpenDialogueWithInfo(false)
-  }
-
-  // SET SIDE INFO POSITION
-  const handleSetPosition = () => {
-    setPosition('0')
-  }
-  // END OF SET SIDE INFO POSITION
-
-  // HANDLE ROW CLICK
-  const handleRowClick = (row, e) => {
-    setSelecedCandidate(row?.row)
-    setUserDetails({
-      ...userDetails,
-      clientid: row?.row.clientId,
-      candidateId: row?.row.candidateId,
-    })
-
-    if (e.target.textContent !== 'Authorize') {
-      if (position !== '0') {
-        setPosition('0')
-      }
-    }
-  }
-  // END OF HANDLE ROW CLICK
-
-  // HANDLE ROW CLICK
-  const handleHideSlide = () => {
-    setPosition('-100%')
-  }
-  // END OF HANDLE ROW CLICK
-
-  // FUNCTION TO HANDLE CANDIDATE AUTHORIZATION
-  const authorizeUser = async (params, type) => {
-    if (type === 'main') {
-      console.log(params?.row?.candidateId)
-    }
-    if (type === 'notMain') {
-      console.log(selectedCandidate)
-    }
-    toastId.current = toast('Please wait...', {
-      autoClose: 3000,
-      isLoading: true,
-    })
-
-    let selectedCandidateId =
-      params?.row?.candidateId || selectedCandidate?.candidateId
-    try {
-      await publicRequest
-        .put(
-          `Candidate/Authorize/${selectedCandidateId}`,
-          {},
-          {
-            headers: {
-              Accept: '*',
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        .then(() => {
-          toast.update(toastId.current, {
-            render: 'Candidate can proceed to the next stage',
-            type: 'success',
-            isLoading: false,
-            autoClose: 3000,
-          })
-          props?.setReloadTable((prev) => !prev)
-        })
-    } catch (error) {
-      console.log(error)
-      console.log(error.message)
-      toast.update(toastId.current, {
-        type: 'error',
-        autoClose: 3000,
-        isLoading: false,
-        render: `${
-          error?.response?.data?.title ||
-          error?.response?.data?.description ||
-          error?.message ||
-          'Something went wrong, please try again'
-        }`,
-      })
-    }
-  }
-  // END OF FUNCTION TO HANDLE CANDIDATE AUTHORIZATION
-
   const defaultColumns = [
     {
       field: 'candidateName',
@@ -279,69 +184,83 @@ const PendingCandidatesDatagrid = (props) => {
       break
   }
 
-  // FUNCTION TO SEND RESULT TO QA
-  const saveResult = async () => {
-    const { candidateId } = selectedCandidate
+  // SHOW RESULT DIALOGUE
+  const handleOpenDialogueWithInfo = () => {
+    setOpenDialogueWithInfo(true)
+    console.log('aa')
+  }
+
+  // HIDE RESULT DIALOGUE
+  const handleCloseDialogueWithInfo = () => {
+    setOpenDialogueWithInfo(false)
+  }
+
+  // SET SIDE INFO POSITION
+  const handleSetPosition = () => {
+    setPosition('0')
+  }
+  // END OF SET SIDE INFO POSITION
+
+  // HANDLE ROW CLICK
+  const handleRowClick = (row, e) => {
+    setSelecedCandidate(row?.row)
+    setUserDetails({
+      ...userDetails,
+      clientid: row?.row.clientId,
+      candidateId: row?.row.candidateId,
+    })
+
+    if (e.target.textContent !== 'Authorize') {
+      if (position !== '0') {
+        setPosition('0')
+      }
+    }
+  }
+  // END OF HANDLE ROW CLICK
+
+  // HANDLE ROW CLICK
+  const handleHideSlide = () => {
+    setPosition('-100%')
+  }
+  // END OF HANDLE ROW CLICK
+
+  // FUNCTION TO HANDLE CANDIDATE AUTHORIZATION
+  const authorizeUser = async (params, type) => {
+    if (type === 'main') {
+      console.log(params?.row?.candidateId)
+    }
+    if (type === 'notMain') {
+      console.log(selectedCandidate)
+    }
     toastId.current = toast('Please wait...', {
+      autoClose: 3000,
       isLoading: true,
     })
 
-    const keys = [
-      'candidateId',
-      'testId',
-      'result',
-      'department',
-      'uploadedBy',
-      'clientId',
-    ]
-
+    let selectedCandidateId =
+      params?.row?.candidateId || selectedCandidate?.candidateId
     try {
-      let found
-      for (let index = 0; index < candidateResults.length; index++) {
-        found = keys?.find((key) => {
-          console.log(candidateResults[0]['candidateId'])
-          return (
-            candidateResults[index][key] === '' ||
-            candidateResults[index][key] === undefined
-          )
-        })
-      }
-
-      if (!found) {
-        await publicRequest
-          .post(`/Result/create`, candidateResults, {
+      await publicRequest
+        .put(
+          `Candidate/Authorize/${selectedCandidateId}`,
+          {},
+          {
             headers: {
               Accept: '*',
               Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
+          }
+        )
+        .then(() => props?.setReloadTable((prev) => !prev))
+        .then(() => {
+          toast.update(toastId.current, {
+            render: 'Candidate can proceed to the next stage',
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
           })
-          .then(() => {
-            publicRequest.put(
-              `Candidate/Authorize/${candidateId}`,
-              {},
-              {
-                headers: {
-                  Accept: '*',
-                  Authorization: `Bearer ${token}`,
-                  'Content-Type': 'application/json',
-                },
-              }
-            )
-          })
-          .then(() => {
-            toast.update(toastId.current, {
-              render: 'Result sent to QA for review',
-              type: 'success',
-              isLoading: false,
-              autoClose: 3000,
-            })
-            props?.setReloadTable((prev) => !prev)
-          })
-      } else {
-        console.log(found)
-        throw Error(`Please fill all fields, the "${found}" field is empty`)
-      }
+        })
     } catch (error) {
       console.log(error)
       console.log(error.message)
@@ -358,53 +277,7 @@ const PendingCandidatesDatagrid = (props) => {
       })
     }
   }
-  // END OF FUNCTION TO SEND RESULT TO QA
-
-  // FUNCTION TO SEND RESULT TO QA
-  const approveResult = async () => {
-    const { candidateId } = selectedCandidate
-    toastId.current = toast('Please wait...', {
-      isLoading: true,
-    })
-
-    try {
-      await publicRequest
-        .put(
-          `Candidate/Authorize/${candidateId}`,
-          {},
-          {
-            headers: {
-              Accept: '*',
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-
-        .then(() => {
-          toast.update(toastId.current, {
-            render: 'Result sent to QA for review',
-            type: 'success',
-            isLoading: false,
-            autoClose: 3000,
-          })
-          props?.setReloadTable((prev) => !prev)
-        })
-    } catch (error) {
-      toast.update(toastId.current, {
-        type: 'error',
-        autoClose: 3000,
-        isLoading: false,
-        render: `${
-          error?.response?.data?.title ||
-          error?.response?.data?.description ||
-          error?.message ||
-          'Something went wrong, please try again'
-        }`,
-      })
-    }
-  }
-  // END OF FUNCTION TO SEND RESULT TO QA
+  // END OF FUNCTION TO HANDLE CANDIDATE AUTHORIZATION
 
   // FUNCTION TO SEND UPDATED USER DETAILS TO THE BACKEND (PHLEB)
   const updatedUserDetails = async () => {
@@ -456,6 +329,7 @@ const PendingCandidatesDatagrid = (props) => {
               }
             )
           })
+          .then(() => props?.setReloadTable((prev) => !prev))
           .then(() => {
             toast.update(toastId.current, {
               render: 'Candidate can proceed to the next stage',
@@ -463,7 +337,6 @@ const PendingCandidatesDatagrid = (props) => {
               isLoading: false,
               autoClose: 3000,
             })
-            props?.setReloadTable((prev) => !prev)
           })
       } else {
         console.log(found)
@@ -486,6 +359,132 @@ const PendingCandidatesDatagrid = (props) => {
     }
   }
   // END OF FUNCTION TO SEND UPDATED USER DETAILS TO THE BACKEND (PHLEB)
+
+  // FUNCTION TO SEND RESULT TO QA
+  const saveResult = async () => {
+    const { candidateId } = selectedCandidate
+    toastId.current = toast('Please wait...', {
+      isLoading: true,
+    })
+
+    const keys = [
+      'candidateId',
+      'testId',
+      'result',
+      'department',
+      'uploadedBy',
+      'clientId',
+    ]
+
+    try {
+      let found
+      for (let index = 0; index < candidateResults.length; index++) {
+        found = keys?.find((key) => {
+          console.log(candidateResults[0]['candidateId'])
+          return (
+            candidateResults[index][key] === '' ||
+            candidateResults[index][key] === undefined
+          )
+        })
+      }
+
+      if (!found) {
+        await publicRequest
+          .post(`/Result/create`, candidateResults, {
+            headers: {
+              Accept: '*',
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          })
+          .then(() => {
+            publicRequest.put(
+              `Candidate/Authorize/${candidateId}`,
+              {},
+              {
+                headers: {
+                  Accept: '*',
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'application/json',
+                },
+              }
+            )
+          })
+          .then(() => props?.setReloadTable((prev) => !prev))
+          .then(() => {
+            toast.update(toastId.current, {
+              render: 'Result sent to QA for review',
+              type: 'success',
+              isLoading: false,
+              autoClose: 3000,
+            })
+          })
+      } else {
+        console.log(found)
+        throw Error(`Please fill all fields, the "${found}" field is empty`)
+      }
+    } catch (error) {
+      console.log(error)
+      console.log(error.message)
+      toast.update(toastId.current, {
+        type: 'error',
+        autoClose: 3000,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
+          error?.message ||
+          'Something went wrong, please try again'
+        }`,
+      })
+    }
+  }
+  // END OF FUNCTION TO SEND RESULT TO QA
+
+  // FUNCTION TO APPROVE RESULT BY QA
+  const approveResult = async () => {
+    const { candidateId } = selectedCandidate
+    toastId.current = toast('Please wait...', {
+      isLoading: true,
+    })
+
+    try {
+      await publicRequest
+        .put(
+          `Candidate/Authorize/${candidateId}`,
+          {},
+          {
+            headers: {
+              Accept: '*',
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(() => props?.setReloadTable((prev) => !prev))
+        .then(() => {
+          toast.update(toastId.current, {
+            render: 'Result sent to QA for review',
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+          })
+        })
+    } catch (error) {
+      toast.update(toastId.current, {
+        type: 'error',
+        autoClose: 3000,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
+          error?.message ||
+          'Something went wrong, please try again'
+        }`,
+      })
+    }
+  }
+  // END OF FUNCTION TO APPROVE RESULT BY QA
 
   // HANDLE FUNCTIONS TO CALL BASED ON BUTTON CLICKED
   const handleBtnClick = (e) => {
