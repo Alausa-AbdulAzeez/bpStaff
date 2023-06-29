@@ -877,10 +877,16 @@ const PendingCandidatesDatagrid = (props) => {
                     <TextField
                       key={index}
                       id={candidateResult?.id}
-                      label={candidateResult?.test}
+                      label={candidateResult?.testName}
                       type="search"
-                      className="candidateName basicCandidateDetailsInput"
-                      onChange={(e) => handleTestInputChange(e, candidateTest)}
+                      className="candidateResultInput"
+                      disabled
+                      value={
+                        candidateResult?.result
+                          ? candidateResult?.result
+                          : "Empty result"
+                      }
+                      // onChange={(e) => handleTestInputChange(e, candidateTest)}
                     />
                   );
                 })}
