@@ -1,29 +1,24 @@
-import * as React from 'react'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
+import * as React from "react";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 // eslint-disable-next-line react/prop-types
 export default function FormDialog({
-  // eslint-disable-next-line react/prop-types
   open,
-  // eslint-disable-next-line react/prop-types
   handleClose,
+  rejectResult,
+  setReasonForRejection,
 }) {
-  console.log(open)
-  // const [openDialogueWithInfo, setOpenDialogueWithInfo] = React.useState(false)
-
-  // const handleOpenDialogueWithInfo = () => {
-  //   setOpenDialogueWithInfo(true)
-  // }
-
-  // const handleCloseDialogueWithInfo = () => {
-  //   setOpenDialogueWithInfo(false)
-  // }
+  // FUNCTION TO HANDLE REJECTION REASON CHANGE
+  const handleRejectionReasonChange = (e) => {
+    setReasonForRejection(e.target?.value);
+  };
+  // END OF FUNCTION TO HANDLE REJECTION REASON CHANGE
 
   return (
     <div>
@@ -35,19 +30,22 @@ export default function FormDialog({
           </DialogContentText>
           <TextField
             autoFocus
-            margin='dense'
-            id='name'
-            label='Reason for rejection'
-            type='text'
+            margin="dense"
+            id="name"
+            label="Reason for rejection"
+            multiline
+            maxRows={4}
+            type="text"
             fullWidth
-            variant='standard'
+            variant="standard"
+            onChange={(e) => handleRejectionReasonChange(e)}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Confirm</Button>
+          <Button onClick={rejectResult}>Confirm</Button>
         </DialogActions>
       </Dialog>
     </div>
-  )
+  );
 }

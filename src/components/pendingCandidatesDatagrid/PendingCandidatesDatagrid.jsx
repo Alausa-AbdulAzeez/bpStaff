@@ -28,6 +28,9 @@ const PendingCandidatesDatagrid = (props) => {
   // RESULT DIALOGUE BACKDROP
   const [openDialogueWithInfo, setOpenDialogueWithInfo] = React.useState(false);
 
+  // REJECTION DETAILS
+  const [reasonForRejection, setReasonForRejection] = React.useState("");
+
   // SELECTED CANDIDATE TESTS (FOR MAINLAB)
   const [candidateTests, setCandidateTests] = useState([]);
   const [loadingCandedateTests, setLoadingCandedateTests] = useState(false);
@@ -497,6 +500,60 @@ const PendingCandidatesDatagrid = (props) => {
   };
   // END OF FUNCTION TO APPROVE RESULT BY QA
 
+  // FUNCTION TO REJECT RESULT BY QA
+  const rejectResult = async () => {
+    let rejectedResultDetails = {};
+    console.log(selectedCandidate);
+    console.log(candidateSubmittedResults);
+    const ids = candidateSubmittedResults.map(
+      (candidateSubmittedResult) => candidateSubmittedResult?.testName
+    );
+
+    rejectedResultDetails = { id: ids, rejectionReason: reasonForRejection };
+    console.log(rejectedResultDetails);
+    // toastId.current = toast("Please wait...", {
+    //   autoClose: 3000,
+    //   isLoading: true,
+    // });
+
+    // try {
+    //   await publicRequest
+    //     .post(
+    //       `Result/reject/`,
+    //       {},
+    //       {
+    //         headers: {
+    //           Accept: "*",
+    //           Authorization: `Bearer ${token}`,
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     )
+    //     .then(() => props?.setReloadTable((prev) => !prev))
+    //     .then(() => {
+    //       toast.update(toastId.current, {
+    //         render: "Candidate result has been accepted",
+    //         type: "success",
+    //         isLoading: false,
+    //         autoClose: 3000,
+    //       });
+    //     });
+    // } catch (error) {
+    //   toast.update(toastId.current, {
+    //     type: "error",
+    //     autoClose: 3000,
+    //     isLoading: false,
+    //     render: `${
+    //       error?.response?.data?.title ||
+    //       error?.response?.data?.description ||
+    //       error?.message ||
+    //       "Something went wrong, please try again"
+    //     }`,
+    //   });
+    // }
+  };
+  // END OF FUNCTION TO REJECT RESULT BY QA
+
   // HANDLE FUNCTIONS TO CALL BASED ON BUTTON CLICKED
   const handleBtnClick = (e) => {
     e.preventDefault();
@@ -691,6 +748,8 @@ const PendingCandidatesDatagrid = (props) => {
       <FormDialog
         open={openDialogueWithInfo}
         handleClose={handleCloseDialogueWithInfo}
+        rejectResult={rejectResult}
+        setReasonForRejection={setReasonForRejection}
       />
 
       <form className="slide" style={{ right: position }}>
