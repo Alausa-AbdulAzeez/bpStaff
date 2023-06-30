@@ -265,7 +265,12 @@ const PendingCandidatesDatagrid = (props) => {
             },
           }
         )
-        .then(() => props?.setReloadTable((prev) => !prev))
+        .then(() => {
+          setTimeout(() => {
+            props?.getPendingCandidates()
+          }, 2000)
+        })
+        // .then(() => props?.setReloadTable((prev) => !prev))
         .then(() => {
           toast.update(toastId.current, {
             render: 'Candidate can proceed to the next stage',
@@ -342,7 +347,12 @@ const PendingCandidatesDatagrid = (props) => {
               }
             )
           })
-          .then(() => props?.setReloadTable((prev) => !prev))
+          .then(() => {
+            setTimeout(() => {
+              props?.getPendingCandidates()
+            }, 2000)
+          })
+          // .then(() => props?.setReloadTable((prev) => !prev))
           .then(() => {
             toast.update(toastId.current, {
               render: 'Candidate can proceed to the next stage',
@@ -402,6 +412,7 @@ const PendingCandidatesDatagrid = (props) => {
       }
 
       if (!found) {
+        console.log(candidateResults)
         await publicRequest
           .post(`/Result/create`, candidateResults, {
             headers: {
@@ -423,7 +434,8 @@ const PendingCandidatesDatagrid = (props) => {
               }
             )
           })
-          .then(() => props?.setReloadTable((prev) => !prev))
+          .then(() => props?.getPendingCandidates())
+          // .then(() => props?.setReloadTable((prev) => !prev))
           .then(() => {
             toast.update(toastId.current, {
               render: 'Result sent to QA for review',
@@ -474,7 +486,8 @@ const PendingCandidatesDatagrid = (props) => {
             },
           }
         )
-        .then(() => props?.setReloadTable((prev) => !prev))
+        .then(() => props?.getPendingCandidates())
+        // .then(() => props?.setReloadTable((prev) => !prev))
         .then(() => {
           toast.update(toastId.current, {
             render: 'Result sent to QA for review',
@@ -528,7 +541,8 @@ const PendingCandidatesDatagrid = (props) => {
               'Content-Type': 'application/json',
             },
           })
-          .then(() => props?.setReloadTable((prev) => !prev))
+          .then(() => props?.getPendingCandidates())
+          // .then(() => props?.setReloadTable((prev) => !prev))
           .then(() => {
             toast.update(toastId.current, {
               render: 'Candidate result has been accepted',
@@ -628,6 +642,7 @@ const PendingCandidatesDatagrid = (props) => {
           ? { ...candidateResult, result: e.target.value }
           : candidateResult
       })
+      console.log(candidateResults)
       setCandidateResults(candidateResults)
     }
   }

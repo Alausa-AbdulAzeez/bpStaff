@@ -54,3 +54,31 @@ Password : Password@32
 #CLIENT
 Username :olayinka.oyeyipo@lifeworthhmo.com
 Password : Password123@
+
+#CREATE RESULT
+[
+  {
+    "candidateId": 29,
+    "testId": 9,
+    "result": "-ve",
+    "department": 3,
+    "uploadedBy": "Abdulazeez3",
+    "clientId": 1
+  },
+  {
+    "candidateId": 29,
+    "testId": 10,
+    "result": "-ve",
+    "department": 3,
+    "uploadedBy": "Abdulazeez3",
+    "clientId": 1
+  },
+  {
+    "candidateId": 29,
+    "testId": 11,
+    "result": "-ve",
+    "department": 3,
+    "uploadedBy": "Abdulazeez3",
+    "clientId": 1
+  }
+]

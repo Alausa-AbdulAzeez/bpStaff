@@ -128,6 +128,7 @@ const PendingCandidates = () => {
                   userDetails={currentUser}
                   tableData={searchedTableData}
                   setReloadTable={setReloadTable}
+                  getPendingCandidates={getPendingCandidates}
                 />
               )}
             </div>
