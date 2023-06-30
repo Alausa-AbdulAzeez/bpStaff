@@ -40,12 +40,6 @@ const PendingCandidatesDatagrid = (props) => {
   const [candidateSubmittedResults, setCandidateSubmittedResults] = useState(
     []
   );
-  const [
-    loadingCandedateSubmittedResults,
-    setLoadingCandedateSubmittedResults,
-  ] = useState(false);
-  const [candedateSubmittedResultsError, setCandedateSubmittedResultsError] =
-    useState(false);
 
   // SELECTED CANDIDATE RESULTS
   let [candidateResults, setCandidateResults] = useState([]);
@@ -470,34 +464,36 @@ const PendingCandidatesDatagrid = (props) => {
 
   // FUNCTION TO APPROVE RESULT BY QA
   const approveResult = async () => {
-    const { candidateId } = selectedCandidate;
+    // const { candidateId } = selectedCandidate;
     toastId.current = toast("Please wait...", {
       isLoading: true,
     });
 
     try {
-      await publicRequest
-        .put(
-          `Candidate/Authorize/${candidateId}`,
-          {},
-          {
+      if (selectedCandidateResults?.length > 0) {
+        await publicRequest
+          .post(`Result/approve`, selectedCandidateResults, {
             headers: {
               Accept: "*",
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-          }
-        )
-        .then(() => props?.getPendingCandidates())
-        // .then(() => props?.setReloadTable((prev) => !prev))
-        .then(() => {
-          toast.update(toastId.current, {
-            render: "Result sent to QA for review",
-            type: "success",
-            isLoading: false,
-            autoClose: 3000,
+          })
+          .then(() => {
+            return props?.getPendingCandidates();
+          })
+          // .then(() => props?.setReloadTable((prev) => !prev))
+          .then(() => {
+            toast.update(toastId.current, {
+              render: "Candidate result has been accepted",
+              type: "success",
+              isLoading: false,
+              autoClose: 3000,
+            });
           });
-        });
+      } else {
+        throw new Error("Please select the result to be approved.");
+      }
     } catch (error) {
       toast.update(toastId.current, {
         type: "error",
@@ -511,6 +507,43 @@ const PendingCandidatesDatagrid = (props) => {
         }`,
       });
     }
+
+    // try {
+    //   await publicRequest
+    //     .put(
+    //       `Candidate/Authorize/${candidateId}`,
+    //       {},
+    //       {
+    //         headers: {
+    //           Accept: "*",
+    //           Authorization: `Bearer ${token}`,
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     )
+    //     .then(() => props?.getPendingCandidates())
+    //     // .then(() => props?.setReloadTable((prev) => !prev))
+    //     .then(() => {
+    //       toast.update(toastId.current, {
+    //         render: "Result sent to QA for review",
+    //         type: "success",
+    //         isLoading: false,
+    //         autoClose: 3000,
+    //       });
+    //     });
+    // } catch (error) {
+    //   toast.update(toastId.current, {
+    //     type: "error",
+    //     autoClose: 3000,
+    //     isLoading: false,
+    //     render: `${
+    //       error?.response?.data?.title ||
+    //       error?.response?.data?.description ||
+    //       error?.message ||
+    //       "Something went wrong, please try again"
+    //     }`,
+    //   });
+    // }
   };
   // END OF FUNCTION TO APPROVE RESULT BY QA
 
@@ -531,7 +564,6 @@ const PendingCandidatesDatagrid = (props) => {
       autoClose: 3000,
       isLoading: true,
     });
-    console.log(rejectedResultDetails);
 
     try {
       if (reasonForRejection && selectedCandidateResults?.length > 0) {
@@ -958,10 +990,7 @@ const PendingCandidatesDatagrid = (props) => {
                   pageSize={5}
                   rowsPerPageOptions={[5]}
                   checkboxSelection
-                  // disableSelectionOnClick
-                  // onRowClick={(row) => console.log(row)}
                   getRowId={(row) => row?.resultId}
-                  // experimentalFeatures={{ newEditingApi: true }}
                   onRowSelectionModelChange={(result) => {
                     console.log(result);
                     return setSelectedCandidateResults(result);
