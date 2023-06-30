@@ -47,6 +47,7 @@ const PendingCandidatesDatagrid = (props) => {
 
   // SELECTED CANDIDATE RESULTS
   let [candidateResults, setCandidateResults] = useState([])
+  let [selectedCandidateResults, setSelectedCandidateResults] = useState([])
 
   // BMI
   const [BMI, setBMI] = useState('')
@@ -502,18 +503,23 @@ const PendingCandidatesDatagrid = (props) => {
   const rejectResult = async () => {
     let rejectedResultDetails = {}
 
-    const ids = candidateSubmittedResults.map(
-      (candidateSubmittedResult) => candidateSubmittedResult?.resultId
-    )
+    // const ids = candidateSubmittedResults.map(
+    //   (candidateSubmittedResult) => candidateSubmittedResult?.resultId
+    // )
 
-    rejectedResultDetails = { id: ids, rejectionReason: reasonForRejection }
+    // rejectedResultDetails = { id: ids, rejectionReason: reasonForRejection }
+    rejectedResultDetails = {
+      id: selectedCandidateResults,
+      rejectionReason: reasonForRejection,
+    }
     toastId.current = toast('Please wait...', {
       autoClose: 3000,
       isLoading: true,
     })
+    console.log(rejectedResultDetails)
 
     try {
-      if (reasonForRejection) {
+      if (reasonForRejection && selectedCandidateResults.length > 0) {
         await publicRequest
           .post(`Result/reject/`, rejectedResultDetails, {
             headers: {
@@ -532,7 +538,9 @@ const PendingCandidatesDatagrid = (props) => {
             })
           })
       } else {
-        throw new Error('Please add the reason for rejecting this result.')
+        throw new Error(
+          'Please select a result and add the reason for rejecting this result.'
+        )
       }
     } catch (error) {
       toast.update(toastId.current, {
@@ -737,7 +745,31 @@ const PendingCandidatesDatagrid = (props) => {
 
   // USEEFFECT TO UPDATE CANDIDATE TESTS AND RESULT
   useEffect(() => {}, [candidateTests, candidateSubmittedResults])
+  const resultColumn = [
+    // { field: 'id', headerName: 'ID', width: 90 },
+    {
+      field: 'testName',
+      headerName: 'Test name',
+      width: 150,
+    },
+    {
+      field: 'result',
+      headerName: 'Result',
+      width: 150,
+    },
+  ]
 
+  const rowss = [
+    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
+    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+  ]
   return (
     <div className='datagridWraper'>
       <SimpleBackdrop open={open} handleClose={handleClose} />
@@ -921,30 +953,53 @@ const PendingCandidatesDatagrid = (props) => {
           //   </Accordion>
           // </div>
           <div className='qaResultsWrapper'>
-            {loadingCandedateSubmittedResults || candedateSubmittedResultsError
-              ? loadingCandedateSubmittedResults
-                ? 'Loading...'
-                : 'An error occured, please try again'
-              : candidateSubmittedResults?.length === 0
-              ? 'No result for selected candidate'
-              : candidateSubmittedResults?.map((candidateResult, index) => {
-                  return (
-                    <TextField
-                      key={index}
-                      id={candidateResult?.id}
-                      label={candidateResult?.testName}
-                      type='search'
-                      className='candidateResultInput'
-                      disabled
-                      value={
-                        candidateResult?.result
-                          ? candidateResult?.result
-                          : 'Empty result'
-                      }
-                      // onChange={(e) => handleTestInputChange(e, candidateTest)}
-                    />
-                  )
-                })}
+            {
+              loadingCandedateSubmittedResults ||
+              candedateSubmittedResultsError ? (
+                loadingCandedateSubmittedResults ? (
+                  'Loading...'
+                ) : (
+                  'An error occured, please try again'
+                )
+              ) : candidateSubmittedResults?.length === 0 ? (
+                'No result for selected candidate'
+              ) : (
+                <Box sx={{ height: 300, width: '100%' }}>
+                  <DataGrid
+                    rows={candidateSubmittedResults}
+                    columns={resultColumn}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    checkboxSelection
+                    // disableSelectionOnClick
+                    // onRowClick={(row) => console.log(row)}
+                    getRowId={(row) => row?.resultId}
+                    // experimentalFeatures={{ newEditingApi: true }}
+                    onRowSelectionModelChange={(result) => {
+                      console.log(result)
+                      return setSelectedCandidateResults(result)
+                    }}
+                  />
+                </Box>
+              )
+              // candidateSubmittedResults?.map((candidateResult, index) => {
+              //     return (
+              //       <TextField
+              //         key={index}
+              //         id={candidateResult?.id}
+              //         label={candidateResult?.testName}
+              //         type='search'
+              //         className='candidateResultInput'
+              //         disabled
+              //         value={
+              //           candidateResult?.result
+              //             ? candidateResult?.result
+              //             : 'Empty result'
+              //         }
+              //       />
+              //     )
+              //   })
+            }
           </div>
         )}
         <div className='bottomButtons'>

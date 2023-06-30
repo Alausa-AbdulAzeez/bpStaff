@@ -10,19 +10,13 @@ import { publicRequest } from '../../functions/requestMethods'
 import { toast } from 'react-toastify'
 
 const RejectedResultsDatagrid = (props) => {
-  // SELECTED CANDIDATE TESTS (FOR MAINLAB)
-  const [candidateTests, setCandidateTests] = useState([])
-  const [loadingCandedateTests, setLoadingCandedateTests] = useState(false)
-  const [candedateTestsError, setCandedateTestsError] = useState(false)
-
   // SELECTED CANDIDATE RESULTS
   let [candidateResults, setCandidateResults] = useState([])
 
-  // BMI
-  const [BMI, setBMI] = useState('')
-
-  // TOAST ID
-  const toastId = useRef(null)
+  // SELECTED CANDIDATE RESULTS TO BE UPDATED
+  let [candidateResultsTobeUpdated, setCandidateResultsTobeUpdated] = useState(
+    []
+  )
 
   // SELECTED CANDIDATE AFTER ROW CLICK
   const [selectedCandidate, setSelecedCandidate] = useState({})
@@ -134,33 +128,6 @@ const RejectedResultsDatagrid = (props) => {
         break
     }
   }
-  // FUNCTION TO CALCULATE BMI
-  const calculateBmi = () => {
-    let height = Number(userDetails?.height)
-    let weight = Number(userDetails?.weight)
-    let bmi
-    let heightInMetres
-
-    // CHECK IF HEIGHT AND WEIGHT ARE AVAILABLE
-    userDetails?.height && userDetails?.weight
-
-    // convert Number( to) metres
-    heightInMetres = Number(height) / 100
-
-    bmi = weight / Math.pow(heightInMetres, 2)
-    setUserDetails({ ...userDetails, bmi: bmi?.toString() })
-
-    setBMI(bmi)
-  }
-  // END OF FUNCTION TO CALCULATE BMI
-
-  // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
-  const handleCandidatePropertyChange = (e, dataType) => {
-    setUserDetails({ ...userDetails, [dataType]: e.target.value })
-    console.log(userDetails)
-  }
-
-  // END OF FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
 
   // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
   const handleTestInputChange = (e, data) => {
@@ -183,11 +150,6 @@ const RejectedResultsDatagrid = (props) => {
 
   // END OF FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
 
-  // use effect to update bmi
-  useEffect(() => {
-    calculateBmi()
-  }, [userDetails?.height, userDetails?.weight])
-
   // USEEFFECT TO UPDATE SELECTED ROW
 
   // AS A CANDIDATE IS SELECTED, GET IT'S TESTS AND CREATE A RESULTS LIST
@@ -201,9 +163,6 @@ const RejectedResultsDatagrid = (props) => {
 
   // USEEFFECT TO UPDATE USER DETAILS
   useEffect(() => {}, [userDetails])
-
-  // USEEFFECT TO UPDATE CANDIDATE TESTS AND RESULT
-  useEffect(() => {}, [candidateTests])
 
   return (
     <div className='datagridWraper'>
@@ -230,26 +189,20 @@ const RejectedResultsDatagrid = (props) => {
         {loggedInUserRole === 'MainLab1' && (
           <>
             <div className='basicDetailsWrapper'>
-              {loadingCandedateTests || candedateTestsError
-                ? loadingCandedateTests
-                  ? 'Loading...'
-                  : 'An error occured, please try again'
-                : candidateTests?.length === 0
-                ? 'No test for selected candidate'
-                : candidateTests?.map((candidateTest, index) => {
-                    return (
-                      <TextField
-                        key={index}
-                        id={candidateTest?.id}
-                        label={candidateTest?.test}
-                        type='search'
-                        className='candidateName basicCandidateDetailsInput'
-                        onChange={(e) =>
-                          handleTestInputChange(e, candidateTest)
-                        }
-                      />
-                    )
-                  })}
+              {candidateResults?.map((candidateResult, index) => {
+                return (
+                  <TextField
+                    key={index}
+                    id={candidateResult?.resultId}
+                    label={candidateResult?.testName}
+                    type='search'
+                    value={candidateResult?.result}
+                    className='candidateName basicCandidateDetailsInput'
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => handleTestInputChange(e, candidateResult)}
+                  />
+                )
+              })}
             </div>
           </>
         )}
@@ -278,7 +231,7 @@ const RejectedResultsDatagrid = (props) => {
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           rowsPerPageOptions={[5, 10, 20]}
           onRowClick={(row, e) => handleRowClick(row, e)}
-          getRowId={(row) => row}
+          getRowId={(row) => row?.candidateName + row?.clientName}
           pagination
           rowSelection={false}
         />
