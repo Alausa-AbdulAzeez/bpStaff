@@ -10,6 +10,7 @@ import Loading from '../../components/loading/Loading'
 import { publicRequest } from '../../functions/requestMethods'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import RejectedResultsDatagrid from '../../components/rejectedResultsDatagrid/RejectedResultsDatagrid'
 
 const RejectedResults = () => {
   // GET CURRENT LOGGED IN USER
@@ -35,7 +36,7 @@ const RejectedResults = () => {
   const getRejectedResults = async () => {
     try {
       setLoading(true)
-      const res = await publicRequest.get('/Candidate/stage', {
+      const res = await publicRequest.get('Result/rejected', {
         headers: {
           Accept: '*',
           Authorization: `Bearer ${token}`,
@@ -124,7 +125,7 @@ const RejectedResults = () => {
                   <ErrorComponent errorMessage={errorMessage && errorMessage} />
                 )
               ) : (
-                <PendingCandidatesDatagrid
+                <RejectedResultsDatagrid
                   userDetails={currentUser}
                   tableData={searchedTableData}
                   setReloadTable={setReloadTable}
