@@ -8,250 +8,252 @@ import {
   Select,
   TextField,
   Typography,
-} from '@mui/material'
-import { Box } from '@mui/system'
-import { DataGrid } from '@mui/x-data-grid'
-import React, { useEffect, useRef, useState } from 'react'
-import { MdCancel } from 'react-icons/md'
-import { useSelector } from 'react-redux'
-import SimpleBackdrop from '../backdrop/Backdrop'
-import './pendingCandidatesDatagrid.scss'
-import { FaAngleDown } from 'react-icons/fa'
+} from "@mui/material";
+import { Box } from "@mui/system";
+import { DataGrid } from "@mui/x-data-grid";
+import React, { useEffect, useRef, useState } from "react";
+import { MdCancel } from "react-icons/md";
+import { useSelector } from "react-redux";
+import SimpleBackdrop from "../backdrop/Backdrop";
+import "./pendingCandidatesDatagrid.scss";
+import { FaAngleDown } from "react-icons/fa";
 import {
   publicRequest,
   publicRequestWithHeaders,
-} from '../../functions/requestMethods'
-import { toast } from 'react-toastify'
-import FormDialog from '../DialogueWithInfo'
+} from "../../functions/requestMethods";
+import { toast } from "react-toastify";
+import FormDialog from "../DialogueWithInfo";
 
 const PendingCandidatesDatagrid = (props) => {
   // RESULT DIALOGUE BACKDROP
-  const [openDialogueWithInfo, setOpenDialogueWithInfo] = React.useState(false)
+  const [openDialogueWithInfo, setOpenDialogueWithInfo] = React.useState(false);
 
   // REJECTION DETAILS
-  const [reasonForRejection, setReasonForRejection] = React.useState('')
+  const [reasonForRejection, setReasonForRejection] = React.useState("");
 
   // SELECTED CANDIDATE TESTS (FOR MAINLAB)
-  const [candidateTests, setCandidateTests] = useState([])
-  const [loadingCandedateTests, setLoadingCandedateTests] = useState(false)
-  const [candedateTestsError, setCandedateTestsError] = useState(false)
+  const [candidateTests, setCandidateTests] = useState([]);
+  const [loadingCandedateTests, setLoadingCandedateTests] = useState(false);
+  const [candedateTestsError, setCandedateTestsError] = useState(false);
 
   // SELECTED CANDIDATE SUBMITTED RESULTS (FOR QA)
-  const [candidateSubmittedResults, setCandidateSubmittedResults] = useState([])
+  const [candidateSubmittedResults, setCandidateSubmittedResults] = useState(
+    []
+  );
   const [
     loadingCandedateSubmittedResults,
     setLoadingCandedateSubmittedResults,
-  ] = useState(false)
+  ] = useState(false);
   const [candedateSubmittedResultsError, setCandedateSubmittedResultsError] =
-    useState(false)
+    useState(false);
 
   // SELECTED CANDIDATE RESULTS
-  let [candidateResults, setCandidateResults] = useState([])
-  let [selectedCandidateResults, setSelectedCandidateResults] = useState([])
+  let [candidateResults, setCandidateResults] = useState([]);
+  let [selectedCandidateResults, setSelectedCandidateResults] = useState([]);
 
   // BMI
-  const [BMI, setBMI] = useState('')
+  const [BMI, setBMI] = useState("");
 
   // TOAST ID
-  const toastId = useRef(null)
+  const toastId = useRef(null);
 
   // SELECTED CANDIDATE AFTER ROW CLICK
-  const [selectedCandidate, setSelecedCandidate] = useState({})
+  const [selectedCandidate, setSelecedCandidate] = useState({});
 
   // USER DETAILS
   const [userDetails, setUserDetails] = useState({
-    candidateId: '',
-    clientid: '',
-    height: '',
-    bloodPressure: '',
-    weight: '',
-    age: '',
-    bmi: '',
-    gender: '',
+    candidateId: "",
+    clientid: "",
+    height: "",
+    bloodPressure: "",
+    weight: "",
+    age: "",
+    bmi: "",
+    gender: "",
     // temperature: "",
-    state: '',
-  })
+    state: "",
+  });
 
   // TABLE ROWS PER PAGE
-  const [pageSize, setPageSize] = useState(5)
+  const [pageSize, setPageSize] = useState(5);
 
   // INITIAL POSITION OF SLIDE
-  const [position, setPosition] = useState('-100%')
+  const [position, setPosition] = useState("-100%");
 
   // TABLE DATA
-  const tableData = props?.tableData
-  let rows
-  let columns
-  let title
+  const tableData = props?.tableData;
+  let rows;
+  let columns;
+  let title;
 
   // SLIDE BUTTONS
-  let leftBtnText
-  let rightBtnText
+  let leftBtnText;
+  let rightBtnText;
 
   // LOGGED IN USER RLOE
-  const loggedInUserRole = props.userDetails?.data?.role
+  const loggedInUserRole = props.userDetails?.data?.role;
 
   // LOGGED IN USER
-  const userName = props.userDetails?.data?.profile?.fullName
+  const userName = props.userDetails?.data?.profile?.fullName;
 
   // LOGGED IN USER TOKEN
-  const { token } = useSelector((state) => state?.user?.currentUser?.data)
+  const { token } = useSelector((state) => state?.user?.currentUser?.data);
 
   // LOGOUT BACKDROP
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const defaultColumns = [
     {
-      field: 'candidateName',
-      headerName: 'Candidate Name',
+      field: "candidateName",
+      headerName: "Candidate Name",
       width: 250,
       editable: false,
     },
-    { field: 'clientName', headerName: 'Client Name', width: 250 },
+    { field: "clientName", headerName: "Client Name", width: 250 },
     {
-      field: 'testcategory',
-      headerName: 'Test Category',
+      field: "testcategory",
+      headerName: "Test Category",
       width: 200,
       editable: false,
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       width: 130,
       renderCell: (params) => {
         return (
           <>
-            {loggedInUserRole === 'Reception' && (
+            {loggedInUserRole === "Reception" && (
               <div
-                className='notAuthorized'
-                onClick={() => authorizeUser(params, 'main')}
+                className="notAuthorized"
+                onClick={() => authorizeUser(params, "main")}
               >
                 Authorize
               </div>
             )}
-            {(loggedInUserRole === 'Phlebotomy' ||
-              loggedInUserRole === 'MainLab1' ||
-              loggedInUserRole === 'Quality assurance') && (
-              <div className='notAuthorized'>View</div>
+            {(loggedInUserRole === "Phlebotomy" ||
+              loggedInUserRole === "MainLab1" ||
+              loggedInUserRole === "Quality assurance") && (
+              <div className="notAuthorized">View</div>
             )}
           </>
-        )
+        );
       },
     },
 
     {
-      field: 'role',
-      headerName: 'Attended to',
+      field: "role",
+      headerName: "Attended to",
       width: 150,
       renderCell: () => {
         return (
           <>
-            <div className='pendingCandidatesNotAttendedTo'>False</div>
+            <div className="pendingCandidatesNotAttendedTo">False</div>
           </>
-        )
+        );
       },
     },
-  ]
+  ];
 
   switch (loggedInUserRole) {
-    case 'Reception':
-      rows = tableData
-      columns = defaultColumns
-      title = 'Pending Candidates'
-      rightBtnText = 'Authorize'
-      break
+    case "Reception":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Pending Candidates";
+      rightBtnText = "Authorize";
+      break;
 
-    case 'Phlebotomy':
-      rows = tableData
-      columns = defaultColumns
-      title = 'Pending Candidates'
-      rightBtnText = 'Save Details'
-      break
-    case 'MainLab1':
-      rows = tableData
-      columns = defaultColumns
-      title = 'Pending Candidates'
-      rightBtnText = 'Save Result'
-      break
-    case 'Quality assurance':
-      rows = tableData
-      columns = defaultColumns
-      title = 'Candidates'
-      rightBtnText = 'Approve'
-      leftBtnText = 'Reject'
-      break
+    case "Phlebotomy":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Pending Candidates";
+      rightBtnText = "Save Details";
+      break;
+    case "MainLab1":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Pending Candidates";
+      rightBtnText = "Save Result";
+      break;
+    case "Quality assurance":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Candidates";
+      rightBtnText = "Approve";
+      leftBtnText = "Reject";
+      break;
 
-    case 'Report':
-      rows = tableData
-      columns = defaultColumns
-      title = 'Candidates'
-      leftBtnText = 'Send Report'
-      rightBtnText = 'Preview Report'
-      break
+    case "Report":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Candidates";
+      leftBtnText = "Send Report";
+      rightBtnText = "Preview Report";
+      break;
 
     default:
-      break
+      break;
   }
 
   // SHOW RESULT DIALOGUE
   const handleOpenDialogueWithInfo = () => {
-    setOpenDialogueWithInfo(true)
-    console.log('aa')
-  }
+    setOpenDialogueWithInfo(true);
+    console.log("aa");
+  };
 
   // HIDE RESULT DIALOGUE
   const handleCloseDialogueWithInfo = () => {
-    setOpenDialogueWithInfo(false)
-  }
+    setOpenDialogueWithInfo(false);
+  };
 
   // SET SIDE INFO POSITION
   const handleSetPosition = () => {
-    setPosition('0')
-  }
+    setPosition("0");
+  };
   // END OF SET SIDE INFO POSITION
 
   // HANDLE ROW CLICK
   const handleRowClick = (row, e) => {
-    setSelecedCandidate(row?.row)
+    setSelecedCandidate(row?.row);
     setUserDetails({
       ...userDetails,
-      clientid: row?.row.clientId,
-      candidateId: row?.row.candidateId,
-    })
+      clientid: row?.row?.clientId,
+      candidateId: row?.row?.candidateId,
+    });
 
-    if (e.target.textContent !== 'Authorize') {
-      if (position !== '0') {
-        setPosition('0')
+    if (e.target.textContent !== "Authorize") {
+      if (position !== "0") {
+        setPosition("0");
       }
     }
-  }
+  };
   // END OF HANDLE ROW CLICK
 
   // HANDLE ROW CLICK
   const handleHideSlide = () => {
-    setPosition('-100%')
-  }
+    setPosition("-100%");
+  };
   // END OF HANDLE ROW CLICK
 
   // FUNCTION TO HANDLE CANDIDATE AUTHORIZATION
   const authorizeUser = async (params, type) => {
-    if (type === 'main') {
-      console.log(params?.row?.candidateId)
+    if (type === "main") {
+      console.log(params?.row?.candidateId);
     }
-    if (type === 'notMain') {
-      console.log(selectedCandidate)
+    if (type === "notMain") {
+      console.log(selectedCandidate);
     }
-    toastId.current = toast('Please wait...', {
+    toastId.current = toast("Please wait...", {
       autoClose: 3000,
       isLoading: true,
-    })
+    });
 
     let selectedCandidateId =
-      params?.row?.candidateId || selectedCandidate?.candidateId
+      params?.row?.candidateId || selectedCandidate?.candidateId;
     try {
       await publicRequest
         .put(
@@ -259,65 +261,65 @@ const PendingCandidatesDatagrid = (props) => {
           {},
           {
             headers: {
-              Accept: '*',
+              Accept: "*",
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           }
         )
         .then(() => {
           setTimeout(() => {
-            props?.getPendingCandidates()
-          }, 2000)
+            props?.getPendingCandidates();
+          }, 2000);
         })
         // .then(() => props?.setReloadTable((prev) => !prev))
         .then(() => {
           toast.update(toastId.current, {
-            render: 'Candidate can proceed to the next stage',
-            type: 'success',
+            render: "Candidate can proceed to the next stage",
+            type: "success",
             isLoading: false,
             autoClose: 3000,
-          })
-        })
+          });
+        });
     } catch (error) {
-      console.log(error)
-      console.log(error.message)
+      console.log(error);
+      console.log(error.message);
       toast.update(toastId.current, {
-        type: 'error',
+        type: "error",
         autoClose: 3000,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
           error?.response?.data?.description ||
           error?.message ||
-          'Something went wrong, please try again'
+          "Something went wrong, please try again"
         }`,
-      })
+      });
     }
-  }
+  };
   // END OF FUNCTION TO HANDLE CANDIDATE AUTHORIZATION
 
   // FUNCTION TO SEND UPDATED USER DETAILS TO THE BACKEND (PHLEB)
   const updatedUserDetails = async () => {
-    const { candidateId, clientId } = selectedCandidate
+    const { candidateId, clientId } = selectedCandidate;
 
-    toastId.current = toast('Please wait...', {
+    toastId.current = toast("Please wait...", {
       isLoading: true,
-    })
+    });
 
     const keys = [
-      'height',
-      'bloodPressure',
-      'weight',
-      'age',
-      'gender',
-      'temperature',
-    ]
+      "height",
+      "bloodPressure",
+      "weight",
+      "age",
+      "gender",
+      "temperature",
+    ];
 
     try {
       const found = keys?.find((key) => {
-        return userDetails[key] === ''
-      })
+        return userDetails[key] === "";
+      });
 
       if (!found) {
         await publicRequest
@@ -328,9 +330,9 @@ const PendingCandidatesDatagrid = (props) => {
             userDetails,
             {
               headers: {
-                Accept: '*',
+                Accept: "*",
                 Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
             }
           )
@@ -340,85 +342,85 @@ const PendingCandidatesDatagrid = (props) => {
               {},
               {
                 headers: {
-                  Accept: '*',
+                  Accept: "*",
                   Authorization: `Bearer ${token}`,
-                  'Content-Type': 'application/json',
+                  "Content-Type": "application/json",
                 },
               }
-            )
+            );
           })
           .then(() => {
             setTimeout(() => {
-              props?.getPendingCandidates()
-            }, 2000)
+              props?.getPendingCandidates();
+            }, 2000);
           })
           // .then(() => props?.setReloadTable((prev) => !prev))
           .then(() => {
             toast.update(toastId.current, {
-              render: 'Candidate can proceed to the next stage',
-              type: 'success',
+              render: "Candidate can proceed to the next stage",
+              type: "success",
               isLoading: false,
               autoClose: 3000,
-            })
-          })
+            });
+          });
       } else {
-        console.log(found)
-        throw Error(`Please fill all fields, the "${found}" field is empty`)
+        console.log(found);
+        throw Error(`Please fill all fields, the "${found}" field is empty`);
       }
     } catch (error) {
-      console.log(error)
-      console.log(error.message)
+      console.log(error);
+      console.log(error.message);
       toast.update(toastId.current, {
-        type: 'error',
+        type: "error",
         autoClose: 3000,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
           error?.response?.data?.description ||
           error?.message ||
-          'Something went wrong, please try again'
+          "Something went wrong, please try again"
         }`,
-      })
+      });
     }
-  }
+  };
   // END OF FUNCTION TO SEND UPDATED USER DETAILS TO THE BACKEND (PHLEB)
 
   // FUNCTION TO SEND RESULT TO QA
   const saveResult = async () => {
-    const { candidateId } = selectedCandidate
-    toastId.current = toast('Please wait...', {
+    const { candidateId } = selectedCandidate;
+    toastId.current = toast("Please wait...", {
       isLoading: true,
-    })
+    });
 
     const keys = [
-      'candidateId',
-      'testId',
-      'result',
-      'department',
-      'uploadedBy',
-      'clientId',
-    ]
+      "candidateId",
+      "testId",
+      "result",
+      "department",
+      "uploadedBy",
+      "clientId",
+    ];
 
     try {
-      let found
-      for (let index = 0; index < candidateResults.length; index++) {
+      let found;
+      for (let index = 0; index < candidateResults?.length; index++) {
         found = keys?.find((key) => {
-          console.log(candidateResults[0]['candidateId'])
+          console.log(candidateResults[0]["candidateId"]);
           return (
-            candidateResults[index][key] === '' ||
+            candidateResults[index][key] === "" ||
             candidateResults[index][key] === undefined
-          )
-        })
+          );
+        });
       }
 
       if (!found) {
-        console.log(candidateResults)
+        console.log(candidateResults);
         await publicRequest
           .post(`/Result/create`, candidateResults, {
             headers: {
-              Accept: '*',
+              Accept: "*",
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           })
           .then(() => {
@@ -427,51 +429,51 @@ const PendingCandidatesDatagrid = (props) => {
               {},
               {
                 headers: {
-                  Accept: '*',
+                  Accept: "*",
                   Authorization: `Bearer ${token}`,
-                  'Content-Type': 'application/json',
+                  "Content-Type": "application/json",
                 },
               }
-            )
+            );
           })
           .then(() => props?.getPendingCandidates())
           // .then(() => props?.setReloadTable((prev) => !prev))
           .then(() => {
             toast.update(toastId.current, {
-              render: 'Result sent to QA for review',
-              type: 'success',
+              render: "Result sent to QA for review",
+              type: "success",
               isLoading: false,
               autoClose: 3000,
-            })
-          })
+            });
+          });
       } else {
-        console.log(found)
-        throw Error(`Please fill all fields, the "${found}" field is empty`)
+        console.log(found);
+        throw Error(`Please fill all fields, the "${found}" field is empty`);
       }
     } catch (error) {
-      console.log(error)
-      console.log(error.message)
+      console.log(error);
+      console.log(error.message);
       toast.update(toastId.current, {
-        type: 'error',
+        type: "error",
         autoClose: 3000,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
           error?.response?.data?.description ||
           error?.message ||
-          'Something went wrong, please try again'
+          "Something went wrong, please try again"
         }`,
-      })
+      });
     }
-  }
+  };
   // END OF FUNCTION TO SEND RESULT TO QA
 
   // FUNCTION TO APPROVE RESULT BY QA
   const approveResult = async () => {
-    const { candidateId } = selectedCandidate
-    toastId.current = toast('Please wait...', {
+    const { candidateId } = selectedCandidate;
+    toastId.current = toast("Please wait...", {
       isLoading: true,
-    })
+    });
 
     try {
       await publicRequest
@@ -480,9 +482,9 @@ const PendingCandidatesDatagrid = (props) => {
           {},
           {
             headers: {
-              Accept: '*',
+              Accept: "*",
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           }
         )
@@ -490,31 +492,31 @@ const PendingCandidatesDatagrid = (props) => {
         // .then(() => props?.setReloadTable((prev) => !prev))
         .then(() => {
           toast.update(toastId.current, {
-            render: 'Result sent to QA for review',
-            type: 'success',
+            render: "Result sent to QA for review",
+            type: "success",
             isLoading: false,
             autoClose: 3000,
-          })
-        })
+          });
+        });
     } catch (error) {
       toast.update(toastId.current, {
-        type: 'error',
+        type: "error",
         autoClose: 3000,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
           error?.response?.data?.description ||
           error?.message ||
-          'Something went wrong, please try again'
+          "Something went wrong, please try again"
         }`,
-      })
+      });
     }
-  }
+  };
   // END OF FUNCTION TO APPROVE RESULT BY QA
 
   // FUNCTION TO REJECT RESULT BY QA
   const rejectResult = async () => {
-    let rejectedResultDetails = {}
+    let rejectedResultDetails = {};
 
     // const ids = candidateSubmittedResults.map(
     //   (candidateSubmittedResult) => candidateSubmittedResult?.resultId
@@ -524,112 +526,112 @@ const PendingCandidatesDatagrid = (props) => {
     rejectedResultDetails = {
       id: selectedCandidateResults,
       rejectionReason: reasonForRejection,
-    }
-    toastId.current = toast('Please wait...', {
+    };
+    toastId.current = toast("Please wait...", {
       autoClose: 3000,
       isLoading: true,
-    })
-    console.log(rejectedResultDetails)
+    });
+    console.log(rejectedResultDetails);
 
     try {
-      if (reasonForRejection && selectedCandidateResults.length > 0) {
+      if (reasonForRejection && selectedCandidateResults?.length > 0) {
         await publicRequest
           .post(`Result/reject/`, rejectedResultDetails, {
             headers: {
-              Accept: '*',
+              Accept: "*",
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           })
           .then(() => props?.getPendingCandidates())
           // .then(() => props?.setReloadTable((prev) => !prev))
           .then(() => {
             toast.update(toastId.current, {
-              render: 'Candidate result has been accepted',
-              type: 'success',
+              render: "Candidate result has been accepted",
+              type: "success",
               isLoading: false,
               autoClose: 3000,
-            })
-          })
+            });
+          });
       } else {
         throw new Error(
-          'Please select a result and add the reason for rejecting this result.'
-        )
+          "Please select a result and add the reason for rejecting this result."
+        );
       }
     } catch (error) {
       toast.update(toastId.current, {
-        type: 'error',
+        type: "error",
         autoClose: 3000,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
           error?.response?.data?.description ||
           error?.message ||
-          'Something went wrong, please try again'
+          "Something went wrong, please try again"
         }`,
-      })
+      });
     }
-  }
+  };
   // END OF FUNCTION TO REJECT RESULT BY QA
 
   // HANDLE FUNCTIONS TO CALL BASED ON BUTTON CLICKED
   const handleBtnClick = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     switch (e.target.textContent) {
-      case 'Preview Report':
-        setOpen(true)
-        console.log(e.target.textContent)
-        break
-      case 'Save Details':
-        updatedUserDetails()
-        break
-      case 'Authorize':
-        authorizeUser(selectedCandidate, 'notMain')
-        break
-      case 'Save Result':
-        saveResult()
-        break
-      case 'Reject':
-        setOpenDialogueWithInfo(true)
-        break
-      case 'Approve':
-        approveResult()
-        break
+      case "Preview Report":
+        setOpen(true);
+        console.log(e.target.textContent);
+        break;
+      case "Save Details":
+        updatedUserDetails();
+        break;
+      case "Authorize":
+        authorizeUser(selectedCandidate, "notMain");
+        break;
+      case "Save Result":
+        saveResult();
+        break;
+      case "Reject":
+        setOpenDialogueWithInfo(true);
+        break;
+      case "Approve":
+        approveResult();
+        break;
       default:
-        break
+        break;
     }
-  }
+  };
   // FUNCTION TO CALCULATE BMI
   const calculateBmi = () => {
-    let height = Number(userDetails?.height)
-    let weight = Number(userDetails?.weight)
-    let bmi
-    let heightInMetres
+    let height = Number(userDetails?.height);
+    let weight = Number(userDetails?.weight);
+    let bmi;
+    let heightInMetres;
 
     // CHECK IF HEIGHT AND WEIGHT ARE AVAILABLE
-    userDetails?.height && userDetails?.weight
+    userDetails?.height && userDetails?.weight;
 
     // convert Number( to) metres
-    heightInMetres = Number(height) / 100
+    heightInMetres = Number(height) / 100;
 
-    bmi = weight / Math.pow(heightInMetres, 2)
-    setUserDetails({ ...userDetails, bmi: bmi?.toString() })
+    bmi = weight / Math.pow(heightInMetres, 2);
+    setUserDetails({ ...userDetails, bmi: bmi?.toString() });
 
-    setBMI(bmi)
-  }
+    setBMI(bmi);
+  };
   // END OF FUNCTION TO CALCULATE BMI
 
   // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
   const handleCandidatePropertyChange = (e, dataType) => {
-    setUserDetails({ ...userDetails, [dataType]: e.target.value })
-    console.log(userDetails)
-  }
+    setUserDetails({ ...userDetails, [dataType]: e.target.value });
+    console.log(userDetails);
+  };
 
   // END OF FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
 
   // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
   const handleTestInputChange = (e, data) => {
-    if (candidateResults.length > 0) {
+    if (candidateResults?.length > 0) {
       // const selectedCandidateResult = candidateResults.find(
       //   (candidateResult) => candidateResult.testId === data?.testId
       // )
@@ -637,45 +639,45 @@ const PendingCandidatesDatagrid = (props) => {
 
       // MAP OVER THE CANDIDATE RESULTS ARRAY, IF THE IDs MATCH UPDATE, IF NOT RETURN CURRENT ITEM IN THE ARRAY
       candidateResults = candidateResults.map((candidateResult) => {
-        console.log(candidateResult.testId, data?.testId)
+        console.log(candidateResult.testId, data?.testId);
         return candidateResult.testId === data?.testId
           ? { ...candidateResult, result: e.target.value }
-          : candidateResult
-      })
-      console.log(candidateResults)
-      setCandidateResults(candidateResults)
+          : candidateResult;
+      });
+      console.log(candidateResults);
+      setCandidateResults(candidateResults);
     }
-  }
+  };
 
   // END OF FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
 
   // use effect to update bmi
   useEffect(() => {
-    calculateBmi()
-  }, [userDetails?.height, userDetails?.weight])
+    calculateBmi();
+  }, [userDetails?.height, userDetails?.weight]);
 
   // USEEFFECT TO UPDATE SELECTED ROW
 
   // AS A CANDIDATE IS SELECTED, GET IT'S TESTS AND CREATE A RESULTS LIST
   useEffect(() => {
-    if (loggedInUserRole === 'MainLab1') {
+    if (loggedInUserRole === "MainLab1") {
       if (selectedCandidate?.candidateId) {
-        let resultList = []
+        let resultList = [];
         const getCandidatetTests = async () => {
-          console.log(selectedCandidate)
-          setLoadingCandedateTests(true)
-          setCandedateTestsError(false)
+          console.log(selectedCandidate);
+          setLoadingCandedateTests(true);
+          setCandedateTestsError(false);
           try {
             await publicRequest
               .get(`Candidate/test/${selectedCandidate?.candidateId}`)
               .then((res) => {
-                console.log(res)
-                setCandidateTests(res?.data?.data?.tests)
-                setLoadingCandedateTests(false)
+                console.log(res);
+                setCandidateTests(res?.data?.data?.tests);
+                setLoadingCandedateTests(false);
 
                 for (
                   let index = 0;
-                  index < res?.data?.data?.tests.length;
+                  index < res?.data?.data?.tests?.length;
                   index++
                 ) {
                   resultList = [
@@ -683,110 +685,83 @@ const PendingCandidatesDatagrid = (props) => {
                     {
                       candidateId: selectedCandidate?.candidateId,
                       testId: res?.data?.data?.tests[index]?.testId,
-                      result: '',
+                      result: "",
                       department: 3,
                       uploadedBy: userName,
                       clientId: selectedCandidate?.clientId,
                     },
-                  ]
+                  ];
                 }
-                setCandidateResults(resultList)
-              })
+                setCandidateResults(resultList);
+              });
           } catch (error) {
-            console.log(error)
-            setLoadingCandedateTests(false)
-            setCandedateTestsError(true)
+            console.log(error);
+            setLoadingCandedateTests(false);
+            setCandedateTestsError(true);
           }
-        }
+        };
 
-        getCandidatetTests()
+        getCandidatetTests();
       }
     }
 
-    if (loggedInUserRole === 'Quality assurance') {
-      if (selectedCandidate?.candidateId) {
-        let resultList = []
-        const getCandidatetResults = async () => {
-          console.log(selectedCandidate)
-          setLoadingCandedateSubmittedResults(true)
-          setCandedateSubmittedResultsError(false)
-          try {
-            await publicRequest
-              .get(`Result/candidate/${selectedCandidate?.candidateId}`, {
-                headers: {
-                  Accept: '*',
-                  Authorization: `Bearer ${token}`,
-                  'Content-Type': 'application/json',
-                },
-              })
-              .then((res) => {
-                setLoadingCandedateSubmittedResults(false)
-                console.log(res)
+    if (loggedInUserRole === "Quality assurance") {
+      console.log(selectedCandidate);
+      setCandidateSubmittedResults(selectedCandidate?.tests);
+      // if (selectedCandidate?.candidateId) {
+      //   let resultList = [];
+      //   const getCandidatetResults = async () => {
+      //     console.log(selectedCandidate);
+      //     setLoadingCandedateSubmittedResults(true);
+      //     setCandedateSubmittedResultsError(false);
+      //     try {
+      //       await publicRequest
+      //         .get(`Result/candidate/${selectedCandidate?.candidateId}`, {
+      //           headers: {
+      //             Accept: "*",
+      //             Authorization: `Bearer ${token}`,
+      //             "Content-Type": "application/json",
+      //           },
+      //         })
+      //         .then((res) => {
+      //           setLoadingCandedateSubmittedResults(false);
+      //           console.log(res);
+      //           setLoadingCandedateSubmittedResults(false);
+      //           setCandidateSubmittedResults(res?.data?.data);
+      //         });
+      //     } catch (error) {
+      //       console.log(error);
+      //       setLoadingCandedateSubmittedResults(false);
+      //       setCandedateSubmittedResultsError(true);
+      //     }
+      //   };
 
-                // for (
-                //   let index = 0;
-                //   index < res?.data?.data?.tests.length;
-                //   index++
-                // ) {
-                //   resultList = [
-                //     ...resultList,
-                //     {
-                //       candidateId: selectedCandidate?.candidateId,
-                //       testId: res?.data?.data?.tests[index]?.testId,
-                //       result: "",
-                //       department: 3,
-                //       uploadedBy: userName,
-                //       clientId: selectedCandidate?.clientId,
-                //     },
-                //   ];
-                // }
-                setLoadingCandedateSubmittedResults(false)
-                setCandidateSubmittedResults(res?.data?.data)
-              })
-          } catch (error) {
-            console.log(error)
-            setLoadingCandedateSubmittedResults(false)
-            setCandedateSubmittedResultsError(true)
-          }
-        }
-
-        getCandidatetResults()
-      }
+      //   getCandidatetResults();
+      // }
     }
-  }, [selectedCandidate])
+  }, [selectedCandidate]);
 
   // USEEFFECT TO UPDATE USER DETAILS
-  useEffect(() => {}, [userDetails])
+  useEffect(() => {}, [userDetails]);
 
   // USEEFFECT TO UPDATE CANDIDATE TESTS AND RESULT
-  useEffect(() => {}, [candidateTests, candidateSubmittedResults])
+  useEffect(() => {}, [candidateTests, candidateSubmittedResults]);
   const resultColumn = [
     // { field: 'id', headerName: 'ID', width: 90 },
     {
-      field: 'testName',
-      headerName: 'Test name',
+      field: "testName",
+      headerName: "Test name",
       width: 150,
     },
     {
-      field: 'result',
-      headerName: 'Result',
+      field: "result",
+      headerName: "Result",
       width: 150,
     },
-  ]
+  ];
 
-  const rowss = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  ]
   return (
-    <div className='datagridWraper'>
+    <div className="datagridWraper">
       <SimpleBackdrop open={open} handleClose={handleClose} />
       <FormDialog
         open={openDialogueWithInfo}
@@ -795,116 +770,121 @@ const PendingCandidatesDatagrid = (props) => {
         setReasonForRejection={setReasonForRejection}
       />
 
-      <form className='slide' style={{ right: position }}>
-        <div className='slideTop'>
-          <div className='cancelconWrapper' onClick={handleHideSlide}>
-            <MdCancel className='cancelIcon' />
+      <form className="slide" style={{ right: position }}>
+        <div className="slideTop">
+          <div className="cancelconWrapper" onClick={handleHideSlide}>
+            <MdCancel className="cancelIcon" />
           </div>
-          <div className='initials'>
+          <div className="initials">
             {selectedCandidate?.candidateName &&
               selectedCandidate?.candidateName[0]?.toUpperCase()}
           </div>
-          <div className='slideFullname'>
+          <div className="slideFullname">
             {selectedCandidate?.candidateName?.toUpperCase()}
           </div>
         </div>
-        <div className='companyName h3'>
+        <div className="companyName h3">
           <h3>Company Name</h3>
           <p>{selectedCandidate?.clientName}</p>
         </div>
 
-        <div className='phoneNo h3'>
-          <h3>Candidate Phone Number</h3>
-          <p>{selectedCandidate?.phoneNumber}</p>
-        </div>
-        <div className='numberOfTests h3'>
-          <h3>{"Candidate's Email"}</h3>
-          <p>{selectedCandidate?.email}</p>
-        </div>
-        {loggedInUserRole === 'receptionist' && (
-          <div className='numberOfTests h3'>
+        {loggedInUserRole !== "Quality assurance" && (
+          <div className="phoneNo h3">
+            <h3>Candidate Phone Number</h3>
+            <p>{selectedCandidate?.phoneNumber}</p>
+          </div>
+        )}
+        {loggedInUserRole !== "Quality assurance" && (
+          <div className="numberOfTests h3">
+            <h3>{"Candidate's Email"}</h3>
+            <p>{selectedCandidate?.email}</p>
+          </div>
+        )}
+
+        {loggedInUserRole === "receptionist" && (
+          <div className="numberOfTests h3">
             <h3>{"Candidate's Adderess"}</h3>
             <p>{selectedCandidate?.address}</p>
           </div>
         )}
-        {loggedInUserRole === 'Phlebotomy' && (
-          <div className='basicDetailsWrapper'>
-            <FormControl className='genderSelect'>
-              <InputLabel id='demo-simple-select-label'>Gender</InputLabel>
+        {loggedInUserRole === "Phlebotomy" && (
+          <div className="basicDetailsWrapper">
+            <FormControl className="genderSelect">
+              <InputLabel id="demo-simple-select-label">Gender</InputLabel>
               <Select
-                labelId='demo-simple-select-label'
-                id='demo-simple-select'
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
                 value={userDetails?.gender}
-                label='Company name'
+                label="Company name"
                 required
-                onChange={(e) => handleCandidatePropertyChange(e, 'gender')}
+                onChange={(e) => handleCandidatePropertyChange(e, "gender")}
               >
-                <MenuItem value={'M'}>M</MenuItem>
-                <MenuItem value={'F'}>F</MenuItem>
+                <MenuItem value={"M"}>M</MenuItem>
+                <MenuItem value={"F"}>F</MenuItem>
               </Select>
             </FormControl>
             <TextField
-              id='outlined-search'
-              label='Age'
-              type='string'
+              id="outlined-search"
+              label="Age"
+              type="string"
               required={true}
-              className='candidateName basicCandidateDetailsInput'
-              onChange={(e) => handleCandidatePropertyChange(e, 'age')}
+              className="candidateName basicCandidateDetailsInput"
+              onChange={(e) => handleCandidatePropertyChange(e, "age")}
             />
             <TextField
-              id='outlined-search'
-              label='Temperature'
-              type='string'
+              id="outlined-search"
+              label="Temperature"
+              type="string"
               required
-              className='candidateName basicCandidateDetailsInput'
+              className="candidateName basicCandidateDetailsInput"
               // onChange={(e) => handleCandidatePropertyChange(e, "temperature")}
             />
             <TextField
-              id='outlined-search'
-              label='Weight'
-              type='string'
-              className='candidateName basicCandidateDetailsInput'
-              onChange={(e) => handleCandidatePropertyChange(e, 'weight')}
+              id="outlined-search"
+              label="Weight"
+              type="string"
+              className="candidateName basicCandidateDetailsInput"
+              onChange={(e) => handleCandidatePropertyChange(e, "weight")}
               value={userDetails?.weight}
               required
             />
             <TextField
-              id='outlined-search'
-              label='Height'
-              type='number'
-              className='candidateName basicCandidateDetailsInput'
-              onChange={(e) => handleCandidatePropertyChange(e, 'height')}
+              id="outlined-search"
+              label="Height"
+              type="number"
+              className="candidateName basicCandidateDetailsInput"
+              onChange={(e) => handleCandidatePropertyChange(e, "height")}
               value={userDetails?.height}
               required
             />
             <TextField
-              id='outlined-search'
-              label='BMI'
-              type='number'
+              id="outlined-search"
+              label="BMI"
+              type="number"
               value={BMI}
-              className='candidateName basicCandidateDetailsInput'
+              className="candidateName basicCandidateDetailsInput"
               InputLabelProps={{ shrink: true }}
             />
             <TextField
-              id='outlined-search'
-              label='Blood Pressure'
-              type='search'
-              className='candidateName basicCandidateDetailsInput'
+              id="outlined-search"
+              label="Blood Pressure"
+              type="search"
+              className="candidateName basicCandidateDetailsInput"
               onChange={(e) =>
-                handleCandidatePropertyChange(e, 'bloodPressure')
+                handleCandidatePropertyChange(e, "bloodPressure")
               }
               required
             />
           </div>
         )}
-        {loggedInUserRole === 'MainLab1' && (
+        {loggedInUserRole === "MainLab1" && (
           <>
-            <div className='qualityAssuranceAccordionWrapper'>
+            <div className="qualityAssuranceAccordionWrapper">
               <Accordion>
                 <AccordionSummary
                   expandIcon={<FaAngleDown />}
-                  aria-controls='panel2a-content'
-                  id='panel2a-header'
+                  aria-controls="panel2a-content"
+                  id="panel2a-header"
                 >
                   <Typography>Candidate Details</Typography>
                 </AccordionSummary>
@@ -924,31 +904,31 @@ const PendingCandidatesDatagrid = (props) => {
                 </AccordionDetails>
               </Accordion>
             </div>
-            <div className='basicDetailsWrapper'>
+            <div className="basicDetailsWrapper">
               {loadingCandedateTests || candedateTestsError
                 ? loadingCandedateTests
-                  ? 'Loading...'
-                  : 'An error occured, please try again'
+                  ? "Loading..."
+                  : "An error occured, please try again"
                 : candidateTests?.length === 0
-                ? 'No test for selected candidate'
+                ? "No test for selected candidate"
                 : candidateTests?.map((candidateTest, index) => {
                     return (
                       <TextField
                         key={index}
                         id={candidateTest?.id}
                         label={candidateTest?.test}
-                        type='search'
-                        className='candidateName basicCandidateDetailsInput'
+                        type="search"
+                        className="candidateName basicCandidateDetailsInput"
                         onChange={(e) =>
                           handleTestInputChange(e, candidateTest)
                         }
                       />
-                    )
+                    );
                   })}
             </div>
           </>
         )}
-        {loggedInUserRole === 'Quality assurance' && (
+        {loggedInUserRole === "Quality assurance" && (
           // <div className="qualityAssuranceAccordionWrapper">
           //   <Accordion>
           //     <AccordionSummary
@@ -967,70 +947,44 @@ const PendingCandidatesDatagrid = (props) => {
           //     </AccordionDetails>
           //   </Accordion>
           // </div>
-          <div className='qaResultsWrapper'>
-            {
-              loadingCandedateSubmittedResults ||
-              candedateSubmittedResultsError ? (
-                loadingCandedateSubmittedResults ? (
-                  'Loading...'
-                ) : (
-                  'An error occured, please try again'
-                )
-              ) : candidateSubmittedResults?.length === 0 ? (
-                'No result for selected candidate'
-              ) : (
-                <Box sx={{ height: 300, width: '100%' }}>
-                  <DataGrid
-                    rows={candidateSubmittedResults}
-                    columns={resultColumn}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    checkboxSelection
-                    // disableSelectionOnClick
-                    // onRowClick={(row) => console.log(row)}
-                    getRowId={(row) => row?.resultId}
-                    // experimentalFeatures={{ newEditingApi: true }}
-                    onRowSelectionModelChange={(result) => {
-                      console.log(result)
-                      return setSelectedCandidateResults(result)
-                    }}
-                  />
-                </Box>
-              )
-              // candidateSubmittedResults?.map((candidateResult, index) => {
-              //     return (
-              //       <TextField
-              //         key={index}
-              //         id={candidateResult?.id}
-              //         label={candidateResult?.testName}
-              //         type='search'
-              //         className='candidateResultInput'
-              //         disabled
-              //         value={
-              //           candidateResult?.result
-              //             ? candidateResult?.result
-              //             : 'Empty result'
-              //         }
-              //       />
-              //     )
-              //   })
-            }
+          <div className="qaResultsWrapper">
+            {candidateSubmittedResults?.length === 0 ? (
+              "No result for selected candidate"
+            ) : (
+              <Box sx={{ height: 300, width: "100%" }}>
+                <DataGrid
+                  rows={candidateSubmittedResults || []}
+                  columns={resultColumn}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  checkboxSelection
+                  // disableSelectionOnClick
+                  // onRowClick={(row) => console.log(row)}
+                  getRowId={(row) => row?.resultId}
+                  // experimentalFeatures={{ newEditingApi: true }}
+                  onRowSelectionModelChange={(result) => {
+                    console.log(result);
+                    return setSelectedCandidateResults(result);
+                  }}
+                />
+              </Box>
+            )}
           </div>
         )}
-        <div className='bottomButtons'>
+        <div className="bottomButtons">
           {leftBtnText && (
-            <div className=' rejectResult' onClick={(e) => handleBtnClick(e)}>
+            <div className=" rejectResult" onClick={(e) => handleBtnClick(e)}>
               {leftBtnText}
             </div>
           )}
           {rightBtnText?.length > 0 && (
-            <div className='authorize' onClick={(e) => handleBtnClick(e)}>
+            <div className="authorize" onClick={(e) => handleBtnClick(e)}>
               {rightBtnText}
             </div>
           )}
         </div>
       </form>
-      <Box sx={{ height: 350, width: '100%' }}>
+      <Box sx={{ height: 350, width: "100%" }}>
         <h3>{title}</h3>
         <DataGrid
           rows={rows}
@@ -1042,13 +996,15 @@ const PendingCandidatesDatagrid = (props) => {
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           rowsPerPageOptions={[5, 10, 20]}
           onRowClick={(row, e) => handleRowClick(row, e)}
-          getRowId={(row) => row.candidateId}
+          getRowId={(row) =>
+            row?.candidateId || row?.candidateName + row?.clientName
+          }
           pagination
           rowSelection={false}
         />
       </Box>
     </div>
-  )
-}
+  );
+};
 
-export default PendingCandidatesDatagrid
+export default PendingCandidatesDatagrid;
