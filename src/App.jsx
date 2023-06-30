@@ -13,6 +13,7 @@ import ResetPassword from './pages/resetPassword/ResetPassword'
 import ChangePassword from './pages/changePassword/ChangePassword'
 import PrivateRoutes from './components/PrivateRoutes'
 import Profile from './pages/profile/Profile'
+import RejectedResults from './pages/rejectedResults/RejectedResults'
 
 function App() {
   let userDetails
@@ -55,6 +56,7 @@ function App() {
           <Route exact path='/' element={<Home />} />
           <Route path='/candidateSearch' element={<CandidateSearch />} />
           <Route path='/pendingCandidates' element={<PendingCandidates />} />
+          <Route path='/rejectedResults' element={<RejectedResults />} />
           <Route path='/viewClients' element={<ViewClients />} />
           <Route path='/reports' element={<Reports />} />
           <Route path='/profile' element={<Profile />} />

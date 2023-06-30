@@ -1,6 +1,6 @@
 import { RxDashboard } from 'react-icons/rx'
 import { React } from 'react'
-import { MdPendingActions } from 'react-icons/md'
+import { MdCancel, MdPendingActions } from 'react-icons/md'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { RiTeamFill } from 'react-icons/ri'
 import { TbReportAnalytics } from 'react-icons/tb'
@@ -94,6 +94,11 @@ export const labScientistData = [
         icon: <MdPendingActions className='sidebarIcon' />,
       },
       {
+        title: 'Rejected Results',
+        link: '/rejectedResults',
+        icon: <MdCancel className='sidebarIcon' />,
+      },
+      {
         title: 'View Clients',
         link: '/viewClients',
         icon: <RiTeamFill className='sidebarIcon' />,
@@ -130,6 +135,7 @@ export const qualityAssuranceData = [
         link: '/pendingCandidates',
         icon: <MdPendingActions className='sidebarIcon' />,
       },
+
       {
         title: 'View Clients',
         link: '/viewClients',

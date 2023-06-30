@@ -2,7 +2,7 @@ import { TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import Sidebar from '../../components/sidebar/Sidebar'
 import Topber from '../../components/topbar/Topber'
-import './pendingCandidates.scss'
+import './rejectedResults.scss'
 import PendingCandidatesDatagrid from '../../components/pendingCandidatesDatagrid/PendingCandidatesDatagrid'
 import { useSelector } from 'react-redux'
 import ErrorComponent from '../../components/error/Error'
@@ -11,7 +11,7 @@ import { publicRequest } from '../../functions/requestMethods'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-const PendingCandidates = () => {
+const RejectedResults = () => {
   // GET CURRENT LOGGED IN USER
   const { currentUser } = useSelector((state) => state?.user)
   const loggedInUserRole = currentUser?.data?.role
@@ -31,8 +31,8 @@ const PendingCandidates = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   // END OF LOADING AND ERROR DATA
 
-  // FUNCTION TO GET AND SET PENDING CANDIDATES
-  const getPendingCandidates = async () => {
+  // FUNCTION TO GET AND SET REJECTED RESULTS
+  const getRejectedResults = async () => {
     try {
       setLoading(true)
       const res = await publicRequest.get('/Candidate/stage', {
@@ -58,7 +58,7 @@ const PendingCandidates = () => {
       console.log(error)
     }
   }
-  // END OF FUNCTION TO GET AND SET PENDING CANDIDATES
+  // END OF FUNCTION TO GET AND SET REJECTED RESULTS
 
   // SEARCH FUNCTIONALITY
   const handleSearchParamsChange = (e) => {
@@ -74,13 +74,13 @@ const PendingCandidates = () => {
 
   // USE EFFECT TO GET ALL CANDIDATES AS THE PAGE LOADS
   useEffect(() => {
-    getPendingCandidates()
+    getRejectedResults()
   }, [])
 
   // USEEFFECT TO UPDATE TABLE AFTER AUTHORIZING A CANDIATE
 
   useEffect(() => {
-    getPendingCandidates()
+    getRejectedResults()
   }, [reloadTable])
 
   // USEEFFECT TO UPDATE TABLE AFTER AUTHORIZING A CANDIATE
@@ -97,14 +97,14 @@ const PendingCandidates = () => {
   return (
     <>
       <ToastContainer />
-      <div className='pendingCandidatesWrapper'>
+      <div className='rejectedResultsWrapper'>
         <Sidebar loggedInUserRole={loggedInUserRole} />
-        <div className='pendingCandidatesRight'>
+        <div className='rejectedResultsRight'>
           <Topber userName={userName} />
-          <div className='pendingCandidatesMainWrapper'>
-            <div className='pendingCandidatesMainTop'>
-              <h3 className='pendingCandidatesMainTopTitle'>Search</h3>
-              <div className='pendingCandidatesMainTopForm'>
+          <div className='rejectedResultsMainWrapper'>
+            <div className='rejectedResultsMainTop'>
+              <h3 className='rejectedResultsMainTopTitle'>Search</h3>
+              <div className='rejectedResultsMainTopForm'>
                 <TextField
                   id='outlined-search'
                   label='Candidate name'
@@ -113,10 +113,10 @@ const PendingCandidates = () => {
                   onChange={(e) => handleSearchParamsChange(e)}
                 />
 
-                {/* <div className='pendingCandidatesBtn'>Search</div> */}
+                {/* <div className='rejectedResultsBtn'>Search</div> */}
               </div>
             </div>
-            <div className='pendingCandidatesMainBottom'>
+            <div className='rejectedResultsMainBottom'>
               {loading || error ? (
                 loading ? (
                   <Loading />
@@ -138,4 +138,4 @@ const PendingCandidates = () => {
   )
 }
 
-export default PendingCandidates
+export default RejectedResults

@@ -15,16 +15,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { MdCancel } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import SimpleBackdrop from '../backdrop/Backdrop'
-import './pendingCandidatesDatagrid.scss'
+import './rejectedResultsDatagrid.scss'
 import { FaAngleDown } from 'react-icons/fa'
-import {
-  publicRequest,
-  publicRequestWithHeaders,
-} from '../../functions/requestMethods'
+import { publicRequest } from '../../functions/requestMethods'
 import { toast } from 'react-toastify'
 import FormDialog from '../DialogueWithInfo'
 
-const PendingCandidatesDatagrid = (props) => {
+const RejectedResultsDatagrid = (props) => {
   // RESULT DIALOGUE BACKDROP
   const [openDialogueWithInfo, setOpenDialogueWithInfo] = React.useState(false)
 
@@ -981,4 +978,4 @@ const PendingCandidatesDatagrid = (props) => {
   )
 }
 
-export default PendingCandidatesDatagrid
+export default RejectedResultsDatagrid
