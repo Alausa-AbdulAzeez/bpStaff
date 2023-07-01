@@ -99,6 +99,22 @@
   border-radius: 10px;
   color: rgba(94, 30, 30, 1);
 }
+.approvedResult {
+  background-color: rgba(156, 220, 155, 1);
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: rgba(2, 101, 0, 1);
+    font-size: x-small;
+}
+.pendingResult {
+  background-color: rgba(186, 60, 60, 0.12);
+  background-color: rgba(255, 166, 0, 0.178);
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: rgba(94, 30, 30, 1);
+  color: rgb(121, 32, 0);
+  font-size: x-small;
+}
 
 .rejectResult {
   background-color: rgba(186, 60, 60, 0.12);

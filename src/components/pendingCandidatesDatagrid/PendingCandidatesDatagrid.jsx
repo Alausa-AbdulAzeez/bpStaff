@@ -36,10 +36,21 @@ const PendingCandidatesDatagrid = (props) => {
   const [loadingCandedateTests, setLoadingCandedateTests] = useState(false);
   const [candedateTestsError, setCandedateTestsError] = useState(false);
 
-  // SELECTED CANDIDATE SUBMITTED RESULTS (FOR QA)
+  // SELECTED CANDIDATE SUBMITTED RESULTS (FOR QA and REPORTS )
   const [candidateSubmittedResults, setCandidateSubmittedResults] = useState(
     []
   );
+
+  // SELECTED CANDIDATE SUBMITTED RESULTS (FOR REPORTS )
+  const [
+    loadingCandedateSubmittedResults,
+    setLoadingCandedateSubmittedResults,
+  ] = useState(false);
+  const [candedateSubmittedResultsError, setCandedateSubmittedResultsError] =
+    useState(false);
+
+  // BUTTONS STATUS (FOR REPORTS)
+  const [btnsAreDisabled, setBtnsAreDisabled] = useState(true);
 
   // SELECTED CANDIDATE RESULTS
   let [candidateResults, setCandidateResults] = useState([]);
@@ -131,6 +142,7 @@ const PendingCandidatesDatagrid = (props) => {
             )}
             {(loggedInUserRole === "Phlebotomy" ||
               loggedInUserRole === "MainLab1" ||
+              loggedInUserRole === "Report" ||
               loggedInUserRole === "Quality assurance") && (
               <div className="notAuthorized">View</div>
             )}
@@ -617,7 +629,7 @@ const PendingCandidatesDatagrid = (props) => {
     e.preventDefault();
     switch (e.target.textContent) {
       case "Preview Report":
-        setOpen(true);
+        btnsAreDisabled ? "" : setOpen(true);
         console.log(e.target.textContent);
         break;
       case "Save Details":
@@ -746,41 +758,51 @@ const PendingCandidatesDatagrid = (props) => {
     if (loggedInUserRole === "Quality assurance") {
       console.log(selectedCandidate);
       setCandidateSubmittedResults(selectedCandidate?.tests);
-      // if (selectedCandidate?.candidateId) {
-      //   let resultList = [];
-      //   const getCandidatetResults = async () => {
-      //     console.log(selectedCandidate);
-      //     setLoadingCandedateSubmittedResults(true);
-      //     setCandedateSubmittedResultsError(false);
-      //     try {
-      //       await publicRequest
-      //         .get(`Result/candidate/${selectedCandidate?.candidateId}`, {
-      //           headers: {
-      //             Accept: "*",
-      //             Authorization: `Bearer ${token}`,
-      //             "Content-Type": "application/json",
-      //           },
-      //         })
-      //         .then((res) => {
-      //           setLoadingCandedateSubmittedResults(false);
-      //           console.log(res);
-      //           setLoadingCandedateSubmittedResults(false);
-      //           setCandidateSubmittedResults(res?.data?.data);
-      //         });
-      //     } catch (error) {
-      //       console.log(error);
-      //       setLoadingCandedateSubmittedResults(false);
-      //       setCandedateSubmittedResultsError(true);
-      //     }
-      //   };
+    }
+    if (loggedInUserRole === "Report") {
+      console.log(selectedCandidate);
+      if (selectedCandidate?.candidateId) {
+        let resultList = [];
+        const getCandidatetResults = async () => {
+          console.log(selectedCandidate);
+          setLoadingCandedateSubmittedResults(true);
+          setCandedateSubmittedResultsError(false);
+          try {
+            await publicRequest
+              .get(`Result/candidate/${selectedCandidate?.candidateId}`, {
+                headers: {
+                  Accept: "*",
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              })
+              .then((res) => {
+                setLoadingCandedateSubmittedResults(false);
+                console.log(res);
+                setLoadingCandedateSubmittedResults(false);
+                setCandidateSubmittedResults(res?.data?.data);
+                const pendingResultPresent = res?.data?.data?.find(
+                  (result) => result?.status === "PENDING"
+                );
+                !pendingResultPresent && setBtnsAreDisabled(false);
+              });
+          } catch (error) {
+            console.log(error);
+            setLoadingCandedateSubmittedResults(false);
+            setCandedateSubmittedResultsError(true);
+          }
+        };
 
-      //   getCandidatetResults();
-      // }
+        getCandidatetResults();
+      }
     }
   }, [selectedCandidate]);
 
   // USEEFFECT TO UPDATE USER DETAILS
   useEffect(() => {}, [userDetails]);
+
+  // USEEFFECT TO UPDATE BUTTON DISABLED STATE
+  useEffect(() => {}, [btnsAreDisabled]);
 
   // USEEFFECT TO UPDATE CANDIDATE TESTS AND RESULT
   useEffect(() => {}, [candidateTests, candidateSubmittedResults]);
@@ -795,6 +817,28 @@ const PendingCandidatesDatagrid = (props) => {
       field: "result",
       headerName: "Result",
       width: 150,
+    },
+    {
+      field: "action",
+      headerName: "Status",
+      width: 130,
+      renderCell: (params) => {
+        return (
+          <>
+            {loggedInUserRole === "Report" && (
+              <div
+                className={
+                  params?.row?.status === "PENDING"
+                    ? "pendingResult"
+                    : "approvedResult"
+                }
+              >
+                {params?.row?.status}
+              </div>
+            )}
+          </>
+        );
+      },
     },
   ];
 
@@ -967,27 +1011,63 @@ const PendingCandidatesDatagrid = (props) => {
           </>
         )}
         {loggedInUserRole === "Quality assurance" && (
-          // <div className="qualityAssuranceAccordionWrapper">
-          //   <Accordion>
-          //     <AccordionSummary
-          //       expandIcon={<FaAngleDown />}
-          //       aria-controls="panel2a-content"
-          //       id="panel2a-header"
-          //     >
-          //       <Typography>Test Details</Typography>
-          //     </AccordionSummary>
-          //     <AccordionDetails>
-          //       <Typography>
-          //         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          //         Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-          //         eget.
-          //       </Typography>
-          //     </AccordionDetails>
-          //   </Accordion>
-          // </div>
           <div className="qaResultsWrapper">
             {candidateSubmittedResults?.length === 0 ? (
               "No result for selected candidate"
+            ) : (
+              <Box sx={{ height: 300, width: "100%" }}>
+                <DataGrid
+                  rows={candidateSubmittedResults || []}
+                  columns={resultColumn}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  checkboxSelection
+                  getRowId={(row) => row?.resultId}
+                  onRowSelectionModelChange={(result) => {
+                    console.log(result);
+                    return setSelectedCandidateResults(result);
+                  }}
+                />
+              </Box>
+            )}
+          </div>
+        )}
+        {loggedInUserRole === "Report" && (
+          <div className="qaResultsWrapper">
+            <div className="qualityAssuranceAccordionWrapper">
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<FaAngleDown />}
+                  aria-controls="panel2a-content"
+                  id="panel2a-header"
+                >
+                  <Typography>Candidate Details</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>Age -{selectedCandidate?.age} years</Typography>
+                  <Typography>Gender - {selectedCandidate?.gender}</Typography>
+                  <Typography>BMI - {selectedCandidate?.bmi}</Typography>
+                  <Typography>
+                    Height - {selectedCandidate?.height}cm
+                  </Typography>
+                  <Typography>
+                    Weight - {selectedCandidate?.weight}kg
+                  </Typography>
+                  <Typography>
+                    bloodPressure - {selectedCandidate?.bloodPressure}mm/Hg
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            </div>
+            {loadingCandedateSubmittedResults ||
+            candedateSubmittedResultsError ? (
+              loadingCandedateSubmittedResults ? (
+                "Loading..."
+              ) : (
+                "An error occured, please try again"
+              )
+            ) : candidateSubmittedResults?.length === 0 ? (
+              "No test for selected candidate"
             ) : (
               <Box sx={{ height: 300, width: "100%" }}>
                 <DataGrid
