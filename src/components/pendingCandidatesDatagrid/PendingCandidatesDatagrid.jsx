@@ -471,15 +471,21 @@ const PendingCandidatesDatagrid = (props) => {
 
     try {
       if (selectedCandidateResults?.length > 0) {
+        console.log(selectedCandidateResults);
         await publicRequest
-          .post(`Result/approve`, selectedCandidateResults, {
-            headers: {
-              Accept: "*",
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          })
+          .post(
+            `Result/approve`,
+            { id: selectedCandidateResults },
+            {
+              headers: {
+                Accept: "*",
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          )
           .then(() => {
+            // return window.location.reload();
             return props?.getPendingCandidates();
           })
           // .then(() => props?.setReloadTable((prev) => !prev))
