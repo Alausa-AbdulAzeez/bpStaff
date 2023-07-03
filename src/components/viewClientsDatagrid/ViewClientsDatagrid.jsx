@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import { Box } from '@mui/system'
 import { DataGrid } from '@mui/x-data-grid'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdCancel } from 'react-icons/md'
 import { FaAngleDown } from 'react-icons/fa'
 import './viewClientsDatagrid.scss'
@@ -18,6 +18,9 @@ import { BsCheck } from 'react-icons/bs'
 const ViewClientsDatagrid = (props) => {
   const [pageSize, setPageSize] = useState(5)
   const [position, setPosition] = useState('-100%')
+
+  // SELECTED CLIENT AFTER ROW CLICK
+  const [selectedClient, setSelecedClient] = useState({})
 
   // TABLE DATA
   let rows = props?.tableData
@@ -32,6 +35,7 @@ const ViewClientsDatagrid = (props) => {
 
   // HANDLE ROW CLICK
   const handleRowClick = (row, e) => {
+    setSelecedClient(row?.row)
     if (e.target.textContent !== 'Authorize') {
       if (position !== '0') {
         setPosition('0')
@@ -62,6 +66,9 @@ const ViewClientsDatagrid = (props) => {
     },
   ]
 
+  // USEEFFECT TO UPDATE SELECTED CLIENT
+  useEffect(() => {}, [selectedClient])
+
   return (
     <div className='viewClientsDatagridWraper'>
       <div className='viewClientsSlide' style={{ right: position }}>
@@ -72,23 +79,37 @@ const ViewClientsDatagrid = (props) => {
           >
             <MdCancel className='viewClientsCancelIcon' />
           </div>
-          <div className='viewClientsInitials'>AA</div>
-          <div className='viewClientsSlideFullname'>Alausa Abdulazeez</div>
+          <div className='viewClientsInitials'>
+            {selectedClient?.clientName &&
+              selectedClient?.clientName[0]?.toUpperCase()}
+          </div>
+          <div className='viewClientsSlideFullname'>
+            {selectedClient?.clientName?.toUpperCase()}
+          </div>
         </div>
         <div className='viewClientsCompanyName h3'>
           <h3>Company Name</h3>
-          <p>Chicken Republic</p>
+          <p>{selectedClient?.clientName}</p>
         </div>
 
         <div className='viewClientsPhoneNo h3'>
           <h3>Contact Number</h3>
-          <p>+23456789010</p>
+          <p>{selectedClient?.phoneNumber}</p>
         </div>
-        <div className='viewClientsNumberOfTests h3'>
-          <h3>Number of Candidates</h3>
-          <p>3</p>
+        <div className='viewClientsPhoneNo h3'>
+          <h3>Contact Person</h3>
+          <p>{selectedClient?.contactPerson}</p>
         </div>
-        <div className='accordionWrapper'>
+        <div className='viewClientsPhoneNo h3'>
+          <h3>Contact Person Email</h3>
+          <p>{selectedClient?.contactPersonEmail}</p>
+        </div>
+        <div className='viewClientsPhoneNo h3'>
+          <h3>Contact Person Phone</h3>
+          <p>{selectedClient?.contactPersonPhone}</p>
+        </div>
+
+        {/* <div className='accordionWrapper'>
           <Accordion>
             <AccordionSummary
               expandIcon={<FaAngleDown />}
@@ -124,11 +145,11 @@ const ViewClientsDatagrid = (props) => {
             </AccordionDetails>
           </Accordion>
           <br />
-        </div>
+        </div> */}
 
-        <div className='viewClientsDate'>
+        {/* <div className='viewClientsDate'>
           January-<small>24</small>-<small>2024</small>
-        </div>
+        </div> */}
       </div>
       <h3>{title}</h3>
       <Box sx={{ height: 350, width: '100%' }}>

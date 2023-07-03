@@ -31,6 +31,7 @@ const CandidateSearchDatagrid = (props) => {
 
   // TABLE DATA
   const tableData = props?.tableData
+  console.log(tableData)
   let rows
   let columns
   let title
@@ -72,7 +73,7 @@ const CandidateSearchDatagrid = (props) => {
       width: 250,
       editable: false,
     },
-    { field: 'id', headerName: 'Company Name', width: 250 },
+    { field: 'clientName', headerName: 'Company Name', width: 250 },
     {
       field: 'testcategory',
       headerName: 'Test Category',
