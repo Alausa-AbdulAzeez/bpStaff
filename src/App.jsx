@@ -61,7 +61,7 @@ function App() {
           <Route path='/rejectedResults' element={<RejectedResults />} />
           <Route path='/viewClients' element={<ViewClients />} />
           <Route path='/reports' element={<Reports />} />
-          {/* <Route path='/profile' element={<Profile />} /> */}
+          <Route path='/profile' element={<Profile />} />
           <Route
             path='/labReport/:candidate'
             element={<DownloadReportPage />}

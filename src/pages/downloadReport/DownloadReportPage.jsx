@@ -8,11 +8,12 @@ import { useParams } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import { publicRequest } from '../../functions/requestMethods'
 import { useSelector } from 'react-redux'
+import { BsDownload } from 'react-icons/bs'
 
 const DownloadReportPage = () => {
   // CANDIDATE DETAILS
-  const [candidateDetails, setCandidateDetails] = useState(null)
-  const [candidateResultDetails, setCandidateResultDetails] = useState(null)
+  const [candidateDetails, setCandidateDetails] = useState([])
+  const [candidateResultDetails, setCandidateResultDetails] = useState([])
 
   // SELECTED CANDIDATE SUBMITTED RESULTS (FOR QA and REPORTS )
   let candidateSubmittedResults = []
@@ -75,14 +76,29 @@ const DownloadReportPage = () => {
               'Content-Type': 'application/json',
             },
           })
-          .then((res) => console.log(res.data))
+          .then((res) => {
+            setCandidateResultDetails(res?.data?.data)
+          })
+        await publicRequest
+          .get(`Candidate/SearchByID?Candidateid=${params?.candidate}`, {
+            headers: {
+              Accept: '*',
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          })
+          .then((res) => {
+            console.log(res)
+            setCandidateDetails(res?.data?.data)
+          })
       } catch (error) {
-        toast.error(
-          error?.response?.data?.title ||
-            error?.response?.data?.description ||
-            error?.message ||
-            'Something went wrong, please try again'
-        )
+        params?.candidate &&
+          toast.error(
+            error?.response?.data?.title ||
+              error?.response?.data?.description ||
+              error?.message ||
+              'Something went wrong, please try again'
+          )
         console.log(error)
       }
     }
@@ -91,20 +107,25 @@ const DownloadReportPage = () => {
 
   return (
     <div className='downloadReportPageContainer' id='report'>
+      <div onClick={() => window.print()} className='downloadBtn'>
+        Download
+        <span>
+          <BsDownload style={{ marginLeft: '5px', fontSize: 'large' }} />
+        </span>
+      </div>
       <div className='doctorPage'>
         <div className='topLogo'>
           <img src={BiopathLogo} alt='Logo' />
         </div>
         <div className='doctorPageTopDetails'>
-          <div className='doctorPageTopDate'> December-02-2022</div>
           <div className='doctorPageTopName doctorPageTopKey'>
-            NAME: <span>John Doe</span>
+            NAME: <span>{candidateDetails[0]?.candidateName}</span>
           </div>
           <div className='doctorPageTopAge doctorPageTopKey'>
-            AGE: <span>23</span>
+            AGE: <span>{candidateDetails[0]?.age}</span>
           </div>
           <div className='doctorPageTopSex doctorPageTopKey'>
-            SEX: <span>Male</span>
+            SEX: <span>{candidateDetails[0]?.gender}</span>
           </div>
           <p>
             I wish to inform you that we have examined the above referenced
@@ -117,17 +138,28 @@ const DownloadReportPage = () => {
           <div className='parametersInvestigatedTitle'>
             PARAMETERS INVESTIGATED
           </div>
+
+          <div className='doctorPageTopName doctorPageTopKey'>
+            Body Mass Index ----- <span>{candidateDetails[0]?.bmi}</span>
+          </div>
+          <div className='doctorPageTopName doctorPageTopKey'>
+            Blood Pressure -----{' '}
+            <span>{candidateDetails[0]?.bloodPressure}mm/Hg</span>
+          </div>
+        </div>
+        <div className='parametersInvestigated'>
+          <div className='parametersInvestigatedTitle'>LABORATORY TESTS</div>
           <Box
-            height={Math.round(candidateSubmittedResults.length * 55)}
+            height={Math.round((candidateResultDetails.length + 1) * 55)}
             width={800}
           >
             <DataGrid
               style={{ textAlign: 'center' }}
-              rows={candidateSubmittedResults || []}
+              rows={candidateResultDetails || []}
               columns={resultColumn}
               // pageSize={100}
               // rowsPerPageOptions={[100]}
-              getRowId={(row) => row?.id}
+              getRowId={(row) => row?.resultId}
               hideFooter
             />
           </Box>

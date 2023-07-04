@@ -70,9 +70,9 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            <div className='editWrapper'>
+            {/* <div className='editWrapper'>
               <button className='profileEditBtn'>Edit</button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

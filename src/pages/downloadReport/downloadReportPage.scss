@@ -4,6 +4,22 @@
   background-color: white;
   overflow-y: auto;
   color: #000;
+  position: relative;
+
+  .downloadBtn {
+    position: absolute;
+    top: 40px;
+    right: 0px;
+    height: 40px;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    background: black;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+  }
 
   .doctorPage {
     height: 100%;
@@ -42,6 +58,14 @@
         margin-bottom: 5px;
         margin-top: 16px;
       }
+      .doctorPageTopKey {
+        font-weight: 900;
+        margin-bottom: 5px;
+
+        & > span {
+          font-weight: normal;
+        }
+      }
       .param {
         margin-bottom: 12px;
         margin-left: 64px;
@@ -68,4 +92,10 @@
 .css-t89xny-MuiDataGrid-columnHeaderTitle {
   font-weight: 900 !important;
   // text-align: center !important;
+}
+
+@media print {
+  .downloadBtn {
+    display: none !important; /* Hide the download button when printing */
+  }
 }
