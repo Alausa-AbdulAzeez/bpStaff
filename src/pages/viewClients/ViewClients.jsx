@@ -62,7 +62,9 @@ const ViewClients = () => {
   const handleSearchParamsChange = (e) => {
     let filteredPendingCandidatesArray
     filteredPendingCandidatesArray = tableData.filter((tableDatum) =>
-      tableDatum?.candidateName?.includes(e.target.value.trim())
+      tableDatum?.clientName
+        ?.toLowerCase()
+        .includes(e.target.value.trim().toLowerCase())
     )
     setSearchedTableData(filteredPendingCandidatesArray)
     // console.log(filteredPendingCandidatesArray)

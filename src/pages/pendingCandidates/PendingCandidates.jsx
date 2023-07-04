@@ -73,7 +73,9 @@ const PendingCandidates = () => {
     let filteredPendingCandidatesArray
     console.log(tableData)
     filteredPendingCandidatesArray = tableData.filter((tableDatum) =>
-      tableDatum?.candidateName?.includes(e.target.value.trim())
+      tableDatum?.candidateName
+        ?.toLowerCase()
+        .includes(e.target.value.trim().toLowerCase())
     )
     setSearchedTableData(filteredPendingCandidatesArray)
     // console.log(filteredPendingCandidatesArray)
