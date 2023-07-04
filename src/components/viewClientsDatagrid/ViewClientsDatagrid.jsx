@@ -1,19 +1,8 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from '@mui/material'
 import { Box } from '@mui/system'
 import { DataGrid } from '@mui/x-data-grid'
 import React, { useEffect, useState } from 'react'
 import { MdCancel } from 'react-icons/md'
-import { FaAngleDown } from 'react-icons/fa'
 import './viewClientsDatagrid.scss'
-import { BsCheck } from 'react-icons/bs'
 
 const ViewClientsDatagrid = (props) => {
   const [pageSize, setPageSize] = useState(5)
@@ -24,7 +13,6 @@ const ViewClientsDatagrid = (props) => {
 
   // TABLE DATA
   let rows = props?.tableData
-  console.log(props?.tableData)
   let title
 
   // LOGGED IN USER RLOE

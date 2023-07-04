@@ -567,6 +567,52 @@ const PendingCandidatesDatagrid = (props) => {
   }
   // END OF FUNCTION TO APPROVE RESULT BY QA
 
+  // FUNCTION TO SEND RESULT BY REPORTS OFFICER
+  const sendReport = async () => {
+    toastId.current = toast('Please wait...', {
+      isLoading: true,
+    })
+
+    const { candidateId } = selectedCandidate
+    try {
+      await publicRequest
+        .put(
+          `Candidate/Authorize/${candidateId}`,
+          {},
+          {
+            headers: {
+              Accept: '*',
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(() => props?.getPendingCandidates())
+        // .then(() => props?.setReloadTable((prev) => !prev))
+        .then(() => {
+          toast.update(toastId.current, {
+            render: 'Result successfully sent to the client',
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+          })
+        })
+    } catch (error) {
+      toast.update(toastId.current, {
+        type: 'error',
+        autoClose: 3000,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
+          error?.message ||
+          'Something went wrong, please try again'
+        }`,
+      })
+    }
+  }
+  // END OF FUNCTION TO SEND RESULT BY REPORTS OFFICER
+
   // FUNCTION TO REJECT RESULT BY QA
   const rejectResult = async () => {
     let rejectedResultDetails = {}
@@ -649,6 +695,9 @@ const PendingCandidatesDatagrid = (props) => {
       case 'Approve':
         approveResult()
         break
+      case 'Send Report':
+        sendReport()
+        break
       default:
         break
     }
@@ -684,11 +733,6 @@ const PendingCandidatesDatagrid = (props) => {
   // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
   const handleTestInputChange = (e, data) => {
     if (candidateResults?.length > 0) {
-      // const selectedCandidateResult = candidateResults.find(
-      //   (candidateResult) => candidateResult.testId === data?.testId
-      // )
-      // console.log(selectedCandidateResult)
-
       // MAP OVER THE CANDIDATE RESULTS ARRAY, IF THE IDs MATCH UPDATE, IF NOT RETURN CURRENT ITEM IN THE ARRAY
       candidateResults = candidateResults.map((candidateResult) => {
         console.log(candidateResult.testId, data?.testId)
@@ -764,7 +808,6 @@ const PendingCandidatesDatagrid = (props) => {
     if (loggedInUserRole === 'Report') {
       console.log(selectedCandidate)
       if (selectedCandidate?.candidateId) {
-        let resultList = []
         const getCandidatetResults = async () => {
           console.log(selectedCandidate)
           setLoadingCandedateSubmittedResults(true)
@@ -783,10 +826,6 @@ const PendingCandidatesDatagrid = (props) => {
                 console.log(res)
                 setLoadingCandedateSubmittedResults(false)
                 setCandidateSubmittedResults(res?.data?.data)
-                const pendingResultPresent = res?.data?.data?.find(
-                  (result) => result?.status === 'PENDING'
-                )
-                !pendingResultPresent && setBtnsAreDisabled(false)
               })
           } catch (error) {
             console.log(error)

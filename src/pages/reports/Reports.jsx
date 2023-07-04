@@ -1,24 +1,87 @@
 import {
+  Autocomplete,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   TextField,
 } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from '../../components/sidebar/Sidebar'
 import Topber from '../../components/topbar/Topber'
 import './reports.scss'
-import searchImg from '../../utils/images/searchImg.png'
+import ErrorComponent from '../../components/error/Error'
 import ReportsDatagrid from '../../components/reportsDatagrid/ReportsDatagrid'
 import { useSelector } from 'react-redux'
+import { publicRequest } from '../../functions/requestMethods'
+import Loading from '../../components/loading/Loading'
 
-const Reports = (props) => {
-  const [searched, setSearched] = useState(false)
+const Reports = () => {
+  // LOGGED IN USER TOKEN
+  const { token } = useSelector((state) => state?.user?.currentUser?.data)
+
   // GET CURRENT LOGGED IN USER
   const { currentUser } = useSelector((state) => state?.user)
   const loggedInUserRole = currentUser?.data?.role
   const userName = currentUser?.data?.profile?.fullName
+
+  // TABLE DATA
+  const [tableData, setTableData] = useState([])
+  const [searchedTableData, setSearchedTableData] = useState([])
+
+  // LOADING AND ERROR DATA
+  const [loadingResults, setLoadingResults] = useState(false)
+  const [errorLoadingResults, setErrorLoadingResults] = useState(false)
+  const [errorMessageLoadingResults, setErrorMessageLoadingResults] =
+    useState(null)
+  // END OF LOADING AND ERROR DATA
+
+  // FUNCTION TO GET AND SET CANDIDATES' RESULTS
+  const getAllResults = async () => {
+    try {
+      setLoadingResults(true)
+      const res = await publicRequest.get('Result/client', {
+        headers: {
+          Accept: '*',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (res.data) {
+        console.log(res.data)
+        setTableData(res.data?.data === '' ? [] : res.data?.data)
+        setSearchedTableData(res.data?.data === '' ? [] : res.data?.data)
+        setLoadingResults(false)
+      } else {
+        console.log(res.data)
+      }
+    } catch (error) {
+      setLoadingResults(false)
+      setErrorLoadingResults(true)
+      setErrorMessageLoadingResults(error)
+
+      console.log(error)
+    }
+  }
+  // END OF FUNCTION TO GET AND SET CANDIDATES' RESULTS
+
+  // SEARCH FUNCTIONALITY
+  const handleSearchParamsChange = (e) => {
+    let filteredPendingCandidatesArray
+    filteredPendingCandidatesArray = tableData.filter((tableDatum) =>
+      tableDatum?.candidateName
+        ?.toLowerCase()
+        .includes(e.target.value.trim().toLowerCase())
+    )
+    setSearchedTableData(filteredPendingCandidatesArray)
+    // console.log(filteredPendingCandidatesArray)
+  }
+  // END OF SEARCH FUNCTIONALITY
+
+  // USE EFFECT TO GET ALL CANDIDATES AS THE PAGE LOADS
+  useEffect(() => {
+    getAllResults()
+  }, [])
 
   return (
     <div className='reportsWrapper'>
@@ -29,40 +92,32 @@ const Reports = (props) => {
           <div className='reportsMainTop'>
             <h3 className='reportsMainTopTitle'>Search</h3>
             <div className='reportsMainTopForm'>
-              <FormControl className='companySelect'>
-                <InputLabel id='demo-simple-select-label'>
-                  Company name
-                </InputLabel>
-                <Select
-                  labelId='demo-simple-select-label'
-                  id='demo-simple-select'
-                  //   value={age}
-                  label='Company name'
-                  //   onChange={handleChange}
-                >
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-              </FormControl>
               <TextField
                 id='outlined-search'
                 label='Candidate name'
                 type='search'
                 className='candidateName'
+                onChange={(e) => handleSearchParamsChange(e)}
               />
-
-              <div className='reportsBtn'>Search</div>
             </div>
           </div>
           <div className='reportsMainBottom'>
-            {searched && (
-              <>
-                <img src={searchImg} alt='Search' className='searchImg' />
-                <h3>Nothing to see here, yet</h3>
-              </>
+            {loadingResults || errorLoadingResults ? (
+              loadingResults ? (
+                <Loading />
+              ) : (
+                <ErrorComponent
+                  errorMessage={
+                    errorMessageLoadingResults && errorMessageLoadingResults
+                  }
+                />
+              )
+            ) : (
+              <ReportsDatagrid
+                userDetails={currentUser}
+                tableData={searchedTableData}
+              />
             )}
-            {<ReportsDatagrid userDetails={currentUser} />}
           </div>
         </div>
       </div>

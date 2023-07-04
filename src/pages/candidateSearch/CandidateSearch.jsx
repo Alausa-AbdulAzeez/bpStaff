@@ -71,7 +71,13 @@ const CandidateSearch = () => {
 
   const getAllClients = async () => {
     try {
-      const res = await publicRequest.get('Client/Client-list')
+      const res = await publicRequest.get('Client/Client-list', {
+        headers: {
+          Accept: '*',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
 
       if (res.data) {
         setClients(res.data.data)
