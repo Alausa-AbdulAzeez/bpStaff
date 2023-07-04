@@ -4,7 +4,6 @@ import Sidebar from '../../components/sidebar/Sidebar'
 
 import Topber from '../../components/topbar/Topber'
 import './candidateSearch.scss'
-import searchImg from '../../utils/images/searchImg.png'
 import CandidateSearchDatagrid from '../../components/candidateSearchDatagrid/CandidateSearchDatagrid'
 import { useSelector } from 'react-redux'
 import { publicRequest } from '../../functions/requestMethods'

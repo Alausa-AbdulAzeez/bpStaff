@@ -14,6 +14,8 @@ import ChangePassword from './pages/changePassword/ChangePassword'
 import PrivateRoutes from './components/PrivateRoutes'
 import Profile from './pages/profile/Profile'
 import RejectedResults from './pages/rejectedResults/RejectedResults'
+import LabReportPage from './pages/labReportPage/LabReportPage'
+import DownloadReportPage from './pages/downloadReport/DownloadReportPage'
 
 function App() {
   let userDetails
@@ -59,7 +61,13 @@ function App() {
           <Route path='/rejectedResults' element={<RejectedResults />} />
           <Route path='/viewClients' element={<ViewClients />} />
           <Route path='/reports' element={<Reports />} />
-          <Route path='/profile' element={<Profile />} />
+          {/* <Route path='/profile' element={<Profile />} /> */}
+          <Route
+            path='/labReport/:candidate'
+            element={<DownloadReportPage />}
+          />
+
+          {/* <Route path='/labReport' element={<LabReportPage />} /> */}
         </Route>
         <Route exact path='/login' element={<Register />} />
 

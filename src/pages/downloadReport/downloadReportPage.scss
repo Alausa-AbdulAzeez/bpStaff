@@ -3,6 +3,7 @@
   width: 1000px;
   background-color: white;
   overflow-y: auto;
+  color: #000;
 
   .doctorPage {
     height: 100%;
@@ -12,7 +13,7 @@
     padding: 32px;
     // overflow-y: auto;
     color: #000;
-    margin-bottom: 300px;
+    // margin-bottom: 300px;
 
     & > .topLogo {
       height: 100px;
@@ -53,6 +54,18 @@
         margin-bottom: 5px;
         margin-top: 16px;
       }
+      // page-break-after: always;
+    }
+    .positionOfDoc {
+      font-weight: bold;
     }
   }
+}
+.resulDataGridWrapper {
+  min-height: 400px;
+  // height: fit-content;
+}
+.css-t89xny-MuiDataGrid-columnHeaderTitle {
+  font-weight: 900 !important;
+  // text-align: center !important;
 }

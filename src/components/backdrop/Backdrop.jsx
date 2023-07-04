@@ -1,15 +1,10 @@
 import * as React from 'react'
 import Backdrop from '@mui/material/Backdrop'
 import jsPDF from 'jspdf'
-import {
-  BsCloudDownloadFill,
-  BsDownload,
-  BsFillArrowDownCircleFill,
-} from 'react-icons/bs'
+import { BsDownload } from 'react-icons/bs'
 import { MdCancel } from 'react-icons/md'
 import DownloadReportPage from '../../pages/downloadReport/DownloadReportPage'
 import BiopathLogo from '../../utils/images/BiopathLogo.jpeg'
-// import BiopathLogo from '../../utils/images/IMG_6229.png'
 
 export default function SimpleBackdrop(props) {
   const { open, handleClose, data } = props
@@ -17,11 +12,6 @@ export default function SimpleBackdrop(props) {
 
   const generatePDF = () => {
     const doc = new jsPDF()
-    // const doc = new jsPDF('p', 'mm', [1100, 1050])
-    // const report = new jsPDF('p', 'mm', [1600, 1250])
-    // report.html(document.querySelector('#report')).then(() => {
-    //   report.save('report.pdf')
-    // })
     doc.html(document.querySelector('#report'), {
       callback: function (doc) {
         // Save the PDF
@@ -89,7 +79,6 @@ export default function SimpleBackdrop(props) {
             <BsDownload style={{ marginLeft: '5px', fontSize: 'large' }} />
           </span>
         </div>
-        {/* <CircularProgress color='inherit' /> */}
         <DownloadReportPage data={data} generatePDF={generatePDF} />
       </Backdrop>
     </div>

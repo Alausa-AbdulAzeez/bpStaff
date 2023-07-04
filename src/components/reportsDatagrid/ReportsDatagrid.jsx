@@ -18,6 +18,7 @@ import './reportsDatagrid.scss'
 import SimpleBackdrop from '../backdrop/Backdrop'
 import { publicRequest } from '../../functions/requestMethods'
 import { useSelector } from 'react-redux'
+import { Link, Navigate } from 'react-router-dom'
 
 const ReportsDatagrid = (props) => {
   const [pageSize, setPageSize] = useState(5)
@@ -58,20 +59,24 @@ const ReportsDatagrid = (props) => {
       editable: false,
     },
     { field: 'clientName', headerName: 'Client Name', width: 300 },
-    {
-      field: 'testcategory',
-      headerName: 'Test Category',
-      width: 250,
-      editable: false,
-    },
+    // {
+    //   field: 'testcategory',
+    //   headerName: 'Test Category',
+    //   width: 250,
+    //   editable: false,
+    // },
     {
       field: 'action',
       headerName: 'Action',
       width: 130,
-      renderCell: () => {
+      renderCell: (param) => {
+        console.log(param?.row?.tests?.[0]?.candidateId)
+        const rowId = param?.row?.tests?.[0]?.candidateId
         return (
           <>
-            <div className='notAuthorized'>View</div>
+            <Link to={`/labReport/${rowId}`} target='_blank'>
+              <div className='notAuthorized'>View Report</div>
+            </Link>
           </>
         )
       },
@@ -154,7 +159,9 @@ const ReportsDatagrid = (props) => {
   const handleBtnClick = (e) => {
     switch (e.target.textContent) {
       case 'View Report':
-        setOpen(true)
+        // setOpen(true)
+        Navigate({ to: '/labReport' })
+
         console.log(e.target.textContent)
 
         break
@@ -280,7 +287,6 @@ const ReportsDatagrid = (props) => {
                   rowsPerPageOptions={[5]}
                   getRowId={(row) => row?.resultId}
                   onRowSelectionModelChange={(result) => {
-                    console.log(result)
                     return setSelectedCandidateResults(result)
                   }}
                 />
@@ -291,14 +297,15 @@ const ReportsDatagrid = (props) => {
 
         {
           <div className='bottomButtons'>
-            {leftBtnText && (
-              <div
-                className='authorize sendDetails'
-                onClick={(e) => handleBtnClick(e)}
-              >
-                {leftBtnText}
-              </div>
-            )}
+            {console.log(selectedCandidate)}
+            <Link
+              to={`/labReport/${
+                selectedCandidate && selectedCandidate.tests?.[0].candidateId
+              }`}
+              target='_blank'
+            >
+              <div className='authorize sendDetails'>{leftBtnText}</div>
+            </Link>
           </div>
         }
       </div>
