@@ -23,6 +23,7 @@ import {
 } from '../../functions/requestMethods'
 import { toast } from 'react-toastify'
 import FormDialog from '../DialogueWithInfo'
+import { Link, Navigate } from 'react-router-dom'
 
 const PendingCandidatesDatagrid = (props) => {
   // RESULT DIALOGUE BACKDROP
@@ -677,7 +678,8 @@ const PendingCandidatesDatagrid = (props) => {
     e.preventDefault()
     switch (e.target.textContent) {
       case 'Preview Report':
-        btnsAreDisabled ? '' : setOpen(true)
+        // btnsAreDisabled ? '' : setOpen(true)
+
         console.log(e.target.textContent)
         break
       case 'Save Details':
@@ -1161,11 +1163,22 @@ const PendingCandidatesDatagrid = (props) => {
                   {leftBtnText}
                 </div>
               )}
-              {rightBtnText?.length > 0 && (
-                <div className='authorize' onClick={(e) => handleBtnClick(e)}>
-                  {rightBtnText}
-                </div>
-              )}
+              {console.log(selectedCandidate)}
+              {rightBtnText?.length > 0 &&
+                (rightBtnText === 'Preview Report' ? (
+                  <Link
+                    to={`/labReport/${
+                      selectedCandidate && selectedCandidate.candidateId
+                    }`}
+                    target='_blank'
+                  >
+                    <div className='authorize'>{rightBtnText}</div>
+                  </Link>
+                ) : (
+                  <div className='authorize' onClick={(e) => handleBtnClick(e)}>
+                    {rightBtnText}
+                  </div>
+                ))}
             </div>
           )}
       </form>

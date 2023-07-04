@@ -297,7 +297,6 @@ const ReportsDatagrid = (props) => {
 
         {
           <div className='bottomButtons'>
-            {console.log(selectedCandidate)}
             <Link
               to={`/labReport/${
                 selectedCandidate && selectedCandidate.tests?.[0].candidateId
