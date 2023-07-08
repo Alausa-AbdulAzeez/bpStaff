@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 const ForgotPassword = () => {
   // MISCELLANEOUS
   const toastId = React.useRef(null);
+  const [btnDisabled, setBtnDisabled] = useState(false);
   // END OF MISCELLANEOUS
 
   // USER LOGIN DETAILS
@@ -30,6 +31,9 @@ const ForgotPassword = () => {
   // FUNCTION FOR ONCLICK LOGIN BUTTON
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    setBtnDisabled(true);
+
     toastId.current = toast("Please wait...", {
       autoClose: 3000,
       isLoading: true,
@@ -45,6 +49,7 @@ const ForgotPassword = () => {
               isLoading: false,
               autoClose: 3000,
             });
+            setBtnDisabled(false);
           })
           .then(() => {
             setUser({
@@ -66,6 +71,7 @@ const ForgotPassword = () => {
           "Something went wrong, please try again"
         }`,
       });
+      setBtnDisabled(false);
     }
   };
   // END OF FUNCTION FOR ONCLICK LOGIN BUTTON
@@ -100,6 +106,7 @@ const ForgotPassword = () => {
               className="forgotPasswordBtn"
               type={"submit"}
               data-testid="forgotPasswordBtn"
+              disabled={btnDisabled}
             >
               Send Login Link
             </button>
