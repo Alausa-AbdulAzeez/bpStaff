@@ -10,6 +10,7 @@ const Homedatagrid = (props) => {
 
   // TABLE DATA
   const tableData = props?.tableData;
+  console.log(tableData);
   let rows;
   let columns;
   let title;
@@ -33,17 +34,17 @@ const Homedatagrid = (props) => {
       width: 140,
       editable: false,
     },
-    {
-      field: "appointmentdate",
-      headerName: "Appointment Date",
-      width: 190,
-      description: "The candidate shoul be present by this date",
-      renderCell: (props) => {
-        const refinedDate = new Date(props?.value);
-        const dateWithRightFormat = format(refinedDate, "dd-MMM-yyyy");
-        return <div>{dateWithRightFormat}</div>;
-      },
-    },
+    // {
+    //   field: "appointmentdate",
+    //   headerName: "Appointment Date",
+    //   width: 190,
+    //   description: "The candidate shoul be present by this date",
+    //   renderCell: (props) => {
+    //     const refinedDate = new Date(props?.value);
+    //     const dateWithRightFormat = format(refinedDate, "dd-MMM-yyyy");
+    //     return <div>{dateWithRightFormat}</div>;
+    //   },
+    // },
     {
       field: "phoneNumber",
       headerName: "Phone Number",
@@ -97,6 +98,8 @@ const Homedatagrid = (props) => {
     default:
       break;
   }
+
+  useEffect(() => {}, [tableData]);
   return (
     <div className="datagridWraper">
       <h3>{title}</h3>
@@ -107,12 +110,11 @@ const Homedatagrid = (props) => {
           pageSize={pageSize}
           // checkboxSelection
           // disableSelectionOnClick
-          experimentalFeatures={{ newEditingApi: true }}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           rowsPerPageOptions={[5, 10, 20]}
           pagination
           rowSelection={false}
-          getRowId={(row) => row?.candidateId}
+          // getRowId={(row) => row?.candidateId && row?.candidateId}
         />
       </Box>
     </div>
