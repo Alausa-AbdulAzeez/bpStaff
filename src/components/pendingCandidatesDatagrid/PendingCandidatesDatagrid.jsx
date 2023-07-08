@@ -259,7 +259,7 @@ const PendingCandidatesDatagrid = (props) => {
       console.log(selectedCandidate);
     }
     toastId.current = toast("Please wait...", {
-      autoClose: 3000,
+      autoClose: 2500,
       isLoading: true,
     });
 
@@ -287,7 +287,7 @@ const PendingCandidatesDatagrid = (props) => {
             render: "Candidate can proceed to the next stage",
             type: "success",
             isLoading: false,
-            autoClose: 3000,
+            autoClose: 2500,
           });
         });
     } catch (error) {
@@ -295,7 +295,7 @@ const PendingCandidatesDatagrid = (props) => {
       console.log(error.message);
       toast.update(toastId.current, {
         type: "error",
-        autoClose: 3000,
+        autoClose: 2500,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
@@ -368,7 +368,7 @@ const PendingCandidatesDatagrid = (props) => {
               render: "Candidate can proceed to the next stage",
               type: "success",
               isLoading: false,
-              autoClose: 3000,
+              autoClose: 2500,
             });
           });
       } else {
@@ -380,7 +380,7 @@ const PendingCandidatesDatagrid = (props) => {
       console.log(error.message);
       toast.update(toastId.current, {
         type: "error",
-        autoClose: 3000,
+        autoClose: 2500,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
@@ -450,7 +450,7 @@ const PendingCandidatesDatagrid = (props) => {
               render: "Result sent to QA for review",
               type: "success",
               isLoading: false,
-              autoClose: 3000,
+              autoClose: 2500,
             });
           });
       } else {
@@ -462,7 +462,7 @@ const PendingCandidatesDatagrid = (props) => {
       console.log(error.message);
       toast.update(toastId.current, {
         type: "error",
-        autoClose: 3000,
+        autoClose: 2500,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
@@ -507,7 +507,7 @@ const PendingCandidatesDatagrid = (props) => {
               render: "Candidate result has been accepted",
               type: "success",
               isLoading: false,
-              autoClose: 3000,
+              autoClose: 2500,
             });
           });
       } else {
@@ -516,7 +516,7 @@ const PendingCandidatesDatagrid = (props) => {
     } catch (error) {
       toast.update(toastId.current, {
         type: "error",
-        autoClose: 3000,
+        autoClose: 2500,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
@@ -547,13 +547,13 @@ const PendingCandidatesDatagrid = (props) => {
     //         render: "Result sent to QA for review",
     //         type: "success",
     //         isLoading: false,
-    //         autoClose: 3000,
+    //         autoClose: 2500,
     //       });
     //     });
     // } catch (error) {
     //   toast.update(toastId.current, {
     //     type: "error",
-    //     autoClose: 3000,
+    //     autoClose: 2500,
     //     isLoading: false,
     //     render: `${
     //       error?.response?.data?.title ||
@@ -593,13 +593,13 @@ const PendingCandidatesDatagrid = (props) => {
             render: "Result successfully sent to the client",
             type: "success",
             isLoading: false,
-            autoClose: 3000,
+            autoClose: 2500,
           });
         });
     } catch (error) {
       toast.update(toastId.current, {
         type: "error",
-        autoClose: 3000,
+        autoClose: 2500,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
@@ -626,7 +626,7 @@ const PendingCandidatesDatagrid = (props) => {
       rejectionReason: reasonForRejection,
     };
     toastId.current = toast("Please wait...", {
-      autoClose: 3000,
+      autoClose: 2500,
       isLoading: true,
     });
 
@@ -647,7 +647,7 @@ const PendingCandidatesDatagrid = (props) => {
               render: "Candidate result has been accepted",
               type: "success",
               isLoading: false,
-              autoClose: 3000,
+              autoClose: 2500,
             });
           });
       } else {
@@ -658,7 +658,7 @@ const PendingCandidatesDatagrid = (props) => {
     } catch (error) {
       toast.update(toastId.current, {
         type: "error",
-        autoClose: 3000,
+        autoClose: 2500,
         isLoading: false,
         render: `${
           error?.response?.data?.title ||
