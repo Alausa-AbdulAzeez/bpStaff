@@ -114,7 +114,7 @@ const Homedatagrid = (props) => {
           rowsPerPageOptions={[5, 10, 20]}
           pagination
           rowSelection={false}
-          // getRowId={(row) => row?.candidateId && row?.candidateId}
+          getRowId={(row) => row?.candidateId}
         />
       </Box>
     </div>

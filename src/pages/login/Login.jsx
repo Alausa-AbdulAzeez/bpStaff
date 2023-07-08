@@ -79,7 +79,7 @@ const Register = () => {
           />
         </div>
         <div className="loginWrapperRight">
-          <form className="loginFormWrapper">
+          <form className="loginFormWrapper" onSubmit={handleLogin}>
             {/* <div className='loginTest'>Trying to test, click</div> */}
             <div className="loginHeading">Log in</div>
             <div className="loginInputs">
@@ -114,7 +114,7 @@ const Register = () => {
               type={"submit"}
               disabled={btnDisabled}
               data-testid="loginBtn"
-              onClick={handleLogin}
+              // onClick={handleLogin}
             >
               Login
             </button>
