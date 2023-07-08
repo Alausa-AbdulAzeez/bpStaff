@@ -53,31 +53,33 @@ function App() {
   // useEffect(() => {}, [user])
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<PrivateRoutes />}>
-          <Route exact path="/" element={<Home />} />
-          <Route path="/candidateSearch" element={<CandidateSearch />} />
-          <Route path="/pendingCandidates" element={<PendingCandidates />} />
-          <Route path="/rejectedResults" element={<RejectedResults />} />
-          <Route path="/viewClients" element={<ViewClients />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route
-            path="/labReport/:candidate"
-            element={<DownloadReportPage />}
-          />
-          <Route path="/scheduleCandidate" element={<ScheduleCandidate />} />
+    <div className="app">
+      <BrowserRouter>
+        <Routes>
+          <Route element={<PrivateRoutes />}>
+            <Route exact path="/" element={<Home />} />
+            <Route path="/candidateSearch" element={<CandidateSearch />} />
+            <Route path="/pendingCandidates" element={<PendingCandidates />} />
+            <Route path="/rejectedResults" element={<RejectedResults />} />
+            <Route path="/viewClients" element={<ViewClients />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route
+              path="/labReport/:candidate"
+              element={<DownloadReportPage />}
+            />
+            <Route path="/scheduleCandidate" element={<ScheduleCandidate />} />
 
-          {/* <Route path='/labReport' element={<LabReportPage />} /> */}
-        </Route>
-        <Route exact path="/login" element={<Register />} />
+            {/* <Route path='/labReport' element={<LabReportPage />} /> */}
+          </Route>
+          <Route exact path="/login" element={<Register />} />
 
-        <Route path="/getToken" element={<ForgotPassword />} />
-        <Route path="/forgotPassword" element={<ResetPassword />} />
-        <Route path="/changePassword" element={<ChangePassword />} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="/getToken" element={<ForgotPassword />} />
+          <Route path="/forgotPassword" element={<ResetPassword />} />
+          <Route path="/changePassword" element={<ChangePassword />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 

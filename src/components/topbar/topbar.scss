@@ -5,6 +5,11 @@
   padding: 0px 64px;
   height: 50px;
   border-bottom: 1px solid var(--border-silver-color);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+
+  backdrop-filter: blur(5px);
 
   .topbarIcon {
     font-size: 24px;

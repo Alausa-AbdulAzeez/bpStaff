@@ -18,6 +18,8 @@ const ScheduleCandidate = () => {
   const [open, setOpen] = React.useState(false);
   const date = new Date().toISOString();
   const toastId = React.useRef(null);
+  const { currentUser } = useSelector((state) => state?.user);
+  const userName = currentUser?.data?.profile?.fullName;
 
   // LOGGED IN USER TOKEN
   const { token } = useSelector((state) => state?.user?.currentUser?.data);
@@ -294,7 +296,7 @@ const ScheduleCandidate = () => {
         />
         <Sidebar />
         <div className="scheduleCandidateRight">
-          <Topber />
+          <Topber userName={userName} />
           {/* <h3>Schedule Candidate</h3> */}
           <div className="scheduleCandidateMainWrapper">
             <form className="scheduleCandidateFormWrapper">

@@ -4,6 +4,8 @@
   border-right: 1px solid var(--border-silver-color);
   min-width: 250px;
 
+
+
   .sidebarTop {
     height: 50px;
     width: 100%;
@@ -12,6 +14,9 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+      position: sticky;
+        top: 0;
+        bottom: 0;
 
     .sidebarTopImageWrapper {
       height: 100%;

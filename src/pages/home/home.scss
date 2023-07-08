@@ -8,9 +8,12 @@
     .homeMainWrapper {
       padding: 30px 64px;
       display: flex;
+      // background-color: red;
       flex-direction: column;
       justify-content: space-between;
-      height: calc(100% - 50px);
+      height: calc(100vh - 50px);
+      overflow-y: hidden;
+
       .homeMainTop {
         display: flex;
         overflow-x: auto;
