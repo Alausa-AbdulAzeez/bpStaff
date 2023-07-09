@@ -121,6 +121,7 @@ const PendingCandidates = () => {
                   type="search"
                   className="candidateName"
                   onChange={(e) => handleSearchParamsChange(e)}
+                  size={"small"}
                 />
 
                 {/* <div className='pendingCandidatesBtn'>Search</div> */}
