@@ -223,6 +223,10 @@ const CandidateSearchDatagrid = (props) => {
           <h3>{"Candidate's Email"}</h3>
           <p>{selectedCandidate?.email}</p>
         </div>
+        <div className='numberOfTests h3'>
+          <h3>{"Candidate's Adderess"}</h3>
+          <p>{selectedCandidate?.address}</p>
+        </div>
         {loggedInUserRole === 'Reception' && (
           <div className='numberOfTests h3'>
             <h3>{"Candidate's Adderess"}</h3>
@@ -367,8 +371,8 @@ const CandidateSearchDatagrid = (props) => {
         <Box sx={{ height: 350 }}>
           <h3>{title}</h3>
           <DataGrid
-            rows={rows}
-            columns={columns}
+            rows={tableData}
+            columns={defaultColumns}
             pageSize={pageSize}
             // checkboxSelection
             // disableSelectionOnClick
