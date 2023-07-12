@@ -142,6 +142,8 @@ const PendingCandidatesDatagrid = (props) => {
               >
                 Authorize
               </div>
+            ) : (
+              <div className='notAuthorized'>View</div>
             )}
             {(loggedInUserRole === 'Phlebotomy' ||
               loggedInUserRole === 'MainLab1' ||
