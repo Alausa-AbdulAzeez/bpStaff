@@ -86,3 +86,21 @@ Password : Password123@
     "clientId": 1
   }
 ]
+
+# CANDIDATE TO BE UPDATED
+{
+  "candidateId": 50,
+  "clientid": 1,
+  "height": "1.2",
+  "bloodPressure": "80/120",
+  "weight": "50",
+  "age": "20",
+  "bmi": "1.22",
+  "gender": "m",
+  "state": "",
+  "temperature": "20",
+  "visaulAcuity": "1.2",
+  "randomBloodSugar": "1.2",
+  "stoolAnalysis": "brown/yellow",
+  "urinalysis": "{'Color/Appearance':'brown/red','Leucocytes':'no','Nitrites':'no','Urobilinogen':'no','Protein':'no','pH':'6.5','Blood':'no','SpecificGravity':'1.2','Ketone':'no','Bilirubin':'no','Glucose':'no'}"
+}

@@ -37,6 +37,9 @@ const PendingCandidatesDatagrid = (props) => {
   const [loadingCandedateTests, setLoadingCandedateTests] = useState(false)
   const [candedateTestsError, setCandedateTestsError] = useState(false)
 
+  // TO SET THE STATE OF THE UPDATE BUTTON
+  const [disableUpdateBtn, setDisableUpdateBtn] = useState(false)
+
   // SELECTED CANDIDATE SUBMITTED RESULTS (FOR QA and REPORTS )
   const [candidateSubmittedResults, setCandidateSubmittedResults] = useState([])
 
@@ -161,10 +164,10 @@ const PendingCandidatesDatagrid = (props) => {
               </div>
             )}
 
-            {(loggedInUserRole === 'Phlebotomy' ||
-              loggedInUserRole === 'MainLab1' ||
-              loggedInUserRole === 'Report' ||
-              loggedInUserRole === 'Quality assurance') && (
+            {(loggedInUserRole[0] === 'Phlebotomy' ||
+              loggedInUserRole[0] === 'MainLab1' ||
+              loggedInUserRole[0] === 'Report' ||
+              loggedInUserRole[0] === 'Quality assurance') && (
               <div className='notAuthorized'>View</div>
             )}
           </>
@@ -331,28 +334,29 @@ const PendingCandidatesDatagrid = (props) => {
     toastId.current = toast('Please wait...', {
       isLoading: true,
     })
+    setDisableUpdateBtn(true)
 
-    const keys = [
-      'height',
-      'bloodPressure',
-      'weight',
-      'age',
-      'gender',
-      'temperature',
-    ]
+    console.log(userDetails)
 
     try {
-      const found = keys?.find((key) => {
-        return userDetails[key] === ''
-      })
-
-      if (!found) {
-        await publicRequest
-          .put(
-            `/Candidate/UInfo?Candidateid=${Number(
-              candidateId
-            )}&Clientid=${Number(clientId)}`,
-            userDetails,
+      await publicRequest
+        .put(
+          `/Candidate/UInfo?Candidateid=${Number(
+            candidateId
+          )}&Clientid=${Number(clientId)}`,
+          userDetails,
+          {
+            headers: {
+              Accept: '*',
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(async () => {
+          await publicRequest.put(
+            `Candidate/Authorize/${candidateId}`,
+            {},
             {
               headers: {
                 Accept: '*',
@@ -361,36 +365,23 @@ const PendingCandidatesDatagrid = (props) => {
               },
             }
           )
-          .then(async () => {
-            await publicRequest.put(
-              `Candidate/Authorize/${candidateId}`,
-              {},
-              {
-                headers: {
-                  Accept: '*',
-                  Authorization: `Bearer ${token}`,
-                  'Content-Type': 'application/json',
-                },
-              }
-            )
+          setDisableUpdateBtn(false)
+        })
+        .then(async () => {
+          await props?.getPendingCandidates().then(() => {
+            setPosition('-100%')
           })
-          .then(async () => {
-            await props?.getPendingCandidates()
-            // window.location.reload();
+          // window.location.reload();
+        })
+        // .then(() => props?.setReloadTable((prev) => !prev))
+        .then(() => {
+          toast.update(toastId.current, {
+            render: 'Candidate can proceed to the next stage',
+            type: 'success',
+            isLoading: false,
+            autoClose: 2500,
           })
-          // .then(() => props?.setReloadTable((prev) => !prev))
-          .then(() => {
-            toast.update(toastId.current, {
-              render: 'Candidate can proceed to the next stage',
-              type: 'success',
-              isLoading: false,
-              autoClose: 2500,
-            })
-          })
-      } else {
-        console.log(found)
-        throw Error(`Please fill all fields, the "${found}" field is empty`)
-      }
+        })
     } catch (error) {
       console.log(error)
       console.log(error.message)
@@ -405,6 +396,7 @@ const PendingCandidatesDatagrid = (props) => {
           'Something went wrong, please try again'
         }`,
       })
+      setDisableUpdateBtn(false)
     }
   }
   // END OF FUNCTION TO SEND UPDATED USER DETAILS TO THE BACKEND (PHLEB)
@@ -742,6 +734,21 @@ const PendingCandidatesDatagrid = (props) => {
 
   // END OF FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
 
+  // FUNCTION TO HANDLE URINALYSIS DATA CHANGE
+  const handleUrinalysisDetailsChange = (e, dataType) => {
+    setUrinalysisDetails({ ...urinalysisDetails, [dataType]: e.target.value })
+    console.log(urinalysisDetails)
+    setUserDetails({
+      ...userDetails,
+      urinalysis: JSON.stringify({
+        ...urinalysisDetails,
+        [dataType]: e.target.value,
+      }),
+    })
+    console.log(userDetails)
+  }
+  // END OF FUNCTION TO HANDLE URINALYSIS DATA CHANGE
+
   // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
   const handleTestInputChange = (e, data) => {
     if (candidateResults?.length > 0) {
@@ -866,6 +873,9 @@ const PendingCandidatesDatagrid = (props) => {
 
   // USEEFFECT TO UPDATE USER DETAILS
   useEffect(() => {}, [userDetails])
+
+  // USEEFFECT TO UPDATE USER URINALYSIS DETAILS
+  useEffect(() => {}, [urinalysisDetails])
 
   // USEEFFECT TO UPDATE BUTTON DISABLED STATE
   useEffect(() => {}, [btnsAreDisabled])
@@ -1378,12 +1388,18 @@ const PendingCandidatesDatagrid = (props) => {
                     }`}
                     target='_blank'
                   >
-                    <div className='authorize'>{rightBtnText}</div>
+                    <button className='authorize' disabled={disableUpdateBtn}>
+                      {rightBtnText}
+                    </button>
                   </Link>
                 ) : (
-                  <div className='authorize' onClick={(e) => handleBtnClick(e)}>
+                  <button
+                    className='authorize'
+                    disabled={disableUpdateBtn}
+                    onClick={(e) => handleBtnClick(e)}
+                  >
                     {rightBtnText}
-                  </div>
+                  </button>
                 ))}
             </div>
           )}
