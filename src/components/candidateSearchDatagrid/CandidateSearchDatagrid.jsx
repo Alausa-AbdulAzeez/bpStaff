@@ -23,6 +23,40 @@ const CandidateSearchDatagrid = (props) => {
   // TABLE ROWS TO LOAD
   const [pageSize, setPageSize] = useState(5)
 
+  // BMI
+  const [BMI, setBMI] = useState('')
+
+  // USER DETAILS
+  const [urinalysisDetails, setUrinalysisDetails] = useState({
+    'Color/Appearance': '',
+    Leucocytes: '',
+    Nitrites: '',
+    Urobilinogen: '',
+    Protein: '',
+    pH: '',
+    Blood: '',
+    SpecificGravity: '',
+    Ketone: '',
+    Bilirubin: '',
+    Glucose: '',
+  })
+  const [userDetails, setUserDetails] = useState({
+    candidateId: '',
+    clientid: '',
+    height: '',
+    bloodPressure: '',
+    weight: '',
+    age: '',
+    bmi: '',
+    gender: '',
+    temperature: '',
+    state: '',
+    visaulAcuity: '',
+    randomBloodSugar: '',
+    stoolAnalysis: '',
+    urinalysis: JSON.stringify(urinalysisDetails),
+  })
+
   // SELECTED CANDIDATE AFTER ROW CLICK
   const [selectedCandidate, setSelecedCandidate] = useState({})
 
@@ -42,29 +76,6 @@ const CandidateSearchDatagrid = (props) => {
 
   // LOGGED IN USER RLOE
   const loggedInUserRole = props.userDetails?.data?.role
-
-  // SET SIDE INFO POSITION
-  const handleSetPosition = () => {
-    setPosition('0')
-  }
-  // END OF SET SIDE INFO POSITION
-
-  // HANDLE ROW CLICK
-  const handleRowClick = (row, e) => {
-    setSelecedCandidate(row?.row)
-    if (e.target.textContent !== 'Authorize') {
-      if (position !== '0') {
-        setPosition('0')
-      }
-    }
-  }
-  // END OF HANDLE ROW CLICK
-
-  // HANDLE ROW CLICK
-  const handleHideSlide = () => {
-    setPosition('-100%')
-  }
-  // END OF HANDLE ROW CLICK
 
   const defaultColumns = [
     {
@@ -96,42 +107,9 @@ const CandidateSearchDatagrid = (props) => {
       headerName: 'Phone Number',
       width: 130,
     },
-    // {
-    //   field: 'action',
-    //   headerName: 'Authorize',
-    //   width: 130,
-    //   renderCell: (params) => {
-    //     return (
-    //       <>
-    //         {params.row.attendedTo === 'true' ? (
-    //           <div className='notAuthorized'>Authorize</div>
-    //         ) : (
-    //           <div className='notAuthorized'>Authorize</div>
-    //         )}
-    //       </>
-    //     )
-    //   },
-    // },
-
-    // {
-    //   field: 'role',
-    //   headerName: 'Attended to',
-    //   width: 150,
-    //   renderCell: (params) => {
-    //     return (
-    //       <>
-    //         {params.row.attendedTo === 'true' ? (
-    //           <div className='attendedTo'>True</div>
-    //         ) : (
-    //           <div className='notAttendedTo'>False</div>
-    //         )}
-    //       </>
-    //     )
-    //   },
-    // },
   ]
 
-  switch (loggedInUserRole) {
+  switch (loggedInUserRole[0]) {
     case 'Reception':
       rows = tableData
       columns = defaultColumns
@@ -169,7 +147,6 @@ const CandidateSearchDatagrid = (props) => {
       break
   }
 
-  // DUMMY DATA STATE
   const [result, setResult] = useState({
     Gender: '',
     Age: '',
@@ -180,21 +157,60 @@ const CandidateSearchDatagrid = (props) => {
     ['Blood Pressure']: '',
   })
 
-  // DUMMY DATA FUNCTION
-  const dummyDataSave = () => {
-    setTimeout(() => {
-      handleHideSlide()
-      toast('Details Saved Successfully')
-    }, 3000)
+  // SET SIDE INFO POSITION
+  const handleSetPosition = () => {
+    setPosition('0')
+  }
+  // END OF SET SIDE INFO POSITION
+
+  // HANDLE ROW CLICK
+  const handleRowClick = (row, e) => {
+    setSelecedCandidate(row?.row)
+    if (e.target.textContent !== 'Authorize') {
+      if (position !== '0') {
+        setPosition('0')
+      }
+    }
+  }
+  // END OF HANDLE ROW CLICK
+
+  // HANDLE ROW CLICK
+  const handleHideSlide = () => {
+    setPosition('-100%')
+  }
+  // END OF HANDLE ROW CLICK
+
+  // FUNCTION TO CALCULATE BMI
+  const calculateBmi = () => {
+    let height = Number(userDetails?.height)
+    let weight = Number(userDetails?.weight)
+    let bmi
+
+    // CHECK IF HEIGHT AND WEIGHT ARE AVAILABLE
+    userDetails?.height && userDetails?.weight
+
+    bmi = weight / Math.pow(height, 2)
+    setUserDetails({ ...userDetails, bmi: bmi?.toString() })
+
+    setBMI(bmi.toFixed(3))
+  }
+  // END OF FUNCTION TO CALCULATE BMI
+
+  // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
+  const handleCandidatePropertyChange = (e, dataType) => {
+    setUserDetails({ ...userDetails, [dataType]: e.target.value })
+    console.log(userDetails)
   }
 
-  // DUMMY HANDLE CHANGE
-  const handleChange = () => {
-    console.log(result)
-  }
+  // END OF FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
 
   // USEEFFECT TO UPDATE SELECTED ROW
   useEffect(() => {}, [selectedCandidate])
+
+  // use effect to update bmi
+  useEffect(() => {
+    calculateBmi()
+  }, [userDetails?.height, userDetails?.weight])
   return (
     <div className='datagridWraper'>
       <div className='slide' style={{ right: position }}>
@@ -240,7 +256,241 @@ const CandidateSearchDatagrid = (props) => {
           //   </p>
           // </div>
         )}
-        {loggedInUserRole === 'Phlebotom' && (
+        {loggedInUserRole[0] === 'Phlebotomy' && (
+          <>
+            <div className='numberOfTests h3'>
+              <h3>{"Candidate's General Details"}</h3>
+            </div>
+            <div className='candidateSearchBasicDetailsWrapper'>
+              <FormControl className='genderSelect' size='small'>
+                <InputLabel id='demo-simple-select-label'>Gender</InputLabel>
+                <Select
+                  labelId='demo-simple-select-label'
+                  id='demo-simple-select'
+                  value={userDetails?.gender}
+                  label='Company name'
+                  required
+                  onChange={(e) => handleCandidatePropertyChange(e, 'gender')}
+                >
+                  <MenuItem value={'M'}>M</MenuItem>
+                  <MenuItem value={'F'}>F</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                id='outlined-search'
+                label='Age'
+                type='string'
+                required={true}
+                size='small'
+                className='candidateName basicCandidateDetailsInput'
+                onChange={(e) => handleCandidatePropertyChange(e, 'age')}
+              />
+              <TextField
+                id='outlined-search'
+                label='Temperature'
+                type='string'
+                required
+                placeholder='°C'
+                size='small'
+                className='candidateName basicCandidateDetailsInput'
+              />
+              <TextField
+                // id="outlined-search"
+                label='Weight'
+                type='string'
+                placeholder='kg'
+                className='candidateName basicCandidateDetailsInput'
+                onChange={(e) => handleCandidatePropertyChange(e, 'weight')}
+                value={userDetails?.weight}
+                required
+                size='small'
+              />
+              <TextField
+                id='outlined-search'
+                label='Height'
+                type='number'
+                className='candidateName basicCandidateDetailsInput'
+                onChange={(e) => handleCandidatePropertyChange(e, 'height')}
+                value={userDetails?.height}
+                required
+                placeholder='m'
+                size='small'
+              />
+              <TextField
+                id='outlined-search'
+                label='BMI'
+                type='number'
+                value={BMI}
+                className='candidateName basicCandidateDetailsInput'
+                InputLabelProps={{ shrink: true }}
+                size='small'
+              />
+              <TextField
+                id='outlined-search'
+                label='Blood Pressure'
+                type='search'
+                className='candidateName basicCandidateDetailsInput'
+                onChange={(e) =>
+                  handleCandidatePropertyChange(e, 'bloodPressure')
+                }
+                required
+                size='small'
+              />
+              <TextField
+                id='outlined-search'
+                label='Visual Acuity'
+                type='search'
+                className='candidateName basicCandidateDetailsInput'
+                onChange={(e) =>
+                  handleCandidatePropertyChange(e, 'visaulAcuity')
+                }
+                required
+                size='small'
+              />
+              <TextField
+                id='outlined-search'
+                label='Random Blood Sugar'
+                type='search'
+                className='candidateName basicCandidateDetailsInput'
+                onChange={(e) =>
+                  handleCandidatePropertyChange(e, 'randomBloodSugar')
+                }
+                required
+                size='small'
+              />
+            </div>
+            <div className='numberOfTests h3'>
+              <h3 className='urinalysisH3'>
+                {'Urinalysis and Stool Analysis Details'}
+              </h3>
+              <div className='candidateSearchBasicDetailsWrapper'>
+                <TextField
+                  id='outlined-search'
+                  label='Stool Analysis'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) =>
+                    handleCandidatePropertyChange(e, 'stoolAnalysis')
+                  }
+                  required
+                  size='small'
+                  placeholder='Color/Appearance'
+                />
+                <TextField
+                  id='outlined-search'
+                  label='Color/Appearance'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) =>
+                    handleUrinalysisDetailsChange(e, 'Color/Appearance')
+                  }
+                  required
+                  size='small'
+                  placeholder='Color/Appearance'
+                />
+                <TextField
+                  id='outlined-search'
+                  label='Leucocytes'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) =>
+                    handleUrinalysisDetailsChange(e, 'Leucocytes')
+                  }
+                  required
+                  size='small'
+                />
+                <TextField
+                  id='outlined-search'
+                  label='Nitrites'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) => handleUrinalysisDetailsChange(e, 'Nitrites')}
+                  required
+                  size='small'
+                />
+                <TextField
+                  id='outlined-search'
+                  label='Urobilinogen'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) =>
+                    handleUrinalysisDetailsChange(e, 'Urobilinogen')
+                  }
+                  required
+                  size='small'
+                />
+                <TextField
+                  id='outlined-search'
+                  label='Protein'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) => handleUrinalysisDetailsChange(e, 'Protein')}
+                  required
+                  size='small'
+                />
+                <TextField
+                  id='outlined-search'
+                  label='pH'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) => handleUrinalysisDetailsChange(e, 'pH')}
+                  required
+                  size='small'
+                />
+                <TextField
+                  id='outlined-search'
+                  label='Blood'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) => handleUrinalysisDetailsChange(e, 'Blood')}
+                  required
+                  size='small'
+                />
+                <TextField
+                  id='outlined-search'
+                  label='SpecificGravity'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) =>
+                    handleUrinalysisDetailsChange(e, 'SpecificGravity')
+                  }
+                  required
+                  size='small'
+                />
+                <TextField
+                  id='outlined-search'
+                  label='Ketone'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) => handleUrinalysisDetailsChange(e, 'Ketone')}
+                  required
+                  size='small'
+                />
+                <TextField
+                  id='outlined-search'
+                  label='Bilirubin'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) =>
+                    handleUrinalysisDetailsChange(e, 'Bilirubin')
+                  }
+                  required
+                  size='small'
+                />
+                <TextField
+                  id='outlined-search'
+                  label='Glucose'
+                  type='search'
+                  className='candidateName basicCandidateDetailsInput'
+                  onChange={(e) => handleUrinalysisDetailsChange(e, 'Glucose')}
+                  required
+                  size='small'
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {/* {loggedInUserRole === 'Phlebotom' && (
           <div className='basicDetailsWrapper'>
             <FormControl className='genderSelect'>
               <InputLabel id='demo-simple-select-label'>Gender</InputLabel>
@@ -298,7 +548,7 @@ const CandidateSearchDatagrid = (props) => {
               onChange={(e) => handleChange(e, 'Blood Pressure')}
             />
           </div>
-        )}
+        )} */}
 
         {loggedInUserRole === 'labScientist' && (
           <>
@@ -320,7 +570,7 @@ const CandidateSearchDatagrid = (props) => {
                 </AccordionDetails>
               </Accordion>
             </div>
-            <div className='basicDetailsWrapper'>
+            <div className='candidateSearchBasicDetailsWrapper'>
               <TextField
                 id='outlined-search'
                 label='PCV'
@@ -356,15 +606,14 @@ const CandidateSearchDatagrid = (props) => {
             </Accordion>
           </div>
         )}
-        <div className='bottomButtons'>
+        <div className='candidateSearchBottomButtons'>
           {/* {leftBtnText && (
             <div className='authorize sendDetails'>{leftBtnText}</div>
           )} */}
-          {/* {rightBtnText?.length > 0 && (
-            <div className='authorize' onClick={() => dummyDataSave()}>
-              {rightBtnText}
-            </div>
-          )} */}
+          {rightBtnText?.length > 0 &&
+            loggedInUserRole['0'] === 'Phlebotomy' && (
+              <button className='authorize'>{rightBtnText}</button>
+            )}
         </div>
       </div>
       <div className='boxWrapper'>
