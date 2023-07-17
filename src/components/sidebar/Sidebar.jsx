@@ -48,20 +48,16 @@ const Sidebar = () => {
 
   // INITIALIZE SIDEBAR DATA
 
-  console.log(sidebarList)
-  console.log(qualityAssuranceData)
-  console.log([...sidebarList, ...qualityAssuranceData])
-
   switch (loggedInUserRole) {
     case 'Reception':
-      sidebarInfo = [...sidebarList, receptionistData]
+      sidebarInfo = [...receptionistData, ...sidebarList]
       break
     case 'Phlebotomy':
-      sidebarInfo = phlebotomistData
+      sidebarInfo = [...sidebarList, ...phlebotomistData]
 
       break
     case 'MainLab1':
-      sidebarInfo = labScientistData
+      sidebarInfo = [...sidebarList, ...labScientistData]
 
       break
     case 'Quality assurance':

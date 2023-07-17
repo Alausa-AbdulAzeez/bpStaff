@@ -91,6 +91,7 @@ const ViewClients = () => {
                 type='search'
                 className='candidateName'
                 onChange={(e) => handleSearchParamsChange(e)}
+                size='small'
               />
             </div>
           </div>
