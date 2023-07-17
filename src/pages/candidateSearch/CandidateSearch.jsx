@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import ErrorComponent from '../../components/error/Error'
 import Loading from '../../components/loading/Loading'
 import { RxReload } from 'react-icons/rx'
+import DatePicker from 'react-datepicker'
 
 const CandidateSearch = () => {
   // MISCELLANEOUS
@@ -32,6 +33,7 @@ const CandidateSearch = () => {
 
   // TABLE DATA
   const [tableData, setTableData] = useState([])
+  const [filteredData, setFilteredData] = useState([])
 
   // CLIENTS DATA
   const [clients, setClients] = useState([])
@@ -40,8 +42,37 @@ const CandidateSearch = () => {
   // CANDIDATE'S PHONE NUMBER
   const [phoneNumber, setPhoneNumber] = useState('')
 
+  // DATE SELECTION
+  const [startDate, setStartDate] = useState(null)
+
+  // FILTER PARAMS
+  const [filters, setFilters] = useState({
+    clientId: '',
+    phoneNumberOrName: '',
+    date: '',
+  })
+
+  // FUNCTION TO HANDLE INPUT CHANGES
+  const handleInputChange = (event, name, data) => {
+    if (name === 'phoneNumberOrName') {
+      setFilters({ ...filters, [name]: event?.target?.value?.trim() })
+    }
+    if (name === 'date') {
+      setStartDate(data)
+      setFilters({ ...filters, [name]: data })
+    }
+    if (name === 'clientId') {
+      setFilters({ ...filters, [name]: data?.clientId })
+    }
+    // setFilters({ ...filters, [name]: value.trim() });
+  }
+  // END OF FUNCTION TO HANDLE INPUT CHANGES
+
   // FUNCTION TO GET AND SET ALL CANDIDATES
   const getAllCandidates = async () => {
+    setStartDate(null)
+    setFilters({ clientId: '', phoneNumberOrName: '', date: '' })
+
     try {
       setLoading(true)
       const res = await publicRequest.get('/Candidate', {
@@ -53,6 +84,7 @@ const CandidateSearch = () => {
 
       if (res.data) {
         setTableData(res.data?.data?.reverse())
+        setFilteredData(res.data?.data?.reverse())
         setLoading(false)
       } else {
         console.log(res.data)
@@ -66,6 +98,7 @@ const CandidateSearch = () => {
     }
   }
   // END OF FUNCTION TO GET AND SET ALL CANDIDATES
+
   //  FUNCTIONALITIES FOR FETCHING AND SETTING CLIENTS
 
   const getAllClients = async () => {
@@ -158,6 +191,49 @@ const CandidateSearch = () => {
   }
   // END FUNCTION TO HANDLE CANDIDATE SEARCH
 
+  // FUNCTION TO FILTER DATA
+  const filterData = () => {
+    console.log(tableData)
+    const filteredData = tableData.filter((item) => {
+      const { clientId, phoneNumberOrName, date } = filters
+      console.log(clientId, phoneNumberOrName, date)
+
+      const correctDate = new Date(date)
+
+      console.log(correctDate.toLocaleString())
+      const month = (date && date?.getMonth() + 1).toString().padStart(2, '0')
+
+      const year = date && date?.getFullYear()
+
+      const newString = year && month ? year + '-' + month : ''
+      console.log(newString)
+
+      // const newString =
+      //   correctDate.toLocaleString().split(",")[0].split("/")[2] +
+      //   "-" +
+      //   "0" +
+      //   correctDate.toLocaleString().split(",")[0].split("/")[0];
+
+      const itemCompanyId = item?.clientid?.toString().includes(clientId)
+      const itemPhoneNumber = item?.phoneNumber
+        ?.toString()
+        .includes(phoneNumberOrName)
+      const itemName = item?.candidateName
+        ?.toLowerCase()
+        .includes(phoneNumberOrName.toLowerCase())
+      const itemDate = item?.createdDate?.substring(0, 7).includes(newString)
+      console.log(itemDate)
+      return (
+        (clientId === '' || itemCompanyId) &&
+        (phoneNumberOrName === '' || itemPhoneNumber || itemName) &&
+        (date === '' || itemDate)
+      )
+    })
+    console.log(filteredData)
+    setFilteredData(filteredData)
+  }
+  // END OF FUNCTION TO FILTER DATA
+
   return (
     <>
       <ToastContainer />
@@ -166,30 +242,10 @@ const CandidateSearch = () => {
         <div className='candidateSearchRight'>
           <Topber userName={userName} />
           <div className='candidateSearchMainWrapper'>
-            <div className='candidateSearchMainTop'>
+            {/* <div className='candidateSearchMainTop'>
               <h3 className='candidateSearchMainTopTitle'>Search</h3>
               <div className='candidateSearchMainTopForm'>
-                {/* <FormControl className='companySelect'>
-      <InputLabel id='demo-simple-select-label'>
-        Company name
-      </InputLabel>
-      <Select
-        labelId='demo-simple-select-label'
-        id='demo-simple-select'
-        //   value={age}
-        label='Company name'
-        //   onChange={handleChange}
-      >
-        <MenuItem value={10}>Unity Bank</MenuItem>
-        <MenuItem value={20}>Chicken Republic</MenuItem>
-      </Select>
-    </FormControl>
-    <TextField
-      id='outlined-search'
-      label='Candidate name'
-      type='search'
-      className='candidateName'
-    /> */}
+                
                 <Autocomplete
                   disablePortal
                   id='combo-box-demo'
@@ -226,6 +282,52 @@ const CandidateSearch = () => {
                   </span>
                 </button>
               </div>
+            </div> */}
+            <div className='filterContainer'>
+              <Autocomplete
+                // disablePortal
+                options={clients}
+                getOptionLabel={(option) =>
+                  `${option.clientName} ${option.email}`
+                }
+                onChange={(e, option) =>
+                  handleInputChange(e, 'clientId', option)
+                }
+                key={loading}
+                sx={{ width: 200 }}
+                renderInput={(params) => (
+                  <TextField {...params} label='Client Name' size='small' />
+                )}
+              />
+              <TextField
+                id='outlined-search'
+                label="Candidate's Name/PhoneNo"
+                type='search'
+                className='candidateSearchName'
+                onChange={(e) => handleInputChange(e, 'phoneNumberOrName')}
+                size='small'
+                value={filters?.phoneNumberOrName}
+              />
+              <div className='filterDateWrapper'>
+                <DatePicker
+                  placeholderText='Select a date'
+                  onChange={(date, e) => handleInputChange(e, 'date', date)}
+                  dateFormat='MM/yyyy'
+                  showMonthYearPicker
+                  className='filterDate'
+                  selected={startDate}
+                />
+              </div>
+              <button className='searchFilterBtn' onClick={filterData}>
+                Search
+              </button>
+              <button
+                className='resetBtn'
+                onClick={getAllCandidates}
+                // onClick={() => window.location.reload()}
+              >
+                Reset
+              </button>
             </div>
             <div className='candidateSearchMainBottom'>
               {/* <Loading /> */}
@@ -238,7 +340,7 @@ const CandidateSearch = () => {
               ) : (
                 <CandidateSearchDatagrid
                   userDetails={currentUser}
-                  tableData={tableData}
+                  tableData={filteredData}
                 />
               )}
             </div>
