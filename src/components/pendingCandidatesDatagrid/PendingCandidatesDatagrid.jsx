@@ -119,7 +119,7 @@ const PendingCandidatesDatagrid = (props) => {
   let rightBtnText
 
   // LOGGED IN USER RLOE
-  const loggedInUserRole = props.userDetails?.data?.role
+  const loggedInUserRole = props.userDetails?.data?.role?.[0]
 
   // LOGGED IN USER
   const userName = props.userDetails?.data?.profile?.fullName
@@ -155,7 +155,7 @@ const PendingCandidatesDatagrid = (props) => {
       renderCell: (params) => {
         return (
           <>
-            {loggedInUserRole[0] === 'Reception' && (
+            {loggedInUserRole === 'Reception' && (
               <div
                 className='notAuthorized'
                 onClick={() => authorizeUser(params, 'main')}
@@ -164,10 +164,10 @@ const PendingCandidatesDatagrid = (props) => {
               </div>
             )}
 
-            {(loggedInUserRole[0] === 'Phlebotomy' ||
-              loggedInUserRole[0] === 'MainLab1' ||
-              loggedInUserRole[0] === 'Report' ||
-              loggedInUserRole[0] === 'Quality assurance') && (
+            {(loggedInUserRole === 'Phlebotomy' ||
+              loggedInUserRole === 'MainLab1' ||
+              loggedInUserRole === 'Report' ||
+              loggedInUserRole === 'Quality assurance') && (
               <div className='notAuthorized'>View</div>
             )}
           </>
@@ -189,7 +189,7 @@ const PendingCandidatesDatagrid = (props) => {
     },
   ]
 
-  switch (loggedInUserRole[0]) {
+  switch (loggedInUserRole) {
     case 'Reception':
       rows = tableData
       columns = defaultColumns
@@ -782,6 +782,7 @@ const PendingCandidatesDatagrid = (props) => {
           console.log(selectedCandidate)
           setLoadingCandedateTests(true)
           setCandedateTestsError(false)
+
           try {
             await publicRequest
               .get(`Candidate/test/${selectedCandidate?.candidateId}`, {
@@ -966,7 +967,7 @@ const PendingCandidatesDatagrid = (props) => {
           </div>
         )}
 
-        {loggedInUserRole[0] === 'Phlebotomy' && (
+        {loggedInUserRole === 'Phlebotomy' && (
           <>
             <div className='numberOfTests h3'>
               <h3>{"Candidate's General Details"}</h3>
@@ -1201,7 +1202,8 @@ const PendingCandidatesDatagrid = (props) => {
           </>
         )}
 
-        {loggedInUserRole === 'MainLab1' && (
+        {(loggedInUserRole === 'MainLab1' ||
+          loggedInUserRole === 'Quality assurance') && (
           <>
             <div className='qualityAssuranceAccordionWrapper'>
               <Accordion>
@@ -1252,28 +1254,30 @@ const PendingCandidatesDatagrid = (props) => {
                 </AccordionDetails>
               </Accordion>
             </div>
-            <div className='basicDetailsWrapper'>
-              {loadingCandedateTests || candedateTestsError
-                ? loadingCandedateTests
-                  ? 'Loading...'
-                  : 'An error occured, please try again'
-                : candidateTests?.length === 0
-                ? 'No test for selected candidate'
-                : candidateTests?.map((candidateTest, index) => {
-                    return (
-                      <TextField
-                        key={index}
-                        id={candidateTest?.id}
-                        label={candidateTest?.test}
-                        type='search'
-                        className='candidateName basicCandidateDetailsInput'
-                        onChange={(e) =>
-                          handleTestInputChange(e, candidateTest)
-                        }
-                      />
-                    )
-                  })}
-            </div>
+            {loggedInUserRole === 'MainLab1' && (
+              <div className='basicDetailsWrapper'>
+                {loadingCandedateTests || candedateTestsError
+                  ? loadingCandedateTests
+                    ? 'Loading...'
+                    : 'An error occured, please try again'
+                  : candidateTests?.length === 0
+                  ? 'No test for selected candidate'
+                  : candidateTests?.map((candidateTest, index) => {
+                      return (
+                        <TextField
+                          key={index}
+                          id={candidateTest?.id}
+                          label={candidateTest?.test}
+                          type='search'
+                          className='candidateName basicCandidateDetailsInput'
+                          onChange={(e) =>
+                            handleTestInputChange(e, candidateTest)
+                          }
+                        />
+                      )
+                    })}
+              </div>
+            )}
           </>
         )}
         {loggedInUserRole === 'Quality assurance' && (
@@ -1352,7 +1356,7 @@ const PendingCandidatesDatagrid = (props) => {
             )}
           </div>
         )}
-        {loggedInUserRole[0] !== 'Report' && (
+        {loggedInUserRole !== 'Report' && (
           <div className='bottomButtons'>
             {leftBtnText && (
               <div className=' rejectResult' onClick={(e) => handleBtnClick(e)}>
@@ -1387,10 +1391,13 @@ const PendingCandidatesDatagrid = (props) => {
                       selectedCandidate && selectedCandidate.candidateId
                     }`}
                     target='_blank'
+                    className='authorize'
+                    disabled={disableUpdateBtn}
                   >
-                    <button className='authorize' disabled={disableUpdateBtn}>
-                      {rightBtnText}
-                    </button>
+                    {/* <button className='authorize' disabled={disableUpdateBtn}> */}
+                    {rightBtnText}
+                    {/* abab */}
+                    {/* </button> */}
                   </Link>
                 ) : (
                   <button

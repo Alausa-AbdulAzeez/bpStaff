@@ -1,15 +1,17 @@
 .downloadReportPageContainer {
   height: 90%;
-  width: 1000px;
+  // width: 100px;
+  width: 100%;
   background-color: white;
   overflow-y: auto;
   color: #000;
   position: relative;
+  background-color: red !important;
 
   .downloadBtn {
     position: absolute;
     top: 40px;
-    right: 0px;
+    right: 300px;
     height: 40px;
     font-size: 14px;
     color: white;

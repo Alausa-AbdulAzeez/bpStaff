@@ -277,43 +277,28 @@ export const phlebotomistData = [
 ]
 export const labScientistData = [
   {
-    ulTitle: 'LIST',
-    listItems: [
-      {
-        title: 'Rejected Results',
-        link: '/rejectedResults',
-        icon: <MdCancel className='sidebarIcon' />,
-      },
+    title: 'Rejected Results',
+    link: '/rejectedResults',
+    icon: <MdCancel className='sidebarIcon' />,
+  },
 
-      {
-        title: 'Reports',
-        link: '/reports',
-        icon: <TbReportAnalytics className='sidebarIcon' />,
-      },
-    ],
+  {
+    title: 'Reports',
+    link: '/reports',
+    icon: <TbReportAnalytics className='sidebarIcon' />,
   },
 ]
 export const qualityAssuranceData = [
   {
-    ulTitle: 'LIST',
-    listItems: [
-      {
-        title: 'Reports',
-        link: '/reports',
-        icon: <TbReportAnalytics className='sidebarIcon' />,
-      },
-    ],
+    title: 'Reports',
+    link: '/reports',
+    icon: <TbReportAnalytics className='sidebarIcon' />,
   },
 ]
 export const reportOfficerData = [
   {
-    ulTitle: 'LIST',
-    listItems: [
-      {
-        title: 'Reports',
-        link: '/reports',
-        icon: <TbReportAnalytics className='sidebarIcon' />,
-      },
-    ],
+    title: 'Reports',
+    link: '/reports',
+    icon: <TbReportAnalytics className='sidebarIcon' />,
   },
 ]
