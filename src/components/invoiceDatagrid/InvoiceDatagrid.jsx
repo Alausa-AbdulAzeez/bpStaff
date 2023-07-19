@@ -23,28 +23,30 @@ const InvoiceDatagrid = (props) => {
       width: 250,
       editable: false,
     },
-    { field: 'clientName', headerName: 'Company Name', width: 250 },
     {
-      field: 'testcategory',
+      field: 'testCategory',
       headerName: 'Test Category',
-      width: 200,
+      width: 250,
       editable: false,
+    },
+
+    {
+      field: 'amount',
+      headerName: 'Amount',
+      width: 200,
     },
     {
       field: 'appointmentdate',
       headerName: 'Appointment Date',
-      width: 190,
+      width: 150,
       description: 'The candidate shoul be present by this date',
       renderCell: (props) => {
-        const refinedDate = new Date(props?.value)
+        console.log(props)
+        console.log(props.value)
+        const refinedDate = new Date(props?.row?.appointmentDate)
         const dateWithRightFormat = format(refinedDate, 'dd-MMM-yyyy')
         return <div>{dateWithRightFormat}</div>
       },
-    },
-    {
-      field: 'phoneNumber',
-      headerName: 'Phone Number',
-      width: 130,
     },
   ]
 
@@ -61,7 +63,9 @@ const InvoiceDatagrid = (props) => {
             onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
             rowsPerPageOptions={[100, 200, 300]}
             pagination
-            getRowId={(row) => row.candidateId}
+            getRowId={(row) =>
+              row.candidateName + Math.random() + new Date().getMilliseconds()
+            }
           />
         </Box>
       </div>

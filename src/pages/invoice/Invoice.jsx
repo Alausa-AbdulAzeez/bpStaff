@@ -45,56 +45,21 @@ const Invoice = () => {
   // FILTER PARAMS
   const [filters, setFilters] = useState({
     clientId: '',
-    phoneNumberOrName: '',
     date: '',
   })
 
   // FUNCTION TO HANDLE INPUT CHANGES
   const handleInputChange = (event, name, data) => {
-    if (name === 'phoneNumberOrName') {
-      setFilters({ ...filters, [name]: event?.target?.value?.trim() })
-    }
     if (name === 'date') {
-      setStartDate(data)
       setFilters({ ...filters, [name]: data })
     }
     if (name === 'clientId') {
       setFilters({ ...filters, [name]: data?.clientId })
+      setClientId(data?.clientId)
     }
     // setFilters({ ...filters, [name]: value.trim() });
   }
   // END OF FUNCTION TO HANDLE INPUT CHANGES
-
-  // FUNCTION TO GET AND SET ALL CANDIDATES
-  const getAllCandidates = async () => {
-    setStartDate(null)
-    setFilters({ clientId: '', phoneNumberOrName: '', date: '' })
-
-    try {
-      setLoading(true)
-      const res = await publicRequest.get('/Candidate', {
-        headers: {
-          Accept: '*',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (res.data) {
-        setTableData(res.data?.data?.reverse())
-        setFilteredData(res.data?.data?.reverse())
-        setLoading(false)
-      } else {
-        console.log(res.data)
-      }
-    } catch (error) {
-      setLoading(false)
-      setError(true)
-      setErrorMessage(error)
-
-      console.log(error)
-    }
-  }
-  // END OF FUNCTION TO GET AND SET ALL CANDIDATES
 
   //  FUNCTIONALITIES FOR FETCHING AND SETTING CLIENTS
 
@@ -126,53 +91,98 @@ const Invoice = () => {
   // }
   //END OF FUNCTION FOR SETTING CLIENT ID
 
-  // FUNCTION TO FILTER DATA
-  const filterData = () => {
-    console.log(tableData)
-    const filteredData = tableData.filter((item) => {
-      const { clientId, phoneNumberOrName, date } = filters
-      console.log(clientId, phoneNumberOrName, date)
+  // FUNCTION TO CONVERT DATE TO THE CORRECT FORMAT
+  function convertDateFormat(localeString) {
+    const dateObj = new Date(localeString)
 
-      const correctDate = new Date(date)
+    const year = dateObj.getFullYear()
+    const day = String(dateObj.getDate()).padStart(2, '0')
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0')
 
-      console.log(correctDate.toLocaleString())
-      const month = (date && date?.getMonth() + 1).toString().padStart(2, '0')
-
-      const year = date && date?.getFullYear()
-
-      const newString = year && month ? year + '-' + month : ''
-      console.log(newString)
-
-      // const newString =
-      //   correctDate.toLocaleString().split(",")[0].split("/")[2] +
-      //   "-" +
-      //   "0" +
-      //   correctDate.toLocaleString().split(",")[0].split("/")[0];
-
-      const itemCompanyId = item?.clientid?.toString().includes(clientId)
-      const itemPhoneNumber = item?.phoneNumber
-        ?.toString()
-        .includes(phoneNumberOrName)
-      const itemName = item?.candidateName
-        ?.toLowerCase()
-        .includes(phoneNumberOrName.toLowerCase())
-      const itemDate = item?.createdDate?.substring(0, 7).includes(newString)
-      console.log(itemDate)
-      return (
-        (clientId === '' || itemCompanyId) &&
-        (phoneNumberOrName === '' || itemPhoneNumber || itemName) &&
-        (date === '' || itemDate)
-      )
-    })
-    console.log(filteredData)
-    setFilteredData(filteredData)
+    return `${year}/${month}/${day}`
   }
-  // END OF FUNCTION TO FILTER DATA
+  // END OF FUNCTION TO CONVERT DATE TO THE CORRECT FORMAT
+
+  // FUNCTION TO GET AND SET ALL CANDIDATES
+  const getInvoices = async () => {
+    // setFilters({ clientId: '', phoneNumberOrName: '', date: '' })
+    toastId.current = toast('Please wait...', {
+      autoClose: 2500,
+      isLoading: true,
+    })
+
+    const startDate = new Date(
+      filters?.date?.[0] ? filters?.date?.[0] : new Date()
+    )
+    const endDate = new Date(
+      filters?.date?.[1] ? filters?.date?.[1] : new Date()
+    )
+
+    console.log(startDate)
+
+    const convertedStartDate = convertDateFormat(startDate.toLocaleString())
+    const convertedEndDate = convertDateFormat(endDate.toLocaleString())
+
+    const url = `/Bill/invoice/${filters?.clientId}?startDate=${
+      convertedStartDate || '2023/01/01'
+    }&endDate=${convertedEndDate || '2024/01/01'}`
+
+    try {
+      console.log(url)
+      const res = await publicRequest.get(url, {
+        headers: {
+          Accept: '*',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (res.data) {
+        setTableData(res.data?.data?.reverse())
+        setFilteredData(res.data?.data?.reverse())
+
+        console.log(res.data?.data)
+        if (res.data?.data?.length === 0 || res.data?.data === '') {
+          toast.update(toastId.current, {
+            render: 'No Invoice available',
+            type: 'info',
+            isLoading: false,
+            autoClose: 2500,
+          })
+        } else {
+          toast.update(toastId.current, {
+            render: 'Incoice(s) fetched successfully!',
+            type: 'success',
+            isLoading: false,
+            autoClose: 2500,
+          })
+        }
+      } else {
+        console.log(res.data)
+      }
+    } catch (error) {
+      setError(true)
+      setErrorMessage(error)
+
+      console.log(error)
+      toast.update(toastId.current, {
+        type: 'error',
+        autoClose: 2500,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
+          error?.message ||
+          'Something went wrong, please try again'
+        }`,
+      })
+    }
+  }
+  // END OF FUNCTION TO GET AND SET ALL CANDIDATES
 
   // USE EFFECT TO GET ALL CANDIDATES AS THE PAGE LOADS
-  useEffect(() => {
-    getAllCandidates()
-  }, [])
+  // useEffect(() => {
+  //   getInvoices()
+  // }, [])
 
   // use effect to call the getAllClients function as the page loads
   useEffect(() => {
@@ -210,22 +220,28 @@ const Invoice = () => {
                   selectsRange={true}
                   startDate={startDate}
                   endDate={endDate}
-                  onChange={(update) => {
+                  onChange={(update, e) => {
+                    handleInputChange(e, 'date', update)
                     setDateRange(update)
                   }}
                   placeholderText='Start-date - End-date'
                   // onChange={(date, e) => handleInputChange(e, 'date', date)}
-                  className='filterDate'
+                  className='invoiceFilterDate'
                   isClearable={true}
+                  key={loading}
                   // selected={startDate}
                 />
               </div>
-              <button className='searchFilterBtn' onClick={filterData}>
+              <button
+                className='searchFilterBtn'
+                onClick={getInvoices}
+                disabled={clientId ? false : true}
+              >
                 Search
               </button>
               <button
                 className='resetBtn'
-                onClick={getAllCandidates}
+                onClick={(prev) => setLoading(!prev)}
                 // onClick={() => window.location.reload()}
               >
                 Reset

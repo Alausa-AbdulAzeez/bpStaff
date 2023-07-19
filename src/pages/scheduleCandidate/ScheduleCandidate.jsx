@@ -170,52 +170,52 @@ const ScheduleCandidate = () => {
     setDisableDoneAndCancelBtn(true)
     console.log(scheduleInfo)
 
-    // try {
-    //   await publicRequest
-    //     .post('/Candidate', scheduleInfo, {
-    //       headers: {
-    //         Accept: '*',
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     })
-    //     .then(() => {
-    //       toast.update(toastId.current, {
-    //         render: 'Candidate scheduled succesfully!',
-    //         type: 'success',
-    //         isLoading: false,
-    //         autoClose: 2500,
-    //       })
-    //       setDisableDoneAndCancelBtn(false)
-    //     })
-    //     .then(() => {
-    //       window.location.reload()
-    //       // setScheduleInfo({
-    //       //   candidateName: '',
-    //       //   phoneNumber: '',
-    //       //   createdDate: date,
-    //       //   email: '',
-    //       //   address: '',
-    //       //   appointmentdate: startDate?.toISOString(),
-    //       //   clientid: '',
-    //       //   testcategory: '',
-    //       //   status: 'PENDING',
-    //       // })
-    //     })
-    // } catch (error) {
-    //   console.log(error.response)
-    //   toast.update(toastId.current, {
-    //     type: 'error',
-    //     autoClose: 2500,
-    //     isLoading: false,
-    //     render: `${
-    //       error?.response?.data?.title ||
-    //       error?.response?.data?.description ||
-    //       error?.message ||
-    //       'Something went wrong, please try again'
-    //     }`,
-    //   })
-    //   setDisableDoneAndCancelBtn(false)
-    // }
+    try {
+      await publicRequest
+        .post('/Candidate', scheduleInfo, {
+          headers: {
+            Accept: '*',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          toast.update(toastId.current, {
+            render: 'Candidate scheduled succesfully!',
+            type: 'success',
+            isLoading: false,
+            autoClose: 2500,
+          })
+          setDisableDoneAndCancelBtn(false)
+        })
+        .then(() => {
+          window.location.reload()
+          // setScheduleInfo({
+          //   candidateName: '',
+          //   phoneNumber: '',
+          //   createdDate: date,
+          //   email: '',
+          //   address: '',
+          //   appointmentdate: startDate?.toISOString(),
+          //   clientid: '',
+          //   testcategory: '',
+          //   status: 'PENDING',
+          // })
+        })
+    } catch (error) {
+      console.log(error.response)
+      toast.update(toastId.current, {
+        type: 'error',
+        autoClose: 2500,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
+          error?.message ||
+          'Something went wrong, please try again'
+        }`,
+      })
+      setDisableDoneAndCancelBtn(false)
+    }
   }
   // end of function for creating a test category
 
