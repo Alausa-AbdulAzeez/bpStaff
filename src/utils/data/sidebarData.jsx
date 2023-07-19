@@ -4,6 +4,8 @@ import { MdCancel, MdPendingActions, MdSchedule } from 'react-icons/md'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { RiTeamFill } from 'react-icons/ri'
 import { TbReportAnalytics } from 'react-icons/tb'
+import { BsClipboardCheck } from 'react-icons/bs'
+import { FaFileInvoiceDollar } from 'react-icons/fa'
 
 // export const receptionistData = [
 //   {
@@ -269,12 +271,7 @@ export const receptionistData = [
     icon: <MdSchedule className='sidebarIcon' />,
   },
 ]
-export const phlebotomistData = [
-  {
-    ulTitle: 'LIST',
-    listItems: [],
-  },
-]
+export const phlebotomistData = []
 export const labScientistData = [
   {
     title: 'Rejected Results',
@@ -300,5 +297,22 @@ export const reportOfficerData = [
     title: 'Reports',
     link: '/reports',
     icon: <TbReportAnalytics className='sidebarIcon' />,
+  },
+]
+export const partnerLabManagerData = [
+  {
+    title: 'Schedule Candidate',
+    link: '/scheduleCandidate',
+    icon: <MdSchedule className='sidebarIcon' />,
+  },
+  {
+    title: 'Partner Labs',
+    link: '/partnerLabs',
+    icon: <BsClipboardCheck className='sidebarIcon' />,
+  },
+  {
+    title: 'Invoices',
+    link: '/invoices',
+    icon: <FaFileInvoiceDollar className='sidebarIcon' />,
   },
 ]

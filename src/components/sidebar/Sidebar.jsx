@@ -11,6 +11,7 @@ import {
   generalData,
   generalList,
   labScientistData,
+  partnerLabManagerData,
   phlebotomistData,
   qualityAssuranceData,
   receptionistData,
@@ -24,11 +25,15 @@ const Sidebar = () => {
   // LOGOUT DIALOGUE
   const [open, setOpen] = React.useState(false)
   const [sidebarList, setSidebarList] = React.useState(generalList)
+  const sidebarListNoPendingCandidate = sidebarList.filter(
+    (sidebarItem) => sidebarItem?.title !== 'Pending Candidates'
+  )
   const sidebarData = generalData
 
   // GET CURRENT LOGGED IN USER
   const { currentUser } = useSelector((state) => state?.user)
-  const loggedInUserRole = currentUser?.data?.role?.[0]
+  // const loggedInUserRole = currentUser?.data?.role?.[0]
+  const loggedInUserRole = 'partnerLabManager'
   console.log(loggedInUserRole)
 
   let sidebarInfo
@@ -66,6 +71,9 @@ const Sidebar = () => {
       break
     case 'Report':
       sidebarInfo = [...sidebarList, ...reportOfficerData]
+      break
+    case 'partnerLabManager':
+      sidebarInfo = [...partnerLabManagerData, ...sidebarListNoPendingCandidate]
       break
 
     default:
