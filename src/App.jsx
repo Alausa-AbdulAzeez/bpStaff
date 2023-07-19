@@ -19,6 +19,7 @@ import DownloadReportPage from './pages/downloadReport/DownloadReportPage'
 import ScheduleCandidate from './pages/scheduleCandidate/ScheduleCandidate'
 import AddLaboratory from './pages/addLaboratory/AddLaboratory'
 import PartnerLabs from './pages/partnerLabs/PartnerLabs'
+import Invoice from './pages/invoice/Invoice'
 
 function App() {
   let userDetails
@@ -61,6 +62,7 @@ function App() {
           <Route element={<PrivateRoutes />}>
             <Route exact path='/' element={<Home />} />
             <Route path='/partnerLabs' element={<PartnerLabs />} />
+            <Route path='/invoices' element={<Invoice />} />
             <Route path='/partnerLabs/addLab' element={<AddLaboratory />} />
             <Route path='/candidateSearch' element={<CandidateSearch />} />
             <Route path='/pendingCandidates' element={<PendingCandidates />} />
