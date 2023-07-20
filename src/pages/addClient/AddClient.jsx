@@ -17,6 +17,10 @@ const AddClient = () => {
   // LOGGED IN USER TOKEN
   const { token } = useSelector((state) => state?.user?.currentUser?.data);
 
+  // GET CURRENT LOGGED IN USER
+  const { currentUser } = useSelector((state) => state?.user);
+  const userData = currentUser?.data;
+
   // TO SET THE STATE OF THE DONE AND CANCEL BUTTONS
   const [disableDoneAndCancelBtn, setDisableDoneAndCancelBtn] = useState(false);
 
@@ -86,14 +90,14 @@ const AddClient = () => {
           });
         });
     } catch (error) {
-      console.log(error.response);
+      console.log(error?.response);
       toast.update(toastId.current, {
         type: "error",
         autoClose: 2500,
         isLoading: false,
         render: `${
-          error.response.data.title ||
-          error.response.data.description ||
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
           "Something went wrong, please try again"
         }`,
       });
@@ -118,7 +122,7 @@ const AddClient = () => {
         />
         <Sidebar />
         <div className="addClientRight">
-          <Topber />
+          <Topber userData={userData} />
           <div className="addClientMainWrapper">
             <h2> Add New Client</h2>
             {/* <HorizontalStepper properties={properties} /> */}

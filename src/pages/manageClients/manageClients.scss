@@ -1,9 +1,12 @@
 .manageClientsWrapper {
   width: 100%;
   display: flex;
+  height: calc(100vh - 0px);
 
   .manageClientsRight {
-    flex: 5;
+      overflow-y: auto !important;
+        flex: 5;
+        height: 100%;
 
     .manageClientsMainWrapper {
       // position: relative;

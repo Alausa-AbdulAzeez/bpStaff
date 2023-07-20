@@ -1,15 +1,17 @@
 .addClientWrapper {
   width: 100%;
   display: flex;
-  height: calc(100% - 0px);
+  height: calc(100vh - 0px);
 
   .addClientRight {
-    flex: 5;
+    overflow-y: auto !important;
+      flex: 5;
+      height: 100%;
 
     .addClientMainWrapper {
       height: 100%;
       padding: 10px 64px;
-      overflow-y: auto;
+      // overflow-y: auto;
 
       .formWrapper {
         .inputsWrapper {
