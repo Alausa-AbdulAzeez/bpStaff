@@ -8,6 +8,7 @@ import { FiLogOut } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import AlertDialogSlide from "../Dialogue";
 import {
+  customerCareData,
   generalData,
   generalList,
   labScientistData,
@@ -27,6 +28,12 @@ const Sidebar = () => {
   const [sidebarList, setSidebarList] = React.useState(generalList);
   const sidebarListNoPendingCandidate = sidebarList.filter(
     (sidebarItem) => sidebarItem?.title !== "Pending Candidates"
+  );
+  const sidebarListNoViewClients = sidebarList.filter(
+    (sidebarItem) =>
+      sidebarItem?.title !== "View Clients" &&
+      sidebarItem?.title !== "Pending Candidates" &&
+      sidebarItem?.title !== "Candidate Search"
   );
   const sidebarData = generalData;
 
@@ -77,6 +84,9 @@ const Sidebar = () => {
         ...partnerLabManagerData,
         ...sidebarListNoPendingCandidate,
       ];
+      break;
+    case "Customer Care":
+      sidebarInfo = [...customerCareData, ...sidebarListNoViewClients];
       break;
 
     default:

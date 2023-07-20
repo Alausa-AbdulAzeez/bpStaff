@@ -350,3 +350,51 @@ export const partnerLabManagerDashboardData = [
     ),
   },
 ];
+export const customerCareDashboardData = [
+  {
+    title: "Candidate Search",
+    isMoney: false,
+    isCandidateSearch: true,
+    link: "candidateSearch",
+    linkText: "View Candidates",
+    backgroundColor: "#ece8ff7b",
+    icon: (
+      <AiOutlineSearch
+        className="icon"
+        style={{ color: "#7451f8", backgroundColor: "#e1dbfd" }}
+      />
+    ),
+  },
+
+  {
+    title: "View Clients",
+    isMoney: false,
+    isViewClients: true,
+    link: "viewClients",
+    linkText: "View all clients",
+    backgroundColor: "#33A23E36",
+
+    icon: (
+      <RiTeamFill
+        className="icon"
+        style={{ color: "#33A23E", backgroundColor: "#33A23E36" }}
+      />
+    ),
+  },
+  {
+    title: "Profile",
+    isMoney: true,
+    isProfile: true,
+    link: "/profile",
+    linkText: "View profile",
+    backgroundColor: "#3971ff24",
+    name: "Esther",
+
+    icon: (
+      <BsFillPersonFill
+        className="icon"
+        style={{ color: "#3970FF", backgroundColor: "#3970FF36" }}
+      />
+    ),
+  },
+];

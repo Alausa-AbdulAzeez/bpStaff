@@ -5,6 +5,7 @@ import Topber from "../../components/topbar/Topber";
 import ErrorComponent from "../../components/error/Error";
 import "./home.scss";
 import {
+  customerCareDashboardData,
   labScientistDashboardData,
   partnerLabManagerDashboardData,
   phlebotomistDashboardData,
@@ -60,6 +61,10 @@ const Home = () => {
       break;
     case "PartnerLab Manager":
       data = partnerLabManagerDashboardData;
+
+      break;
+    case "Customer Care":
+      data = customerCareDashboardData;
 
       break;
 
