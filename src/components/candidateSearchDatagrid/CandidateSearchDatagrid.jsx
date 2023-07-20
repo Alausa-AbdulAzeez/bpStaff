@@ -9,242 +9,247 @@ import {
   Select,
   TextField,
   Typography,
-} from '@mui/material'
-import { Box } from '@mui/system'
-import { DataGrid } from '@mui/x-data-grid'
-import React, { useEffect, useState } from 'react'
-import { FaAngleDown } from 'react-icons/fa'
-import { MdCancel } from 'react-icons/md'
-import './candidateSearchDatagrid.scss'
-import { toast } from 'react-toastify'
-import { format } from 'date-fns'
+} from "@mui/material";
+import { Box } from "@mui/system";
+import { DataGrid } from "@mui/x-data-grid";
+import React, { useEffect, useState } from "react";
+import { FaAngleDown } from "react-icons/fa";
+import { MdCancel } from "react-icons/md";
+import "./candidateSearchDatagrid.scss";
+import { toast } from "react-toastify";
+import { format } from "date-fns";
 
 const CandidateSearchDatagrid = (props) => {
   // TABLE ROWS TO LOAD
-  const [pageSize, setPageSize] = useState(5)
+  const [pageSize, setPageSize] = useState(5);
 
   // BMI
-  const [BMI, setBMI] = useState('')
+  const [BMI, setBMI] = useState("");
 
   // USER DETAILS
   const [urinalysisDetails, setUrinalysisDetails] = useState({
-    'Color/Appearance': '',
-    Leucocytes: '',
-    Nitrites: '',
-    Urobilinogen: '',
-    Protein: '',
-    pH: '',
-    Blood: '',
-    SpecificGravity: '',
-    Ketone: '',
-    Bilirubin: '',
-    Glucose: '',
-  })
+    "Color/Appearance": "",
+    Leucocytes: "",
+    Nitrites: "",
+    Urobilinogen: "",
+    Protein: "",
+    pH: "",
+    Blood: "",
+    SpecificGravity: "",
+    Ketone: "",
+    Bilirubin: "",
+    Glucose: "",
+  });
   const [userDetails, setUserDetails] = useState({
-    candidateId: '',
-    clientid: '',
-    height: '',
-    bloodPressure: '',
-    weight: '',
-    age: '',
-    bmi: '',
-    gender: '',
-    temperature: '',
-    state: '',
-    visaulAcuity: '',
-    randomBloodSugar: '',
-    stoolAnalysis: '',
+    candidateId: "",
+    clientid: "",
+    height: "",
+    bloodPressure: "",
+    weight: "",
+    age: "",
+    bmi: "",
+    gender: "",
+    temperature: "",
+    state: "",
+    visaulAcuity: "",
+    randomBloodSugar: "",
+    stoolAnalysis: "",
     urinalysis: JSON.stringify(urinalysisDetails),
-  })
+  });
 
   // SELECTED CANDIDATE AFTER ROW CLICK
-  const [selectedCandidate, setSelecedCandidate] = useState({})
+  const [selectedCandidate, setSelecedCandidate] = useState({});
 
   // INITIAL POSITION OF SLIDE
-  const [position, setPosition] = useState('-100%')
+  const [position, setPosition] = useState("-100%");
 
   // TABLE DATA
-  const tableData = props?.tableData
-  console.log(tableData)
-  let rows
-  let columns
-  let title
+  const tableData = props?.tableData;
+  console.log(tableData);
+  let rows;
+  let columns;
+  let title;
 
   // SLIDE BUTTONS
-  let leftBtnText
-  let rightBtnText
+  let leftBtnText;
+  let rightBtnText;
 
   // LOGGED IN USER RLOE
-  const loggedInUserRole = props.userDetails?.data?.role
+  const loggedInUserRole = props.userDetails?.data?.role;
 
   const defaultColumns = [
     {
-      field: 'candidateName',
-      headerName: 'Candidate Name',
+      field: "candidateName",
+      headerName: "Candidate Name",
       width: 250,
       editable: false,
     },
-    { field: 'clientName', headerName: 'Company Name', width: 250 },
+    { field: "clientName", headerName: "Company Name", width: 250 },
     {
-      field: 'testcategory',
-      headerName: 'Test Category',
+      field: "testcategory",
+      headerName: "Test Category",
       width: 200,
       editable: false,
     },
     {
-      field: 'appointmentdate',
-      headerName: 'Appointment Date',
+      field: "appointmentdate",
+      headerName: "Appointment Date",
       width: 190,
-      description: 'The candidate shoul be present by this date',
+      description: "The candidate shoul be present by this date",
       renderCell: (props) => {
-        const refinedDate = new Date(props?.value)
-        const dateWithRightFormat = format(refinedDate, 'dd-MMM-yyyy')
-        return <div>{dateWithRightFormat}</div>
+        const refinedDate = new Date(props?.value);
+        const dateWithRightFormat = format(refinedDate, "dd-MMM-yyyy");
+        return <div>{dateWithRightFormat}</div>;
       },
     },
     {
-      field: 'phoneNumber',
-      headerName: 'Phone Number',
+      field: "status",
+      headerName: "Status",
       width: 130,
     },
-  ]
+    {
+      field: "phoneNumber",
+      headerName: "Phone Number",
+      width: 130,
+    },
+  ];
 
   switch (loggedInUserRole[0]) {
-    case 'Reception':
-      rows = tableData
-      columns = defaultColumns
-      title = 'Candidates'
-      rightBtnText = 'Authorize'
-      break
-    case 'Phlebotomy':
-      rows = tableData
-      columns = defaultColumns
-      title = 'Candidates'
+    case "Reception":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Candidates";
+      rightBtnText = "Authorize";
+      break;
+    case "Phlebotomy":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Candidates";
       // leftBtnText = "Send Details";
-      rightBtnText = 'Save Details'
-      break
-    case 'MainLab1':
-      rows = tableData
-      columns = defaultColumns
-      title = 'Candidates'
+      rightBtnText = "Save Details";
+      break;
+    case "MainLab1":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Candidates";
       // leftBtnText = "Send Result";
-      rightBtnText = 'Save Result'
-      break
-    case 'Quality assurance':
-      rows = tableData
-      columns = defaultColumns
-      title = 'Candidates'
-      rightBtnText = 'Approve'
-      break
-    case 'Report':
-      rows = tableData
-      columns = defaultColumns
-      title = 'Candidates'
-      rightBtnText = 'Approve'
-      break
+      rightBtnText = "Save Result";
+      break;
+    case "Quality assurance":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Candidates";
+      rightBtnText = "Approve";
+      break;
+    case "Report":
+      rows = tableData;
+      columns = defaultColumns;
+      title = "Candidates";
+      rightBtnText = "Approve";
+      break;
 
     default:
-      break
+      break;
   }
 
   const [result, setResult] = useState({
-    Gender: '',
-    Age: '',
-    Temperature: '',
-    Weight: '',
-    Height: '',
-    BMI: '',
-    ['Blood Pressure']: '',
-  })
+    Gender: "",
+    Age: "",
+    Temperature: "",
+    Weight: "",
+    Height: "",
+    BMI: "",
+    ["Blood Pressure"]: "",
+  });
 
   // SET SIDE INFO POSITION
   const handleSetPosition = () => {
-    setPosition('0')
-  }
+    setPosition("0");
+  };
   // END OF SET SIDE INFO POSITION
 
   // HANDLE ROW CLICK
   const handleRowClick = (row, e) => {
-    setSelecedCandidate(row?.row)
-    if (e.target.textContent !== 'Authorize') {
-      if (position !== '0') {
-        setPosition('0')
+    setSelecedCandidate(row?.row);
+    if (e.target.textContent !== "Authorize") {
+      if (position !== "0") {
+        setPosition("0");
       }
     }
-  }
+  };
   // END OF HANDLE ROW CLICK
 
   // HANDLE ROW CLICK
   const handleHideSlide = () => {
-    setPosition('-100%')
-  }
+    setPosition("-100%");
+  };
   // END OF HANDLE ROW CLICK
 
   // FUNCTION TO CALCULATE BMI
   const calculateBmi = () => {
-    let height = Number(userDetails?.height)
-    let weight = Number(userDetails?.weight)
-    let bmi
+    let height = Number(userDetails?.height);
+    let weight = Number(userDetails?.weight);
+    let bmi;
 
     // CHECK IF HEIGHT AND WEIGHT ARE AVAILABLE
-    userDetails?.height && userDetails?.weight
+    userDetails?.height && userDetails?.weight;
 
-    bmi = weight / Math.pow(height, 2)
-    setUserDetails({ ...userDetails, bmi: bmi?.toString() })
+    bmi = weight / Math.pow(height, 2);
+    setUserDetails({ ...userDetails, bmi: bmi?.toString() });
 
-    setBMI(bmi.toFixed(3))
-  }
+    setBMI(bmi.toFixed(3));
+  };
   // END OF FUNCTION TO CALCULATE BMI
 
   // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
   const handleCandidatePropertyChange = (e, dataType) => {
-    setUserDetails({ ...userDetails, [dataType]: e.target.value })
-    console.log(userDetails)
-  }
+    setUserDetails({ ...userDetails, [dataType]: e.target.value });
+    console.log(userDetails);
+  };
 
   // END OF FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
 
   // USEEFFECT TO UPDATE SELECTED ROW
-  useEffect(() => {}, [selectedCandidate])
+  useEffect(() => {}, [selectedCandidate]);
 
   // use effect to update bmi
   useEffect(() => {
-    calculateBmi()
-  }, [userDetails?.height, userDetails?.weight])
+    calculateBmi();
+  }, [userDetails?.height, userDetails?.weight]);
   return (
-    <div className='datagridWraper'>
-      <div className='slide' style={{ right: position }}>
-        <div className='slideTop'>
-          <div className='cancelconWrapper' onClick={handleHideSlide}>
-            <MdCancel className='cancelIcon' />
+    <div className="datagridWraper">
+      <div className="slide" style={{ right: position }}>
+        <div className="slideTop">
+          <div className="cancelconWrapper" onClick={handleHideSlide}>
+            <MdCancel className="cancelIcon" />
           </div>
-          <div className='initials'>
+          <div className="initials">
             {selectedCandidate?.candidateName &&
               selectedCandidate?.candidateName[0]?.toUpperCase()}
           </div>
-          <div className='slideFullname'>
+          <div className="slideFullname">
             {selectedCandidate?.candidateName?.toUpperCase()}
           </div>
         </div>
-        <div className='companyName h3'>
+        <div className="companyName h3">
           <h3>Company Name</h3>
           <p>{selectedCandidate?.phoneNumber}</p>
         </div>
 
-        <div className='phoneNo h3'>
+        <div className="phoneNo h3">
           <h3>Candidate Phone Number</h3>
           <p>{selectedCandidate?.phoneNumber}</p>
         </div>
-        <div className='numberOfTests h3'>
+        <div className="numberOfTests h3">
           <h3>{"Candidate's Email"}</h3>
           <p>{selectedCandidate?.email}</p>
         </div>
-        <div className='numberOfTests h3'>
+        <div className="numberOfTests h3">
           <h3>{"Candidate's Adderess"}</h3>
           <p>{selectedCandidate?.address}</p>
         </div>
-        {loggedInUserRole === 'Reception' && (
-          <div className='numberOfTests h3'>
+        {loggedInUserRole === "Reception" && (
+          <div className="numberOfTests h3">
             <h3>{"Candidate's Adderess"}</h3>
             <p>{selectedCandidate?.address}</p>
           </div>
@@ -256,235 +261,235 @@ const CandidateSearchDatagrid = (props) => {
           //   </p>
           // </div>
         )}
-        {loggedInUserRole[0] === 'Phlebotomy' && (
+        {loggedInUserRole[0] === "Phlebotomy" && (
           <>
-            <div className='numberOfTests h3'>
+            <div className="numberOfTests h3">
               <h3>{"Candidate's General Details"}</h3>
             </div>
-            <div className='candidateSearchBasicDetailsWrapper'>
-              <FormControl className='genderSelect' size='small'>
-                <InputLabel id='demo-simple-select-label'>Gender</InputLabel>
+            <div className="candidateSearchBasicDetailsWrapper">
+              <FormControl className="genderSelect" size="small">
+                <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                 <Select
-                  labelId='demo-simple-select-label'
-                  id='demo-simple-select'
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
                   value={userDetails?.gender}
-                  label='Company name'
+                  label="Company name"
                   required
-                  onChange={(e) => handleCandidatePropertyChange(e, 'gender')}
+                  onChange={(e) => handleCandidatePropertyChange(e, "gender")}
                 >
-                  <MenuItem value={'M'}>M</MenuItem>
-                  <MenuItem value={'F'}>F</MenuItem>
+                  <MenuItem value={"M"}>M</MenuItem>
+                  <MenuItem value={"F"}>F</MenuItem>
                 </Select>
               </FormControl>
               <TextField
-                id='outlined-search'
-                label='Age'
-                type='string'
+                id="outlined-search"
+                label="Age"
+                type="string"
                 required={true}
-                size='small'
-                className='candidateName basicCandidateDetailsInput'
-                onChange={(e) => handleCandidatePropertyChange(e, 'age')}
+                size="small"
+                className="candidateName basicCandidateDetailsInput"
+                onChange={(e) => handleCandidatePropertyChange(e, "age")}
               />
               <TextField
-                id='outlined-search'
-                label='Temperature'
-                type='string'
+                id="outlined-search"
+                label="Temperature"
+                type="string"
                 required
-                placeholder='°C'
-                size='small'
-                className='candidateName basicCandidateDetailsInput'
+                placeholder="°C"
+                size="small"
+                className="candidateName basicCandidateDetailsInput"
               />
               <TextField
                 // id="outlined-search"
-                label='Weight'
-                type='string'
-                placeholder='kg'
-                className='candidateName basicCandidateDetailsInput'
-                onChange={(e) => handleCandidatePropertyChange(e, 'weight')}
+                label="Weight"
+                type="string"
+                placeholder="kg"
+                className="candidateName basicCandidateDetailsInput"
+                onChange={(e) => handleCandidatePropertyChange(e, "weight")}
                 value={userDetails?.weight}
                 required
-                size='small'
+                size="small"
               />
               <TextField
-                id='outlined-search'
-                label='Height'
-                type='number'
-                className='candidateName basicCandidateDetailsInput'
-                onChange={(e) => handleCandidatePropertyChange(e, 'height')}
+                id="outlined-search"
+                label="Height"
+                type="number"
+                className="candidateName basicCandidateDetailsInput"
+                onChange={(e) => handleCandidatePropertyChange(e, "height")}
                 value={userDetails?.height}
                 required
-                placeholder='m'
-                size='small'
+                placeholder="m"
+                size="small"
               />
               <TextField
-                id='outlined-search'
-                label='BMI'
-                type='number'
+                id="outlined-search"
+                label="BMI"
+                type="number"
                 value={BMI}
-                className='candidateName basicCandidateDetailsInput'
+                className="candidateName basicCandidateDetailsInput"
                 InputLabelProps={{ shrink: true }}
-                size='small'
+                size="small"
               />
               <TextField
-                id='outlined-search'
-                label='Blood Pressure'
-                type='search'
-                className='candidateName basicCandidateDetailsInput'
+                id="outlined-search"
+                label="Blood Pressure"
+                type="search"
+                className="candidateName basicCandidateDetailsInput"
                 onChange={(e) =>
-                  handleCandidatePropertyChange(e, 'bloodPressure')
+                  handleCandidatePropertyChange(e, "bloodPressure")
                 }
                 required
-                size='small'
+                size="small"
               />
               <TextField
-                id='outlined-search'
-                label='Visual Acuity'
-                type='search'
-                className='candidateName basicCandidateDetailsInput'
+                id="outlined-search"
+                label="Visual Acuity"
+                type="search"
+                className="candidateName basicCandidateDetailsInput"
                 onChange={(e) =>
-                  handleCandidatePropertyChange(e, 'visaulAcuity')
+                  handleCandidatePropertyChange(e, "visaulAcuity")
                 }
                 required
-                size='small'
+                size="small"
               />
               <TextField
-                id='outlined-search'
-                label='Random Blood Sugar'
-                type='search'
-                className='candidateName basicCandidateDetailsInput'
+                id="outlined-search"
+                label="Random Blood Sugar"
+                type="search"
+                className="candidateName basicCandidateDetailsInput"
                 onChange={(e) =>
-                  handleCandidatePropertyChange(e, 'randomBloodSugar')
+                  handleCandidatePropertyChange(e, "randomBloodSugar")
                 }
                 required
-                size='small'
+                size="small"
               />
             </div>
-            <div className='numberOfTests h3'>
-              <h3 className='urinalysisH3'>
-                {'Urinalysis and Stool Analysis Details'}
+            <div className="numberOfTests h3">
+              <h3 className="urinalysisH3">
+                {"Urinalysis and Stool Analysis Details"}
               </h3>
-              <div className='candidateSearchBasicDetailsWrapper'>
+              <div className="candidateSearchBasicDetailsWrapper">
                 <TextField
-                  id='outlined-search'
-                  label='Stool Analysis'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
+                  id="outlined-search"
+                  label="Stool Analysis"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
                   onChange={(e) =>
-                    handleCandidatePropertyChange(e, 'stoolAnalysis')
+                    handleCandidatePropertyChange(e, "stoolAnalysis")
                   }
                   required
-                  size='small'
-                  placeholder='Color/Appearance'
+                  size="small"
+                  placeholder="Color/Appearance"
                 />
                 <TextField
-                  id='outlined-search'
-                  label='Color/Appearance'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
+                  id="outlined-search"
+                  label="Color/Appearance"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
                   onChange={(e) =>
-                    handleUrinalysisDetailsChange(e, 'Color/Appearance')
+                    handleUrinalysisDetailsChange(e, "Color/Appearance")
                   }
                   required
-                  size='small'
-                  placeholder='Color/Appearance'
+                  size="small"
+                  placeholder="Color/Appearance"
                 />
                 <TextField
-                  id='outlined-search'
-                  label='Leucocytes'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
+                  id="outlined-search"
+                  label="Leucocytes"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
                   onChange={(e) =>
-                    handleUrinalysisDetailsChange(e, 'Leucocytes')
+                    handleUrinalysisDetailsChange(e, "Leucocytes")
                   }
                   required
-                  size='small'
+                  size="small"
                 />
                 <TextField
-                  id='outlined-search'
-                  label='Nitrites'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
-                  onChange={(e) => handleUrinalysisDetailsChange(e, 'Nitrites')}
+                  id="outlined-search"
+                  label="Nitrites"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
+                  onChange={(e) => handleUrinalysisDetailsChange(e, "Nitrites")}
                   required
-                  size='small'
+                  size="small"
                 />
                 <TextField
-                  id='outlined-search'
-                  label='Urobilinogen'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
+                  id="outlined-search"
+                  label="Urobilinogen"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
                   onChange={(e) =>
-                    handleUrinalysisDetailsChange(e, 'Urobilinogen')
+                    handleUrinalysisDetailsChange(e, "Urobilinogen")
                   }
                   required
-                  size='small'
+                  size="small"
                 />
                 <TextField
-                  id='outlined-search'
-                  label='Protein'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
-                  onChange={(e) => handleUrinalysisDetailsChange(e, 'Protein')}
+                  id="outlined-search"
+                  label="Protein"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
+                  onChange={(e) => handleUrinalysisDetailsChange(e, "Protein")}
                   required
-                  size='small'
+                  size="small"
                 />
                 <TextField
-                  id='outlined-search'
-                  label='pH'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
-                  onChange={(e) => handleUrinalysisDetailsChange(e, 'pH')}
+                  id="outlined-search"
+                  label="pH"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
+                  onChange={(e) => handleUrinalysisDetailsChange(e, "pH")}
                   required
-                  size='small'
+                  size="small"
                 />
                 <TextField
-                  id='outlined-search'
-                  label='Blood'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
-                  onChange={(e) => handleUrinalysisDetailsChange(e, 'Blood')}
+                  id="outlined-search"
+                  label="Blood"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
+                  onChange={(e) => handleUrinalysisDetailsChange(e, "Blood")}
                   required
-                  size='small'
+                  size="small"
                 />
                 <TextField
-                  id='outlined-search'
-                  label='SpecificGravity'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
+                  id="outlined-search"
+                  label="SpecificGravity"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
                   onChange={(e) =>
-                    handleUrinalysisDetailsChange(e, 'SpecificGravity')
+                    handleUrinalysisDetailsChange(e, "SpecificGravity")
                   }
                   required
-                  size='small'
+                  size="small"
                 />
                 <TextField
-                  id='outlined-search'
-                  label='Ketone'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
-                  onChange={(e) => handleUrinalysisDetailsChange(e, 'Ketone')}
+                  id="outlined-search"
+                  label="Ketone"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
+                  onChange={(e) => handleUrinalysisDetailsChange(e, "Ketone")}
                   required
-                  size='small'
+                  size="small"
                 />
                 <TextField
-                  id='outlined-search'
-                  label='Bilirubin'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
+                  id="outlined-search"
+                  label="Bilirubin"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
                   onChange={(e) =>
-                    handleUrinalysisDetailsChange(e, 'Bilirubin')
+                    handleUrinalysisDetailsChange(e, "Bilirubin")
                   }
                   required
-                  size='small'
+                  size="small"
                 />
                 <TextField
-                  id='outlined-search'
-                  label='Glucose'
-                  type='search'
-                  className='candidateName basicCandidateDetailsInput'
-                  onChange={(e) => handleUrinalysisDetailsChange(e, 'Glucose')}
+                  id="outlined-search"
+                  label="Glucose"
+                  type="search"
+                  className="candidateName basicCandidateDetailsInput"
+                  onChange={(e) => handleUrinalysisDetailsChange(e, "Glucose")}
                   required
-                  size='small'
+                  size="small"
                 />
               </div>
             </div>
@@ -550,14 +555,14 @@ const CandidateSearchDatagrid = (props) => {
           </div>
         )} */}
 
-        {loggedInUserRole === 'labScientist' && (
+        {loggedInUserRole === "labScientist" && (
           <>
-            <div className='qualityAssuranceAccordionWrapper'>
+            <div className="qualityAssuranceAccordionWrapper">
               <Accordion>
                 <AccordionSummary
                   expandIcon={<FaAngleDown />}
-                  aria-controls='panel2a-content'
-                  id='panel2a-header'
+                  aria-controls="panel2a-content"
+                  id="panel2a-header"
                 >
                   <Typography>Candidate Details</Typography>
                 </AccordionSummary>
@@ -570,29 +575,29 @@ const CandidateSearchDatagrid = (props) => {
                 </AccordionDetails>
               </Accordion>
             </div>
-            <div className='candidateSearchBasicDetailsWrapper'>
+            <div className="candidateSearchBasicDetailsWrapper">
               <TextField
-                id='outlined-search'
-                label='PCV'
-                type='search'
-                className='candidateName basicCandidateDetailsInput'
+                id="outlined-search"
+                label="PCV"
+                type="search"
+                className="candidateName basicCandidateDetailsInput"
               />
               <TextField
-                id='outlined-search'
-                label='Blood Pressure'
-                type='search'
-                className='candidateName basicCandidateDetailsInput'
+                id="outlined-search"
+                label="Blood Pressure"
+                type="search"
+                className="candidateName basicCandidateDetailsInput"
               />
             </div>
           </>
         )}
-        {loggedInUserRole === 'qualityAssurance' && (
-          <div className='qualityAssuranceAccordionWrapper'>
+        {loggedInUserRole === "qualityAssurance" && (
+          <div className="qualityAssuranceAccordionWrapper">
             <Accordion>
               <AccordionSummary
                 expandIcon={<FaAngleDown />}
-                aria-controls='panel2a-content'
-                id='panel2a-header'
+                aria-controls="panel2a-content"
+                id="panel2a-header"
               >
                 <Typography>Test Details</Typography>
               </AccordionSummary>
@@ -606,17 +611,17 @@ const CandidateSearchDatagrid = (props) => {
             </Accordion>
           </div>
         )}
-        <div className='candidateSearchBottomButtons'>
+        <div className="candidateSearchBottomButtons">
           {/* {leftBtnText && (
             <div className='authorize sendDetails'>{leftBtnText}</div>
           )} */}
           {rightBtnText?.length > 0 &&
-            loggedInUserRole['0'] === 'Phlebotomy' && (
-              <button className='authorize'>{rightBtnText}</button>
+            loggedInUserRole["0"] === "Phlebotomy" && (
+              <button className="authorize">{rightBtnText}</button>
             )}
         </div>
       </div>
-      <div className='boxWrapper'>
+      <div className="boxWrapper">
         <Box sx={{ height: 350 }}>
           <h3>{title}</h3>
           <DataGrid
@@ -635,7 +640,7 @@ const CandidateSearchDatagrid = (props) => {
         </Box>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CandidateSearchDatagrid
+export default CandidateSearchDatagrid;
