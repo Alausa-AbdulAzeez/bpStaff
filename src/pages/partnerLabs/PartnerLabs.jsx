@@ -26,6 +26,10 @@ const PartnerLabs = () => {
   // LOGGED IN USER TOKEN
   const { token } = useSelector((state) => state?.user?.currentUser?.data);
 
+  // GET CURRENT LOGGED IN USER
+  const { currentUser } = useSelector((state) => state?.user);
+  const userData = currentUser?.data;
+
   // LOADING AND ERROR DATA
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -388,7 +392,7 @@ const PartnerLabs = () => {
         />
         <Sidebar />
         <div className="partnerLabsRight">
-          <Topber />
+          <Topber userData={userData} />
           <div className="partnerLabsMainWrapper">
             <div className="partnerLabsMainTop">
               <h3>Partner Laboratories</h3>

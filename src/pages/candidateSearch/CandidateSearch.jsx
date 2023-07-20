@@ -20,7 +20,7 @@ const CandidateSearch = () => {
   // GET CURRENT LOGGED IN USER
   const { currentUser } = useSelector((state) => state?.user);
   const loggedInUserRole = currentUser?.data?.role;
-  const userName = currentUser?.data?.profile?.fullName;
+  const userData = currentUser?.data;
 
   // LOGGED IN USER TOKEN
   const { token } = useSelector((state) => state?.user?.currentUser?.data);
@@ -240,7 +240,7 @@ const CandidateSearch = () => {
       <div className="candidateSearchWrapper">
         <Sidebar loggedInUserRole={loggedInUserRole} />
         <div className="candidateSearchRight">
-          <Topber userName={userName} />
+          <Topber userData={userData} />
           <div className="candidateSearchMainWrapper">
             {/* <div className='candidateSearchMainTop'>
               <h3 className='candidateSearchMainTopTitle'>Search</h3>

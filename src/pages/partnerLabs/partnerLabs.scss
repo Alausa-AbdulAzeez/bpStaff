@@ -1,8 +1,11 @@
 .partnerLabsWrapper {
   width: 100%;
   display: flex;
+  height: calc(100vh - 0px);
 
   .partnerLabsRight {
+    overflow-y: auto !important;
+    height: 100%;
     flex: 5;
 
     .partnerLabsMainWrapper {
