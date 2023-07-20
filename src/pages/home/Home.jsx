@@ -6,6 +6,7 @@ import ErrorComponent from "../../components/error/Error";
 import "./home.scss";
 import {
   labScientistDashboardData,
+  partnerLabManagerDashboardData,
   phlebotomistDashboardData,
   qualityAssuranceDashboardData,
   receptionistDashboardData,
@@ -57,6 +58,10 @@ const Home = () => {
       data = reportOfficerDashboardData;
 
       break;
+    case "PartnerLab Manager":
+      data = partnerLabManagerDashboardData;
+
+      break;
 
     default:
       break;
@@ -64,8 +69,6 @@ const Home = () => {
 
   // FUNCTION TO GET AND SET ALL CANDIDATES
   const getAllCandidates = async () => {
-    console.log("getting all");
-    console.log("getting all");
     try {
       setLoading(true);
       const res = await publicRequest.get("/Candidate", {
