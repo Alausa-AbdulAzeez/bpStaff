@@ -528,7 +528,7 @@ const PendingCandidatesDatagrid = (props) => {
           // .then(() => props?.setReloadTable((prev) => !prev))
           .then(() => {
             toast.update(toastId.current, {
-              render: 'Candidate result has been accepted',
+              render: 'Successful',
               type: 'success',
               isLoading: false,
               autoClose: 2500,
@@ -988,6 +988,7 @@ const PendingCandidatesDatagrid = (props) => {
       />
 
       <form className='slide' style={{ right: position }}>
+        {console.log(selectedCandidate)}
         <div className='slideTop'>
           <div className='cancelconWrapper' onClick={handleHideSlide}>
             <MdCancel className='cancelIcon' />
