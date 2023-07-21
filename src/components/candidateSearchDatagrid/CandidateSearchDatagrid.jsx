@@ -189,8 +189,12 @@ const CandidateSearchDatagrid = (props) => {
   const handleRowClick = (row, e) => {
     setSelecedCandidate(row?.row)
     setCandidateToBeUpdated(row?.row)
+    console.log(row?.row?.urinalysis)
+    console.log(JSON.parse(JSON.stringify(row?.row?.urinalysis)).pH)
+    // console.log(JSON.parse(row?.row?.urinalysis))
+
     setUrinalysisDetails(JSON.parse(demo))
-    console.log(JSON.parse(demo))
+    console.log(JSON.parse(demo).pH)
     console.log(JSON.parse(demo))
 
     console.log(row?.row)
@@ -390,7 +394,7 @@ const CandidateSearchDatagrid = (props) => {
                     id='demo-simple-select'
                     value={candidateToBeUpdated?.gender || ''}
                     label='Company name'
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     onChange={(e) => handleCandidatePropertyChange(e, 'gender')}
                   >
                     <MenuItem value={'M'}>M</MenuItem>
@@ -405,13 +409,13 @@ const CandidateSearchDatagrid = (props) => {
                   value={candidateToBeUpdated?.age || ''}
                   className='candidateName basicCandidateDetailsInput'
                   onChange={(e) => handleCandidatePropertyChange(e, 'age')}
-                  InputLabelProps={{ shrink: true }}
+                  inputLabelProps={{ shrink: true }}
                 />
                 <TextField
                   id='outlined-search'
                   label='Temperature'
                   type='string'
-                  InputLabelProps={{ shrink: true }}
+                  inputLabelProps={{ shrink: true }}
                   placeholder='°C'
                   value={candidateToBeUpdated?.temperature || ''}
                   size='small'
@@ -426,7 +430,7 @@ const CandidateSearchDatagrid = (props) => {
                   onChange={(e) => handleCandidatePropertyChange(e, 'weight')}
                   // value={userDetails?.weight}
                   value={candidateToBeUpdated?.weight || ''}
-                  InputLabelProps={{ shrink: true }}
+                  inputLabelProps={{ shrink: true }}
                   key={candidateToBeUpdated}
                   size='small'
                 />
@@ -438,7 +442,7 @@ const CandidateSearchDatagrid = (props) => {
                   className='candidateName basicCandidateDetailsInput'
                   onChange={(e) => handleCandidatePropertyChange(e, 'height')}
                   value={candidateToBeUpdated?.height || ''}
-                  InputLabelProps={{ shrink: true }}
+                  inputLabelProps={{ shrink: true }}
                   placeholder='m'
                   size='small'
                 />
@@ -448,7 +452,7 @@ const CandidateSearchDatagrid = (props) => {
                   type='number'
                   value={BMI}
                   className='candidateName basicCandidateDetailsInput'
-                  InputLabelProps={{ shrink: true }}
+                  inputLabelProps={{ shrink: true }}
                   size='small'
                 />
                 <TextField
@@ -459,7 +463,7 @@ const CandidateSearchDatagrid = (props) => {
                   onChange={(e) =>
                     handleCandidatePropertyChange(e, 'bloodPressure')
                   }
-                  InputLabelProps={{ shrink: true }}
+                  inputLabelProps={{ shrink: true }}
                   size='small'
                   value={candidateToBeUpdated?.bloodPressure || ''}
                 />
@@ -471,7 +475,7 @@ const CandidateSearchDatagrid = (props) => {
                   onChange={(e) =>
                     handleCandidatePropertyChange(e, 'visaulAcuity')
                   }
-                  InputLabelProps={{ shrink: true }}
+                  inputLabelProps={{ shrink: true }}
                   value={candidateToBeUpdated?.visaulAcuity || ''}
                   size='small'
                 />
@@ -483,7 +487,7 @@ const CandidateSearchDatagrid = (props) => {
                   onChange={(e) =>
                     handleCandidatePropertyChange(e, 'randomBloodSugar')
                   }
-                  InputLabelProps={{ shrink: true }}
+                  inputLabelProps={{ shrink: true }}
                   value={candidateToBeUpdated?.randomBloodSugar || ''}
                   size='small'
                 />
@@ -501,7 +505,7 @@ const CandidateSearchDatagrid = (props) => {
                     onChange={(e) =>
                       handleCandidatePropertyChange(e, 'stoolAnalysis')
                     }
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     size='small'
                     value={candidateToBeUpdated?.stoolAnalysis || ''}
                     placeholder='Color/Appearance'
@@ -514,7 +518,7 @@ const CandidateSearchDatagrid = (props) => {
                     onChange={(e) =>
                       handleUrinalysisDetailsChange(e, 'Color/Appearance')
                     }
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     value={urinalysisDetails?.['Color/Appearance'] || ''}
                     size='small'
                     placeholder='Color/Appearance'
@@ -528,7 +532,7 @@ const CandidateSearchDatagrid = (props) => {
                       handleUrinalysisDetailsChange(e, 'Leucocytes')
                     }
                     value={urinalysisDetails?.Leucocytes || ''}
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     size='small'
                   />
                   <TextField
@@ -539,7 +543,7 @@ const CandidateSearchDatagrid = (props) => {
                     onChange={(e) =>
                       handleUrinalysisDetailsChange(e, 'Nitrites')
                     }
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     value={urinalysisDetails?.Nitrites || ''}
                     size='small'
                   />
@@ -551,7 +555,7 @@ const CandidateSearchDatagrid = (props) => {
                     onChange={(e) =>
                       handleUrinalysisDetailsChange(e, 'Urobilinogen')
                     }
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     value={urinalysisDetails?.Urobilinogen || ''}
                     size='small'
                   />
@@ -563,7 +567,7 @@ const CandidateSearchDatagrid = (props) => {
                     onChange={(e) =>
                       handleUrinalysisDetailsChange(e, 'Protein')
                     }
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     value={urinalysisDetails?.Protein || ''}
                     size='small'
                   />
@@ -574,7 +578,7 @@ const CandidateSearchDatagrid = (props) => {
                     className='candidateName basicCandidateDetailsInput'
                     onChange={(e) => handleUrinalysisDetailsChange(e, 'pH')}
                     value={urinalysisDetails?.pH || ''}
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     size='small'
                   />
                   <TextField
@@ -583,7 +587,7 @@ const CandidateSearchDatagrid = (props) => {
                     type='search'
                     className='candidateName basicCandidateDetailsInput'
                     onChange={(e) => handleUrinalysisDetailsChange(e, 'Blood')}
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     value={urinalysisDetails?.Blood || ''}
                     size='small'
                   />
@@ -595,7 +599,7 @@ const CandidateSearchDatagrid = (props) => {
                     onChange={(e) =>
                       handleUrinalysisDetailsChange(e, 'SpecificGravity')
                     }
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     value={urinalysisDetails?.SpecificGravity || ''}
                     size='small'
                   />
@@ -605,7 +609,7 @@ const CandidateSearchDatagrid = (props) => {
                     type='search'
                     className='candidateName basicCandidateDetailsInput'
                     onChange={(e) => handleUrinalysisDetailsChange(e, 'Ketone')}
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     value={urinalysisDetails?.Ketone || ''}
                     size='small'
                   />
@@ -617,7 +621,7 @@ const CandidateSearchDatagrid = (props) => {
                     onChange={(e) =>
                       handleUrinalysisDetailsChange(e, 'Bilirubin')
                     }
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     value={urinalysisDetails?.Bilirubin || ''}
                     size='small'
                   />
@@ -629,7 +633,7 @@ const CandidateSearchDatagrid = (props) => {
                     onChange={(e) =>
                       handleUrinalysisDetailsChange(e, 'Glucose')
                     }
-                    InputLabelProps={{ shrink: true }}
+                    inputLabelProps={{ shrink: true }}
                     value={urinalysisDetails?.Glucose || ''}
                     size='small'
                   />
