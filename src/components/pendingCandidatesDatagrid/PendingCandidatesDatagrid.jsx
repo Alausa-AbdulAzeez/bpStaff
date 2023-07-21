@@ -180,6 +180,7 @@ const PendingCandidatesDatagrid = (props) => {
 
             {(loggedInUserRole === 'Phlebotomy' ||
               loggedInUserRole === 'MainLab1' ||
+              loggedInUserRole === 'Customer Care' ||
               loggedInUserRole === 'Report' ||
               loggedInUserRole === 'Quality assurance') && (
               <div className='notAuthorized'>View</div>
@@ -232,6 +233,14 @@ const PendingCandidatesDatagrid = (props) => {
       break
 
     case 'Report':
+      rows = tableData
+      columns = defaultColumns
+      title = 'Candidates'
+      leftBtnText = 'Send Report'
+      rightBtnText = 'Preview Report'
+      break
+
+    case 'Customer Care':
       rows = tableData
       columns = defaultColumns
       title = 'Candidates'
@@ -889,7 +898,7 @@ const PendingCandidatesDatagrid = (props) => {
       console.log(selectedCandidate)
       setCandidateSubmittedResults(selectedCandidate?.tests)
     }
-    if (loggedInUserRole === 'Report') {
+    if (loggedInUserRole === 'Report' || loggedInUserRole === 'Customer Care') {
       console.log(selectedCandidate)
       if (selectedCandidate?.candidateId) {
         const getCandidatetResults = async () => {
@@ -960,7 +969,8 @@ const PendingCandidatesDatagrid = (props) => {
       renderCell: (params) => {
         return (
           <>
-            {loggedInUserRole === 'Report' && (
+            {(loggedInUserRole === 'Report' ||
+              loggedInUserRole === 'Customer Care') && (
               <div
                 className={
                   params?.row?.status === 'PENDING'
@@ -1276,7 +1286,7 @@ const PendingCandidatesDatagrid = (props) => {
                   <Typography>
                     Height -----
                     <span style={{ fontWeight: 'bold' }}>
-                      {selectedCandidate?.height}cm
+                      {selectedCandidate?.height}m
                     </span>
                   </Typography>
                   <Typography>
@@ -1334,6 +1344,7 @@ const PendingCandidatesDatagrid = (props) => {
                           handleWidalDetailsChange(e, 'S.typhi O')
                         }
                         size='small'
+                        placeholder='A:B'
                       />
                       <TextField
                         id='outlined-search'
@@ -1344,6 +1355,7 @@ const PendingCandidatesDatagrid = (props) => {
                           handleWidalDetailsChange(e, 'S.typhi H')
                         }
                         size='small'
+                        placeholder='A:B'
                       />
                       <TextField
                         id='outlined-search'
@@ -1354,6 +1366,7 @@ const PendingCandidatesDatagrid = (props) => {
                           handleWidalDetailsChange(e, 'S.paratyphi-A O')
                         }
                         size='small'
+                        placeholder='A:B'
                       />
                       <TextField
                         id='outlined-search'
@@ -1364,6 +1377,7 @@ const PendingCandidatesDatagrid = (props) => {
                           handleWidalDetailsChange(e, 'S.paratyphi-A H')
                         }
                         size='small'
+                        placeholder='A:B'
                       />
                       <TextField
                         id='outlined-search'
@@ -1374,6 +1388,7 @@ const PendingCandidatesDatagrid = (props) => {
                           handleWidalDetailsChange(e, 'S.paratyphi-B O')
                         }
                         size='small'
+                        placeholder='A:B'
                       />
                       <TextField
                         id='outlined-search'
@@ -1384,6 +1399,7 @@ const PendingCandidatesDatagrid = (props) => {
                           handleWidalDetailsChange(e, 'S.paratyphi-B H')
                         }
                         size='small'
+                        placeholder='A:B'
                       />
                       <TextField
                         id='outlined-search'
@@ -1394,6 +1410,7 @@ const PendingCandidatesDatagrid = (props) => {
                           handleWidalDetailsChange(e, 'S.paratyphi-C O')
                         }
                         size='small'
+                        placeholder='A:B'
                       />
                       <TextField
                         id='outlined-search'
@@ -1404,6 +1421,7 @@ const PendingCandidatesDatagrid = (props) => {
                           handleWidalDetailsChange(e, 'S.paratyphi-C H')
                         }
                         size='small'
+                        placeholder='A:B'
                       />
                     </div>
                   </div>
@@ -1434,7 +1452,8 @@ const PendingCandidatesDatagrid = (props) => {
             )}
           </div>
         )}
-        {loggedInUserRole === 'Report' && (
+        {(loggedInUserRole === 'Report' ||
+          loggedInUserRole === 'Customer Care') && (
           <div className='reportResultsWrapper'>
             <div className='qualityAssuranceAccordionWrapper'>
               <Accordion>
@@ -1449,9 +1468,7 @@ const PendingCandidatesDatagrid = (props) => {
                   <Typography>Age -{selectedCandidate?.age} years</Typography>
                   <Typography>Gender - {selectedCandidate?.gender}</Typography>
                   <Typography>BMI - {selectedCandidate?.bmi}</Typography>
-                  <Typography>
-                    Height - {selectedCandidate?.height}cm
-                  </Typography>
+                  <Typography>Height - {selectedCandidate?.height}m</Typography>
                   <Typography>
                     Weight - {selectedCandidate?.weight}kg
                   </Typography>
@@ -1488,21 +1505,26 @@ const PendingCandidatesDatagrid = (props) => {
             )}
           </div>
         )}
-        {loggedInUserRole !== 'Report' && (
-          <div className='bottomButtons'>
-            {leftBtnText && (
-              <div className=' rejectResult' onClick={(e) => handleBtnClick(e)}>
-                {leftBtnText}
-              </div>
-            )}
-            {rightBtnText?.length > 0 && (
-              <div className='authorize' onClick={(e) => handleBtnClick(e)}>
-                {rightBtnText}
-              </div>
-            )}
-          </div>
-        )}
-        {loggedInUserRole === 'Report' &&
+        {loggedInUserRole !== 'Report' &&
+          loggedInUserRole !== 'Customer Care' && (
+            <div className='bottomButtons'>
+              {leftBtnText && (
+                <div
+                  className=' rejectResult'
+                  onClick={(e) => handleBtnClick(e)}
+                >
+                  {leftBtnText}
+                </div>
+              )}
+              {rightBtnText?.length > 0 && (
+                <div className='authorize' onClick={(e) => handleBtnClick(e)}>
+                  {rightBtnText}
+                </div>
+              )}
+            </div>
+          )}
+        {(loggedInUserRole === 'Report' ||
+          loggedInUserRole === 'Customer Care') &&
           candidateSubmittedResults.length > 0 &&
           !loadingCandedateSubmittedResults && (
             <div className='bottomButtons'>

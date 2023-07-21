@@ -101,3 +101,20 @@
     display: none !important; /* Hide the download button when printing */
   }
 }
+
+.widalReaction {
+  font-weight: lighter;
+  margin-top: 0;
+}
+
+.widalResultWrapper {
+  display: flex;
+  // flex-direction: column;
+
+  .singleTyphiWrapper {
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}

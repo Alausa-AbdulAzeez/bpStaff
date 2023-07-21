@@ -18,11 +18,19 @@ const DownloadReportPage = () => {
   // SELECTED CANDIDATE SUBMITTED RESULTS (FOR QA and REPORTS )
   let candidateSubmittedResults = []
 
+  // WIDAL TEST CHECK
+  let containsWidalTest = false
+  const [containsWidal, setContainsWidal] = useState(false)
+
   // LOGGED IN USER TOKEN
   const { token } = useSelector((state) => state?.user?.currentUser?.data)
 
   // GET PAGE PARAMS
   let params = useParams()
+
+  // TABLE DATA
+  const [generalTableData, setGeneralTableData] = useState([])
+  const [widalTableData, setWidalTableData] = useState([])
 
   candidateSubmittedResults = [
     { testName: 'malaria', result: '+ve', id: '1' },
@@ -78,6 +86,28 @@ const DownloadReportPage = () => {
           })
           .then((res) => {
             setCandidateResultDetails(res?.data?.data)
+            let tests = res?.data?.data
+            console.log(tests)
+            containsWidalTest = tests?.some((test) => {
+              return test.testName === 'Widal test'
+            })
+            if (containsWidalTest) {
+              let generalResult = tests?.filter(
+                (test) => test?.testName !== 'Widal test'
+              )
+              setGeneralTableData(generalResult)
+
+              let widalResult = tests?.filter(
+                (test) => test?.testName === 'Widal test'
+              )
+              console.log(widalResult)
+              const parsedWidalResult = JSON.parse(widalResult?.[0]?.result)
+              const parsedWidalResultArr = Object.entries(parsedWidalResult)
+              console.log(parsedWidalResult)
+              console.log(parsedWidalResultArr)
+              setWidalTableData(parsedWidalResultArr)
+            }
+            setContainsWidal(containsWidalTest)
           })
         await publicRequest
           .get(`Candidate/SearchByID?Candidateid=${params?.candidate}`, {
@@ -148,21 +178,103 @@ const DownloadReportPage = () => {
           </div>
         </div>
         <div className='parametersInvestigated'>
-          <div className='parametersInvestigatedTitle'>LABORATORY TESTS</div>
-          <Box
-            height={Math.round((candidateResultDetails.length + 1) * 55)}
-            width={650}
-          >
-            <DataGrid
-              style={{ textAlign: 'center' }}
-              rows={candidateResultDetails || []}
-              columns={resultColumn}
-              // pageSize={100}
-              // rowsPerPageOptions={[100]}
-              getRowId={(row) => row?.resultId}
-              hideFooter
-            />
-          </Box>
+          {!containsWidal && (
+            <>
+              <div className='parametersInvestigatedTitle'>
+                LABORATORY TESTS
+              </div>
+              <Box
+                height={Math.round((candidateResultDetails.length + 1) * 55)}
+                width={650}
+              >
+                <DataGrid
+                  style={{ textAlign: 'center' }}
+                  rows={candidateResultDetails || []}
+                  columns={resultColumn}
+                  // pageSize={100}
+                  // rowsPerPageOptions={[100]}
+                  getRowId={(row) => row?.resultId}
+                  hideFooter
+                />
+              </Box>
+            </>
+          )}
+          {containsWidal && (
+            <>
+              <div className='parametersInvestigatedTitle'>
+                LABORATORY TESTS
+              </div>
+              <Box
+                height={Math.round((generalTableData.length + 1) * 55)}
+                width={650}
+              >
+                <DataGrid
+                  style={{ textAlign: 'center' }}
+                  rows={generalTableData || []}
+                  columns={resultColumn}
+                  // pageSize={100}
+                  // rowsPerPageOptions={[100]}
+                  getRowId={(row) => row?.resultId}
+                  hideFooter
+                />
+              </Box>
+              {console.log(widalTableData)}
+
+              <div className='parametersInvestigatedTitle'>SERELOGY</div>
+              {/* <Box
+                height={Math.round((widalTableData.length + 1) * 55)}
+                width={650}
+              >
+                <DataGrid
+                  style={{ textAlign: 'center' }}
+                  rows={widalTableData || []}
+                  columns={resultColumn}
+                  // pageSize={100}
+                  // rowsPerPageOptions={[100]}
+                  getRowId={(row) => row?.resultId}
+                  hideFooter
+                />
+              </Box> */}
+
+              <h3 className='widalReaction'>WIDAL REACTION</h3>
+              <div className='widalResultWrapper'>
+                <div className='singleTyphiWrapper '>
+                  <div className='sTyphi'>S.typhi</div>
+                  <div className='sTyphi'>S.paratyphi A</div>
+                  <div className='sTyphi'>S.paratyphi B</div>
+                  <div className='sTyphi'>S.paratyphi C</div>
+                </div>
+                <div className='singleTyphiWrapper'>
+                  <div className='sTyphi S.typhi-O'>
+                    O: <span>{widalTableData?.[0]?.[1]}</span>
+                  </div>
+                  <div className='sTyphi S.paratyphi-A-O'>
+                    O: <span>{widalTableData?.[2]?.[1]}</span>
+                  </div>
+                  <div className='sTyphi S.paratyphi-B-O'>
+                    O:<span>{widalTableData?.[4]?.[1]}</span>
+                  </div>
+                  <div className='sTyphi S.paratyphi-C-O'>
+                    O:<span>{widalTableData?.[6]?.[1]}</span>
+                  </div>
+                </div>
+                <div className='singleTyphiWrapper'>
+                  <div className='sTyphi S.typhi-H'>
+                    H: {widalTableData?.[1]?.[1]}
+                  </div>
+                  <div className='sTyphi S.paratyphi-A-H'>
+                    H:<span>{widalTableData?.[3]?.[1]}</span>
+                  </div>
+                  <div className='sTyphi S.paratyphi-B-H'>
+                    H:<span>{widalTableData?.[5]?.[1]}</span>
+                  </div>
+                  <div className='sTyphi S.paratyphi-C-H'>
+                    H:<span>{widalTableData?.[7]?.[1]}</span>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </div>
         <div className='recommendation'>
           <div className='recommendationTitle'>RECOMMENDATION</div>
