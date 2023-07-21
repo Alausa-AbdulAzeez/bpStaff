@@ -130,7 +130,7 @@ const RejectedResults = () => {
                 <RejectedResultsDatagrid
                   userDetails={currentUser}
                   tableData={searchedTableData}
-                  setReloadTable={setReloadTable}
+                  getRejectedResults={getRejectedResults}
                 />
               )}
             </div>

@@ -18,6 +18,9 @@ const RejectedResultsDatagrid = (props) => {
     []
   )
 
+  // DISABLE BUTTON WHILE UPDATING
+  const [disableUpdateBtn, setDisableUpdateBtn] = useState(false)
+
   // TOAST ID
   const toastId = useRef(null)
 
@@ -36,6 +39,18 @@ const RejectedResultsDatagrid = (props) => {
     gender: '',
     // temperature: "",
     state: '',
+  })
+
+  // WIDAL TEST VALUES
+  const [widalTestValues, setWidalTestValues] = useState({
+    'S.typhi O': '',
+    'S.typhi H': '',
+    'S.paratyphi-A O': '',
+    'S.paratyphi-A H': '',
+    'S.paratyphi-B O': '',
+    'S.paratyphi-B H': '',
+    'S.paratyphi-C O': '',
+    'S.paratyphi-C H': '',
   })
 
   // TABLE ROWS PER PAGE
@@ -145,10 +160,13 @@ const RejectedResultsDatagrid = (props) => {
     if (candidateResults.length > 0) {
       // MAP OVER THE CANDIDATE RESULTS ARRAY, IF THE IDs MATCH UPDATE, IF NOT RETURN CURRENT ITEM IN THE ARRAY
       candidateResults = candidateResults.map((candidateResult) => {
-        console.log(candidateResult.resultId, data?.resultId)
-        return candidateResult.resultId === data?.resultId
-          ? { ...candidateResult, result: e.target.value }
-          : candidateResult
+        if (candidateResult?.testName !== 'Widal test') {
+          return candidateResult?.resultId === data?.resultId
+            ? { ...candidateResult, result: e.target.value }
+            : candidateResult
+        } else {
+          return candidateResult
+        }
       })
       setCandidateResults(candidateResults)
     }
@@ -158,6 +176,9 @@ const RejectedResultsDatagrid = (props) => {
 
   // FUNCTION TO UPDATE CANDIDATE RESULT (MAINLAB)
   const updateResult = async () => {
+    setDisableUpdateBtn(true)
+
+    console.log(candidateResults)
     toastId.current = toast('Please wait...', {
       autoClose: 3000,
       isLoading: true,
@@ -186,12 +207,15 @@ const RejectedResultsDatagrid = (props) => {
             isLoading: false,
             autoClose: 3000,
           })
+          setDisableUpdateBtn(false)
         })
+        .then(async () => await props?.getRejectedResults())
         .then(() => {
-          window.location.reload()
+          setPosition('-100%')
         })
     } catch (error) {
       console.log(error)
+      setDisableUpdateBtn(false)
       toast.update(toastId.current, {
         type: 'error',
         autoClose: 3000,
@@ -212,19 +236,50 @@ const RejectedResultsDatagrid = (props) => {
 
   // AS A CANDIDATE IS SELECTED, GET IT'S TESTS AND CREATE A RESULTS LIST
   useEffect(() => {
-    console.log(selectedCandidate)
     if (loggedInUserRole === 'MainLab1') {
       let rejectedResultList = selectedCandidate?.tests
       setCandidateResults(rejectedResultList)
 
       containsWidalTest = selectedCandidate?.tests?.some((test) => {
+        if (test.testName === 'Widal test') {
+          setWidalTestValues(JSON.parse(test?.result))
+        }
         return test.testName === 'Widal test'
       })
-      console.log(selectedCandidate?.tests)
 
       setContainsWidal(containsWidalTest)
     }
   }, [selectedCandidate])
+
+  // FUNCTION TO HANDLE WIDAL TEST DATA CHANGE
+  const handleWidalDetailsChange = (e, dataType) => {
+    setWidalTestValues({ ...widalTestValues, [dataType]: e.target.value })
+    // setUserDetails({
+    //   ...userDetails,
+    //   urinalysis: JSON.stringify({
+    //     ...urinalysisDetails,
+    //     [dataType]: e.target.value,
+    //   }),
+    // })
+    // console.log(userDetails)
+    console.log(candidateResults)
+    candidateResults = candidateResults.map((candidateResult) => {
+      if (candidateResult.testName === 'Widal test') {
+        return {
+          ...candidateResult,
+          result: JSON.stringify({
+            ...widalTestValues,
+            [dataType]: e.target.value,
+          }),
+        }
+      } else {
+        return candidateResult
+      }
+    })
+
+    setCandidateResults(candidateResults)
+  }
+  // END OF FUNCTION TO HANDLE WIDAL TEST DATA CHANGE
 
   // USEEFFECT TO UPDATE USER DETAILS
   useEffect(() => {}, [userDetails])
@@ -257,7 +312,6 @@ const RejectedResultsDatagrid = (props) => {
         {loggedInUserRole === 'MainLab1' && (
           <>
             <div className='basicDetailsWrapper'>
-              {console.log(candidateResults)}
               {candidateResults?.map((candidateResult, index) => {
                 return (
                   candidateResult?.testName !== 'Widal test' && (
@@ -289,6 +343,8 @@ const RejectedResultsDatagrid = (props) => {
                     className='candidateName basicCandidateDetailsInput'
                     onChange={(e) => handleWidalDetailsChange(e, 'S.typhi O')}
                     size='small'
+                    value={widalTestValues?.['S.typhi O']}
+                    InputLabelProps={{ shrink: true }}
                   />
                   <TextField
                     id='outlined-search'
@@ -297,6 +353,8 @@ const RejectedResultsDatagrid = (props) => {
                     className='candidateName basicCandidateDetailsInput'
                     onChange={(e) => handleWidalDetailsChange(e, 'S.typhi H')}
                     size='small'
+                    InputLabelProps={{ shrink: true }}
+                    value={widalTestValues?.['S.typhi H']}
                   />
                   <TextField
                     id='outlined-search'
@@ -307,6 +365,8 @@ const RejectedResultsDatagrid = (props) => {
                       handleWidalDetailsChange(e, 'S.paratyphi-A O')
                     }
                     size='small'
+                    InputLabelProps={{ shrink: true }}
+                    value={widalTestValues?.['S.paratyphi-A O']}
                   />
                   <TextField
                     id='outlined-search'
@@ -317,6 +377,8 @@ const RejectedResultsDatagrid = (props) => {
                       handleWidalDetailsChange(e, 'S.paratyphi-A H')
                     }
                     size='small'
+                    InputLabelProps={{ shrink: true }}
+                    value={widalTestValues?.['S.paratyphi-A H']}
                   />
                   <TextField
                     id='outlined-search'
@@ -327,6 +389,8 @@ const RejectedResultsDatagrid = (props) => {
                       handleWidalDetailsChange(e, 'S.paratyphi-B O')
                     }
                     size='small'
+                    InputLabelProps={{ shrink: true }}
+                    value={widalTestValues?.['S.paratyphi-B O']}
                   />
                   <TextField
                     id='outlined-search'
@@ -337,6 +401,8 @@ const RejectedResultsDatagrid = (props) => {
                       handleWidalDetailsChange(e, 'S.paratyphi-B H')
                     }
                     size='small'
+                    InputLabelProps={{ shrink: true }}
+                    value={widalTestValues?.['S.paratyphi-B H']}
                   />
                   <TextField
                     id='outlined-search'
@@ -347,6 +413,8 @@ const RejectedResultsDatagrid = (props) => {
                       handleWidalDetailsChange(e, 'S.paratyphi-C O')
                     }
                     size='small'
+                    InputLabelProps={{ shrink: true }}
+                    value={widalTestValues?.['S.paratyphi-C O']}
                   />
                   <TextField
                     id='outlined-search'
@@ -357,6 +425,8 @@ const RejectedResultsDatagrid = (props) => {
                       handleWidalDetailsChange(e, 'S.paratyphi-C H')
                     }
                     size='small'
+                    InputLabelProps={{ shrink: true }}
+                    value={widalTestValues?.['S.paratyphi-C H']}
                   />
                 </div>
               </div>
@@ -371,9 +441,13 @@ const RejectedResultsDatagrid = (props) => {
             </div>
           )} */}
 
-          <div className='authorize' onClick={(e) => handleBtnClick(e)}>
+          <button
+            className='authorizeRejectedResult'
+            onClick={(e) => handleBtnClick(e)}
+            disabled={disableUpdateBtn}
+          >
             {rightBtnText}
-          </div>
+          </button>
         </div>
       </form>
       <Box sx={{ height: 350, width: '100%' }}>

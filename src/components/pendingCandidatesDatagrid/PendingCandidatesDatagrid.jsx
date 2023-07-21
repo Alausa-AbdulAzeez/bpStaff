@@ -467,7 +467,7 @@ const PendingCandidatesDatagrid = (props) => {
               }
             )
           })
-          .then(() => props?.getPendingCandidates())
+          .then(async () => await props?.getPendingCandidates())
           // .then(() => props?.setReloadTable((prev) => !prev))
           .then(() => {
             toast.update(toastId.current, {
@@ -521,14 +521,14 @@ const PendingCandidatesDatagrid = (props) => {
               },
             }
           )
-          .then(() => {
+          .then(async () => {
             // return window.location.reload();
-            return props?.getPendingCandidates()
+            return await props?.getPendingCandidates()
           })
           // .then(() => props?.setReloadTable((prev) => !prev))
           .then(() => {
             toast.update(toastId.current, {
-              render: 'Successful',
+              render: 'Results has been accepted',
               type: 'success',
               isLoading: false,
               autoClose: 2500,
@@ -610,7 +610,7 @@ const PendingCandidatesDatagrid = (props) => {
             },
           }
         )
-        .then(() => props?.getPendingCandidates())
+        .then(async () => await props?.getPendingCandidates())
         // .then(() => props?.setReloadTable((prev) => !prev))
         .then(() => {
           toast.update(toastId.current, {
@@ -664,12 +664,12 @@ const PendingCandidatesDatagrid = (props) => {
               'Content-Type': 'application/json',
             },
           })
-          .then(() => props?.getPendingCandidates())
+          .then(async () => await props?.getPendingCandidates())
           // .then(() => props?.setReloadTable((prev) => !prev))
           .then(() => {
             toast.update(toastId.current, {
-              render: 'Candidate result has been accepted',
-              type: 'success',
+              render: 'Result has been rejected',
+              type: 'info',
               isLoading: false,
               autoClose: 2500,
             })
