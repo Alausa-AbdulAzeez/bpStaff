@@ -105,7 +105,8 @@
     transition: all ease-in-out 0.65s;
     padding: 32px;
 
-    .urinalysisH3 {
+    .urinalysisH3,
+    .widalTest {
       margin-bottom: 16px !important;
     }
 
@@ -174,6 +175,44 @@
         max-width: 200px;
         flex: 1;
       }
+    }
+    .basicDetailsWrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 20px;
+
+      .genderSelect {
+        width: 100px;
+      }
+
+      .basicCandidateDetailsInput {
+        min-width: 200px;
+        max-width: 200px;
+        flex: 1;
+      }
+    }
+    .widalTestBasicDetailsWrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 20px;
+
+      .genderSelect {
+        width: 100px;
+      }
+
+      .basicCandidateDetailsInput {
+        min-width: 200px;
+        max-width: 200px;
+        flex: 1;
+      }
+    }
+    .widalTestWrapper {
+      margin-bottom: 24px;
+    }
+    .urinalysisWrapper {
+      margin-bottom: 24px;
     }
 
     .qualityAssuranceAccordionWrapper {

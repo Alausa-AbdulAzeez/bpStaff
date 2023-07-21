@@ -68,10 +68,24 @@ const PendingCandidatesDatagrid = (props) => {
   // TOAST ID
   const toastId = useRef(null)
 
+  // WIDAL TEST CHECK
+  let containsWidalTest = false
+  const [containsWidal, setContainsWidal] = useState(false)
+
   // SELECTED CANDIDATE AFTER ROW CLICK
   const [selectedCandidate, setSelecedCandidate] = useState({})
 
   // USER DETAILS
+  const [widalTestDetails, setWidalTestDetails] = useState({
+    'S.typhi O': '',
+    'S.typhi H': '',
+    'S.paratyphi-A O': '',
+    'S.paratyphi-A H': '',
+    'S.paratyphi-B O': '',
+    'S.paratyphi-B H': '',
+    'S.paratyphi-C O': '',
+    'S.paratyphi-C H': '',
+  })
   const [urinalysisDetails, setUrinalysisDetails] = useState({
     'Color/Appearance': '',
     Leucocytes: '',
@@ -405,6 +419,7 @@ const PendingCandidatesDatagrid = (props) => {
   // FUNCTION TO SEND RESULT TO QA
   const saveResult = async () => {
     const { candidateId } = selectedCandidate
+    console.log(candidateResults)
     toastId.current = toast('Please wait...', {
       isLoading: true,
     })
@@ -750,15 +765,49 @@ const PendingCandidatesDatagrid = (props) => {
   }
   // END OF FUNCTION TO HANDLE URINALYSIS DATA CHANGE
 
+  // FUNCTION TO HANDLE WIDAL TEST DATA CHANGE
+  const handleWidalDetailsChange = (e, dataType) => {
+    setWidalTestDetails({ ...widalTestDetails, [dataType]: e.target.value })
+    // setUserDetails({
+    //   ...userDetails,
+    //   urinalysis: JSON.stringify({
+    //     ...urinalysisDetails,
+    //     [dataType]: e.target.value,
+    //   }),
+    // })
+    // console.log(userDetails)
+    console.log(candidateResults)
+    candidateResults = candidateResults.map((candidateResult) => {
+      if (candidateResult.testId === 19) {
+        return {
+          ...candidateResult,
+          result: JSON.stringify({
+            ...widalTestDetails,
+            [dataType]: e.target.value,
+          }),
+        }
+      } else {
+        return candidateResult
+      }
+    })
+
+    setCandidateResults(candidateResults)
+  }
+  // END OF FUNCTION TO HANDLE WIDAL TEST DATA CHANGE
+
   // FUNCTION TO HANDLE CHANGE OF CANDIDATE'S PROPERTIES
   const handleTestInputChange = (e, data) => {
     if (candidateResults?.length > 0) {
       // MAP OVER THE CANDIDATE RESULTS ARRAY, IF THE IDs MATCH UPDATE, IF NOT RETURN CURRENT ITEM IN THE ARRAY
       candidateResults = candidateResults.map((candidateResult) => {
-        console.log(candidateResult.testId, data?.testId)
-        return candidateResult.testId === data?.testId
-          ? { ...candidateResult, result: e.target.value }
-          : candidateResult
+        console.log(candidateResult?.testId, data?.testId)
+        if (candidateResult?.testId !== 19) {
+          return candidateResult?.testId === data?.testId
+            ? { ...candidateResult, result: e.target.value }
+            : candidateResult
+        } else {
+          return candidateResult
+        }
       })
       console.log(candidateResults)
       setCandidateResults(candidateResults)
@@ -796,6 +845,14 @@ const PendingCandidatesDatagrid = (props) => {
               .then((res) => {
                 console.log(res)
                 setCandidateTests(res?.data?.data?.tests)
+                let tests = res?.data?.data?.tests
+
+                containsWidalTest = tests?.some((test) => {
+                  return test.test === 'Widal test'
+                })
+                setContainsWidal(containsWidalTest)
+                console.log(containsWidalTest)
+
                 setLoadingCandedateTests(false)
 
                 for (
@@ -1064,7 +1121,7 @@ const PendingCandidatesDatagrid = (props) => {
                 size='small'
               />
             </div>
-            <div className='numberOfTests h3'>
+            <div className='numberOfTests h3 urinalysisWrapper'>
               <h3 className='urinalysisH3'>
                 {'Urinalysis and Stool Analysis Details'}
               </h3>
@@ -1237,28 +1294,120 @@ const PendingCandidatesDatagrid = (props) => {
               </Accordion>
             </div>
             {loggedInUserRole === 'MainLab1' && (
-              <div className='basicDetailsWrapper'>
-                {loadingCandedateTests || candedateTestsError
-                  ? loadingCandedateTests
-                    ? 'Loading...'
-                    : 'An error occured, please try again'
-                  : candidateTests?.length === 0
-                  ? 'No test for selected candidate'
-                  : candidateTests?.map((candidateTest, index) => {
-                      return (
-                        <TextField
-                          key={index}
-                          id={candidateTest?.id}
-                          label={candidateTest?.test}
-                          type='search'
-                          className='candidateName basicCandidateDetailsInput'
-                          onChange={(e) =>
-                            handleTestInputChange(e, candidateTest)
-                          }
-                        />
-                      )
-                    })}
-              </div>
+              <>
+                <div className='basicDetailsWrapper'>
+                  {loadingCandedateTests || candedateTestsError
+                    ? loadingCandedateTests
+                      ? 'Loading...'
+                      : 'An error occured, please try again'
+                    : candidateTests?.length === 0
+                    ? 'No test for selected candidate'
+                    : candidateTests?.map((candidateTest, index) => {
+                        return (
+                          candidateTest?.test !== 'Widal test' && (
+                            <TextField
+                              key={index}
+                              id={candidateTest?.id}
+                              label={candidateTest?.test}
+                              type='search'
+                              className='candidateName basicCandidateDetailsInput'
+                              onChange={(e) =>
+                                handleTestInputChange(e, candidateTest)
+                              }
+                              size='small'
+                            />
+                          )
+                        )
+                      })}
+                </div>
+                {containsWidal && (
+                  <div className='widalTestWrapper'>
+                    <h3 className='widalTestH3'>{'Widal Test'}</h3>
+                    <div className='widalTestBasicDetailsWrapper'>
+                      <TextField
+                        id='outlined-search'
+                        label='S.typhi O'
+                        type='search'
+                        className='candidateName basicCandidateDetailsInput'
+                        onChange={(e) =>
+                          handleWidalDetailsChange(e, 'S.typhi O')
+                        }
+                        size='small'
+                      />
+                      <TextField
+                        id='outlined-search'
+                        label='S.typhi H'
+                        type='search'
+                        className='candidateName basicCandidateDetailsInput'
+                        onChange={(e) =>
+                          handleWidalDetailsChange(e, 'S.typhi H')
+                        }
+                        size='small'
+                      />
+                      <TextField
+                        id='outlined-search'
+                        label='S.paratyphi-A O'
+                        type='search'
+                        className='candidateName basicCandidateDetailsInput'
+                        onChange={(e) =>
+                          handleWidalDetailsChange(e, 'S.paratyphi-A O')
+                        }
+                        size='small'
+                      />
+                      <TextField
+                        id='outlined-search'
+                        label='S.paratyphi-A H'
+                        type='search'
+                        className='candidateName basicCandidateDetailsInput'
+                        onChange={(e) =>
+                          handleWidalDetailsChange(e, 'S.paratyphi-A H')
+                        }
+                        size='small'
+                      />
+                      <TextField
+                        id='outlined-search'
+                        label='S.paratyphi-B O'
+                        type='search'
+                        className='candidateName basicCandidateDetailsInput'
+                        onChange={(e) =>
+                          handleWidalDetailsChange(e, 'S.paratyphi-B O')
+                        }
+                        size='small'
+                      />
+                      <TextField
+                        id='outlined-search'
+                        label='S.paratyphi-B H'
+                        type='search'
+                        className='candidateName basicCandidateDetailsInput'
+                        onChange={(e) =>
+                          handleWidalDetailsChange(e, 'S.paratyphi-B H')
+                        }
+                        size='small'
+                      />
+                      <TextField
+                        id='outlined-search'
+                        label='S.paratyphi-C O'
+                        type='search'
+                        className='candidateName basicCandidateDetailsInput'
+                        onChange={(e) =>
+                          handleWidalDetailsChange(e, 'S.paratyphi-C O')
+                        }
+                        size='small'
+                      />
+                      <TextField
+                        id='outlined-search'
+                        label='S.paratyphi-C H'
+                        type='search'
+                        className='candidateName basicCandidateDetailsInput'
+                        onChange={(e) =>
+                          handleWidalDetailsChange(e, 'S.paratyphi-C H')
+                        }
+                        size='small'
+                      />
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </>
         )}
