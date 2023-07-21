@@ -249,6 +249,7 @@ const PendingCandidatesDatagrid = (props) => {
   // HANDLE ROW CLICK
   const handleRowClick = (row, e) => {
     setSelecedCandidate(row?.row)
+
     setUserDetails({
       ...userDetails,
       clientid: row?.row?.clientId,
@@ -991,7 +992,6 @@ const PendingCandidatesDatagrid = (props) => {
                 id='outlined-search'
                 label='Age'
                 type='string'
-                required={true}
                 size='small'
                 className='candidateName basicCandidateDetailsInput'
                 onChange={(e) => handleCandidatePropertyChange(e, 'age')}
@@ -1000,7 +1000,6 @@ const PendingCandidatesDatagrid = (props) => {
                 id='outlined-search'
                 label='Temperature'
                 type='string'
-                required
                 placeholder='°C'
                 size='small'
                 className='candidateName basicCandidateDetailsInput'
@@ -1013,7 +1012,6 @@ const PendingCandidatesDatagrid = (props) => {
                 className='candidateName basicCandidateDetailsInput'
                 onChange={(e) => handleCandidatePropertyChange(e, 'weight')}
                 value={userDetails?.weight}
-                required
                 size='small'
               />
               <TextField
@@ -1023,7 +1021,6 @@ const PendingCandidatesDatagrid = (props) => {
                 className='candidateName basicCandidateDetailsInput'
                 onChange={(e) => handleCandidatePropertyChange(e, 'height')}
                 value={userDetails?.height}
-                required
                 placeholder='m'
                 size='small'
               />
@@ -1044,7 +1041,6 @@ const PendingCandidatesDatagrid = (props) => {
                 onChange={(e) =>
                   handleCandidatePropertyChange(e, 'bloodPressure')
                 }
-                required
                 size='small'
               />
               <TextField
@@ -1055,7 +1051,6 @@ const PendingCandidatesDatagrid = (props) => {
                 onChange={(e) =>
                   handleCandidatePropertyChange(e, 'visaulAcuity')
                 }
-                required
                 size='small'
               />
               <TextField
@@ -1066,7 +1061,6 @@ const PendingCandidatesDatagrid = (props) => {
                 onChange={(e) =>
                   handleCandidatePropertyChange(e, 'randomBloodSugar')
                 }
-                required
                 size='small'
               />
             </div>
@@ -1083,7 +1077,6 @@ const PendingCandidatesDatagrid = (props) => {
                   onChange={(e) =>
                     handleCandidatePropertyChange(e, 'stoolAnalysis')
                   }
-                  required
                   size='small'
                   placeholder='Color/Appearance'
                 />
@@ -1095,7 +1088,6 @@ const PendingCandidatesDatagrid = (props) => {
                   onChange={(e) =>
                     handleUrinalysisDetailsChange(e, 'Color/Appearance')
                   }
-                  required
                   size='small'
                   placeholder='Color/Appearance'
                 />
@@ -1107,7 +1099,6 @@ const PendingCandidatesDatagrid = (props) => {
                   onChange={(e) =>
                     handleUrinalysisDetailsChange(e, 'Leucocytes')
                   }
-                  required
                   size='small'
                 />
                 <TextField
@@ -1116,7 +1107,6 @@ const PendingCandidatesDatagrid = (props) => {
                   type='search'
                   className='candidateName basicCandidateDetailsInput'
                   onChange={(e) => handleUrinalysisDetailsChange(e, 'Nitrites')}
-                  required
                   size='small'
                 />
                 <TextField
@@ -1127,7 +1117,6 @@ const PendingCandidatesDatagrid = (props) => {
                   onChange={(e) =>
                     handleUrinalysisDetailsChange(e, 'Urobilinogen')
                   }
-                  required
                   size='small'
                 />
                 <TextField
@@ -1136,7 +1125,6 @@ const PendingCandidatesDatagrid = (props) => {
                   type='search'
                   className='candidateName basicCandidateDetailsInput'
                   onChange={(e) => handleUrinalysisDetailsChange(e, 'Protein')}
-                  required
                   size='small'
                 />
                 <TextField
@@ -1145,7 +1133,6 @@ const PendingCandidatesDatagrid = (props) => {
                   type='search'
                   className='candidateName basicCandidateDetailsInput'
                   onChange={(e) => handleUrinalysisDetailsChange(e, 'pH')}
-                  required
                   size='small'
                 />
                 <TextField
@@ -1154,7 +1141,6 @@ const PendingCandidatesDatagrid = (props) => {
                   type='search'
                   className='candidateName basicCandidateDetailsInput'
                   onChange={(e) => handleUrinalysisDetailsChange(e, 'Blood')}
-                  required
                   size='small'
                 />
                 <TextField
@@ -1165,7 +1151,6 @@ const PendingCandidatesDatagrid = (props) => {
                   onChange={(e) =>
                     handleUrinalysisDetailsChange(e, 'SpecificGravity')
                   }
-                  required
                   size='small'
                 />
                 <TextField
@@ -1174,7 +1159,6 @@ const PendingCandidatesDatagrid = (props) => {
                   type='search'
                   className='candidateName basicCandidateDetailsInput'
                   onChange={(e) => handleUrinalysisDetailsChange(e, 'Ketone')}
-                  required
                   size='small'
                 />
                 <TextField
@@ -1185,7 +1169,6 @@ const PendingCandidatesDatagrid = (props) => {
                   onChange={(e) =>
                     handleUrinalysisDetailsChange(e, 'Bilirubin')
                   }
-                  required
                   size='small'
                 />
                 <TextField
@@ -1194,7 +1177,6 @@ const PendingCandidatesDatagrid = (props) => {
                   type='search'
                   className='candidateName basicCandidateDetailsInput'
                   onChange={(e) => handleUrinalysisDetailsChange(e, 'Glucose')}
-                  required
                   size='small'
                 />
               </div>
