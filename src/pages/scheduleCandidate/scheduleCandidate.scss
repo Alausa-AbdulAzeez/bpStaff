@@ -68,6 +68,11 @@
           .autoComplete {
             display: flex;
             align-items: flex-end;
+            width: 400px !important;
+
+            .autoCompleteInput {
+              width: 350px;
+            }
           }
         }
         .testCategoryWrapper {
@@ -135,7 +140,6 @@
           border-radius: 10px;
           margin-bottom: 25px;
 
-
           &:disabled {
             background-color: #7551f87c;
             cursor: not-allowed;
@@ -166,4 +170,42 @@
 .datePicker {
   border: none;
   outline: none;
+}
+@media screen and (max-width: 1200px) {
+  .scheduleCandidateMainWrapper {
+    .scheduleCandidateFormWrapper {
+      & > .inputsWrapper {
+        display: flex;
+        // flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+
+        .autoComplete {
+          display: flex;
+          // align-items: flex-end;
+          justify-content: center !important;
+          align-items: center !important;
+          width: 300px !important;
+
+          .autoCompleteInput {
+            width: 300px !important;
+          }
+        }
+
+        .singleInput {
+          flex: none;
+          width: 300px !important;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-end !important;
+          height: 78px;
+
+          .inputWrapper {
+            width: 300px !important;
+          }
+        }
+      }
+    }
+  }
 }

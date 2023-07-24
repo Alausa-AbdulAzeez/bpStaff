@@ -12,13 +12,15 @@
       flex-direction: column;
       justify-content: space-between;
       height: calc(100vh - 50px);
-      overflow-y: hidden;
+      overflow-y: auto;
+      // overflow-y: hidden;
 
       .homeMainTop {
         display: flex;
         overflow-x: auto;
         gap: 20px;
-        height: 160px;
+        min-height: 160px;
+        max-height: 160px;
       }
     }
   }
