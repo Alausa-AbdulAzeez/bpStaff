@@ -162,3 +162,11 @@
   // width: 500px;
   height: 100%;
 }
+
+@media screen and (max-width: 1200px) {
+  .datagridWraper {
+    width: 650px !important;
+
+  }
+}
+

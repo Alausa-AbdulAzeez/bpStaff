@@ -54,3 +54,10 @@
     background-color: rgba(207, 221, 255, 0.495);
   }
 }
+
+@media screen and (max-width: 1200px) {
+  .viewClientsDatagridWraper {
+    width: 650px !important;
+
+  }
+}
