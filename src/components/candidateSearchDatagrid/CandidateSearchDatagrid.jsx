@@ -129,6 +129,11 @@ const CandidateSearchDatagrid = (props) => {
       headerName: "Phone Number",
       width: 130,
     },
+    {
+      field: "laboratory",
+      headerName: "Screening Lab",
+      width: 130,
+    },
   ];
 
   switch (loggedInUserRole[0]) {
@@ -669,7 +674,7 @@ const CandidateSearchDatagrid = (props) => {
             columns={defaultColumns}
             pageSize={pageSize}
             // checkboxSelection
-            // disableSelectionOnClick
+            disableSelectionOnClick
             experimentalFeatures={{ newEditingApi: true }}
             onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 20]}
