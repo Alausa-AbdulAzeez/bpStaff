@@ -134,3 +134,11 @@
     }
   }
 }
+
+@media screen and (max-width: 1200px) {
+  .filterContainer {
+    width: 600px !important;
+    padding: 0 20px !important;
+
+  }
+}

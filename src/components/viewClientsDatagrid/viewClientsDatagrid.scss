@@ -104,3 +104,9 @@
   color: rgba(2, 101, 0, 1);
   cursor: pointer;
 }
+@media screen and (max-width: 1200px) {
+  .viewClientsDatagridWraper {
+    width: 650px !important;
+
+  }
+}
