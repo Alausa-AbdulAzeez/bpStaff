@@ -1,9 +1,12 @@
 .profileWrapper {
   width: 100%;
   display: flex;
+    height: calc(100vh - 0px);
 
   .profileRight {
     flex: 5;
+        overflow-y: auto !important;
+          height: 100%;
 
     .profileMainWrapper {
       padding: 30px 64px;

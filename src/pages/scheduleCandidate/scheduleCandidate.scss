@@ -4,8 +4,8 @@
   height: calc(100vh - 0px);
 
   .scheduleCandidateRight {
-    overflow-y: auto !important;
     flex: 5;
+    overflow-y: auto !important;
     height: 100%;
 
     .scheduleCandidateMainWrapper {

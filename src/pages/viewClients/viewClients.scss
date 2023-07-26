@@ -1,9 +1,12 @@
 .viewClientsWrapper {
   width: 100%;
   display: flex;
+    height: calc(100vh - 0px);
 
   .viewClientsRight {
     flex: 5;
+        overflow-y: auto !important;
+          height: 100%;
 
     .viewClientsMainWrapper {
       padding: 30px 64px;

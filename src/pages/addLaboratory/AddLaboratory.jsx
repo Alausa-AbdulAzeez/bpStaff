@@ -202,9 +202,10 @@ const AddLaboratory = () => {
                     />
                   </div>
                 </div>
-                <div className="singleInput">
+                <div className="singleInput autoComplete">
                   <Autocomplete
                     disablePortal
+                    className="autoCompleteInput"
                     id="combo-box-demo"
                     options={states}
                     onChange={(e, option) =>
@@ -278,9 +279,10 @@ const AddLaboratory = () => {
                     />
                   </div>
                 </div>
-                <div className="singleInput">
+                <div className="singleInput autoComplete">
                   <Autocomplete
                     disablePortal
+                    className="autoCompleteInput"
                     id="combo-box-demo"
                     options={labTypes}
                     onChange={(e, option) =>
