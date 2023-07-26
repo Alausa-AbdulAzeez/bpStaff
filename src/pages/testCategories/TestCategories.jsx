@@ -196,10 +196,11 @@ const TestCategories = () => {
               onSubmit={createTestCategory}
             >
               <div className="inputsWrapper">
-                <div className="singleInput">
+                <div className="singleInput autoComplete">
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
+                    className="autoCompleteInput"
                     options={clients}
                     getOptionLabel={(option) => option.clientName}
                     onChange={(e, option) =>

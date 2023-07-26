@@ -1,14 +1,17 @@
 .pendingCandidatesWrapper {
   width: 100%;
   display: flex;
+    height: calc(100vh - 0px);
 
   .pendingCandidatesRight {
     flex: 5;
+        overflow-y: auto !important;
+          height: 100%;
 
     .pendingCandidatesMainWrapper {
       padding: 0px 64px;
 
-
+      
       .pendingCandidatesMainTopTitle{
         color: rgb(114, 114, 114);
       }
