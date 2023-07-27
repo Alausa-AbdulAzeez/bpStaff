@@ -10,7 +10,6 @@ const Homedatagrid = (props) => {
 
   // TABLE DATA
   const tableData = props?.tableData
-  console.log(tableData)
   let rows
   let columns
   let title

@@ -140,7 +140,6 @@ const Invoice = () => {
         setTableData(res.data?.data?.reverse())
         setFilteredData(res.data?.data?.reverse())
 
-        console.log(res.data?.data)
         if (res.data?.data?.length === 0 || res.data?.data === '') {
           toast.update(toastId.current, {
             render: 'No Invoice available',
@@ -197,9 +196,7 @@ const Invoice = () => {
   //   getInvoices()
   // }, [])
 
-  useEffect(() => {
-    console.log(reset)
-  }, [reset])
+  useEffect(() => {}, [reset])
 
   // use effect to call the getAllClients function as the page loads
   useEffect(() => {

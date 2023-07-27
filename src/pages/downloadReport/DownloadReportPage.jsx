@@ -87,7 +87,6 @@ const DownloadReportPage = () => {
           .then((res) => {
             setCandidateResultDetails(res?.data?.data)
             let tests = res?.data?.data
-            console.log(tests)
             containsWidalTest = tests?.some((test) => {
               return test.testName === 'Widal test'
             })
@@ -100,11 +99,9 @@ const DownloadReportPage = () => {
               let widalResult = tests?.filter(
                 (test) => test?.testName === 'Widal test'
               )
-              console.log(widalResult)
               const parsedWidalResult = JSON.parse(widalResult?.[0]?.result)
               const parsedWidalResultArr = Object.entries(parsedWidalResult)
-              console.log(parsedWidalResult)
-              console.log(parsedWidalResultArr)
+
               setWidalTableData(parsedWidalResultArr)
             }
             setContainsWidal(containsWidalTest)
@@ -118,7 +115,6 @@ const DownloadReportPage = () => {
             },
           })
           .then((res) => {
-            console.log(res)
             setCandidateDetails(res?.data?.data)
           })
       } catch (error) {
@@ -218,7 +214,6 @@ const DownloadReportPage = () => {
                   hideFooter
                 />
               </Box>
-              {console.log(widalTableData)}
 
               <div className='parametersInvestigatedTitle'>SERELOGY</div>
               {/* <Box

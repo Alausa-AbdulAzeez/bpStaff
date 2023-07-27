@@ -65,7 +65,6 @@ const ReportsDatagrid = (props) => {
       headerName: 'Action',
       width: 130,
       renderCell: (param) => {
-        console.log(param?.row?.tests?.[0]?.candidateId)
         const rowId = param?.row?.tests?.[0]?.candidateId
         return (
           <>
@@ -157,8 +156,6 @@ const ReportsDatagrid = (props) => {
         // setOpen(true)
         Navigate({ to: '/labReport' })
 
-        console.log(e.target.textContent)
-
         break
 
       default:
@@ -170,10 +167,8 @@ const ReportsDatagrid = (props) => {
 
   // USEEFFECT TO UPDATE SELECTED CANDIDATE INFO
   useEffect(() => {
-    console.log(selectedCandidate.tests?.[0].candidateId)
     if (selectedCandidate.tests?.[0].candidateId) {
       const getCandidatetResults = async () => {
-        console.log(selectedCandidate)
         setLoadingCandedateSubmittedResults(true)
         setCandedateSubmittedResultsError(false)
         try {
@@ -190,7 +185,6 @@ const ReportsDatagrid = (props) => {
             )
             .then((res) => {
               setLoadingCandedateSubmittedResults(false)
-              console.log(res)
               setLoadingCandedateSubmittedResults(false)
               setCandidateSubmittedResults(res?.data?.data)
             })

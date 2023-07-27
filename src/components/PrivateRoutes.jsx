@@ -18,8 +18,6 @@ const PrivateRoutes = () => {
   const token = useSelector((state) => state?.user?.currentUser?.data?.token)
   const role = useSelector((state) => state?.user?.currentUser?.data?.role)
 
-  console.log(role)
-
   if (role === 'Client' || role === 'SuperAdmin' || role === null) {
     persistor
       .purge()
@@ -84,9 +82,7 @@ const PrivateRoutes = () => {
     getAllCandidates()
   }, [dispatch, navigate, token])
 
-  useEffect(() => {
-    console.log(isLoggedIn)
-  }, [isLoggedIn])
+  useEffect(() => {}, [isLoggedIn])
 
   return isLoggedIn ? <Outlet /> : <Navigate to={'/login'} />
 }

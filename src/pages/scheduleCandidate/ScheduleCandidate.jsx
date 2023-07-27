@@ -93,11 +93,9 @@ const ScheduleCandidate = () => {
           Authorization: `Bearer ${token}`,
         },
       })
-      console.log(res.data)
 
       if (res.data) {
         setLaboratories(res?.data?.data)
-        console.log(res?.data?.data)
       } else {
         console.log(res.data)
       }
@@ -168,7 +166,6 @@ const ScheduleCandidate = () => {
     })
 
     setDisableDoneAndCancelBtn(true)
-    console.log(scheduleInfo)
 
     try {
       await publicRequest

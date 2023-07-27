@@ -16,7 +16,6 @@ const RejectedResults = () => {
   // GET CURRENT LOGGED IN USER
   const { currentUser } = useSelector((state) => state?.user)
   const loggedInUserRole = currentUser?.data?.role?.[0]
-  console.log(loggedInUserRole)
   const userData = currentUser?.data
   const [reloadTable, setReloadTable] = useState(false)
 
@@ -45,7 +44,6 @@ const RejectedResults = () => {
       })
 
       if (res.data) {
-        console.log(res.data)
         setTableData(res.data?.data === '' ? [] : res.data?.data)
         setSearchedTableData(res.data?.data === '' ? [] : res.data?.data)
         setLoading(false)
@@ -65,7 +63,6 @@ const RejectedResults = () => {
   // SEARCH FUNCTIONALITY
   const handleSearchParamsChange = (e) => {
     let filteredPendingCandidatesArray
-    console.log(tableData)
     filteredPendingCandidatesArray = tableData.filter((tableDatum) =>
       tableDatum?.candidateName?.includes(e.target.value.trim())
     )

@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
-import { Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Typography } from '@mui/material'
+import { Box } from '@mui/system'
 import {
   DataGrid,
   GridToolbarContainer,
   GridToolbarExport,
-} from "@mui/x-data-grid";
-import React, { useState } from "react";
+} from '@mui/x-data-grid'
+import React, { useState } from 'react'
 
-import "./invoiceDatagrid.scss";
-import { format } from "date-fns";
+import './invoiceDatagrid.scss'
+import { format } from 'date-fns'
 
 const InvoiceDatagrid = (props) => {
   function CustomToolbar() {
@@ -17,50 +17,48 @@ const InvoiceDatagrid = (props) => {
       <GridToolbarContainer>
         <GridToolbarExport printOptions={{ disableToolbarButton: true }} />
       </GridToolbarContainer>
-    );
+    )
   }
 
   // TABLE ROWS TO LOAD
-  const [pageSize, setPageSize] = useState(100);
+  const [pageSize, setPageSize] = useState(100)
 
   // TABLE DATA
-  const tableData = props?.tableData;
-  console.log(tableData);
-  let title = "Invoices";
+  const tableData = props?.tableData
+  let title = 'Invoices'
 
   const defaultColumns = [
     {
-      field: "candidateName",
-      headerName: "Candidate Name",
+      field: 'candidateName',
+      headerName: 'Candidate Name',
       width: 270,
       editable: false,
     },
     {
-      field: "testCategory",
-      headerName: "Test Category",
+      field: 'testCategory',
+      headerName: 'Test Category',
       width: 280,
       editable: false,
     },
 
     {
-      field: "amount",
-      headerName: "Amount",
+      field: 'amount',
+      headerName: 'Amount',
       width: 200,
     },
 
     {
-      field: "appointmentdate",
-      headerName: "Appointment Date",
+      field: 'appointmentdate',
+      headerName: 'Appointment Date',
       width: 200,
-      description: "The candidate shoul be present by this date",
+      description: 'The candidate shoul be present by this date',
       valueGetter: (params) => {
-        console.log(params);
-        return params.row;
+        return params.row
       },
       valueFormatter: (params) => {
-        const refinedDate = new Date(params?.value?.appointmentDate);
-        const dateWithRightFormat = format(refinedDate, "dd-MMM-yyyy");
-        return dateWithRightFormat;
+        const refinedDate = new Date(params?.value?.appointmentDate)
+        const dateWithRightFormat = format(refinedDate, 'dd-MMM-yyyy')
+        return dateWithRightFormat
       },
       // renderCell: (props) => {
       //   const refinedDate = new Date(props?.row?.appointmentDate);
@@ -68,11 +66,11 @@ const InvoiceDatagrid = (props) => {
       //   return <p>{dateWithRightFormat}</p>;
       // },
     },
-  ];
+  ]
 
   return (
-    <div className="invoiceDatagridWraper">
-      <div className="boxWrapper">
+    <div className='invoiceDatagridWraper'>
+      <div className='boxWrapper'>
         <Box sx={{ height: 350, zIndex: -1 }}>
           <h3>{title}</h3>
           <DataGrid
@@ -93,7 +91,7 @@ const InvoiceDatagrid = (props) => {
         </Box>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default InvoiceDatagrid;
+export default InvoiceDatagrid

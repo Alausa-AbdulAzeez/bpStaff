@@ -1,7 +1,7 @@
-import { toast } from "react-toastify";
-import { publicRequest } from "../functions/requestMethods";
-import { loginSuccess } from "./userSlice";
-import { loggedIn } from "./globalSlice";
+import { toast } from 'react-toastify'
+import { publicRequest } from '../functions/requestMethods'
+import { loginSuccess } from './userSlice'
+import { loggedIn } from './globalSlice'
 
 export const login = async (
   dispatch,
@@ -11,59 +11,58 @@ export const login = async (
   setBtnDisabled
 ) => {
   // dispatch(loginStart())
-  toastId.current = toast("Please wait...", {
+  toastId.current = toast('Please wait...', {
     autoClose: false,
     isLoading: true,
-  });
-  setBtnDisabled(true);
+  })
+  setBtnDisabled(true)
 
   try {
-    const res = await publicRequest.post("/Account/login", user).then((res) => {
-      console.log(res?.data?.data);
+    const res = await publicRequest.post('/Account/login', user).then((res) => {
       if (
-        res?.data?.data?.role?.[0] === "SuperAdmin" ||
-        res?.data?.data?.role?.[0] === "client"
+        res?.data?.data?.role?.[0] === 'SuperAdmin' ||
+        res?.data?.data?.role?.[0] === 'client'
       ) {
-        throw new Error("Can not access this resource");
+        throw new Error('Can not access this resource')
       } else {
         if (res?.data?.data?.isDefaultPassword === false) {
-          dispatch(loginSuccess(res?.data));
-          dispatch(loggedIn());
+          dispatch(loginSuccess(res?.data))
+          dispatch(loggedIn())
           toast.update(toastId.current, {
-            render: "Login succesful! Please wait while we redirect you.",
-            type: "success",
+            render: 'Login succesful! Please wait while we redirect you.',
+            type: 'success',
             autoClose: 2000,
             isLoading: false,
-          });
-          setBtnDisabled(false);
-          navigate("/");
+          })
+          setBtnDisabled(false)
+          navigate('/')
         } else {
-          dispatch(loginSuccess(res?.data));
-          setBtnDisabled(false);
-          navigate("/changePassword");
+          dispatch(loginSuccess(res?.data))
+          setBtnDisabled(false)
+          navigate('/changePassword')
           toast.update(toastId.current, {
             render:
               "Hi there! You're required to change your password from the default password before you can proceed.",
-            type: "info",
+            type: 'info',
             autoClose: 4000,
             isLoading: false,
-          });
+          })
         }
       }
-    });
+    })
   } catch (error) {
-    console.log(error);
+    console.log(error)
     toast.update(toastId.current, {
-      type: "error",
+      type: 'error',
       autoClose: 3000,
       isLoading: false,
       render: `${
         error?.response?.data?.title ||
         error?.response?.data?.description ||
         error?.message ||
-        "Something went wrong, please try again"
+        'Something went wrong, please try again'
       }`,
-    });
-    setBtnDisabled(false);
+    })
+    setBtnDisabled(false)
   }
-};
+}
