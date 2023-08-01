@@ -3,6 +3,8 @@
   height: 100vh;
   border-right: 1px solid var(--border-silver-color);
   min-width: 250px;
+  overflow-y: auto;
+  z-index: 1000;
 
   .sidebarTop {
     height: 50px;
@@ -15,6 +17,7 @@
     position: sticky;
     top: 0;
     bottom: 0;
+    background-color: white;
 
     .sidebarTopImageWrapper {
       height: 100%;
