@@ -6,6 +6,8 @@
   overflow-y: auto;
   z-index: 1000;
 
+
+
   .sidebarTop {
     height: 50px;
     width: 100%;
@@ -79,4 +81,87 @@
       margin-bottom: 40px;
     }
   }
+}
+.menuIconWrapper{
+position: absolute;
+top: 80px;
+left: 20px;
+display: none;
+
+
+.menuIcon{
+  font-size: 28px;
+  cursor: pointer;
+}
+}
+
+
+
+
+
+@media screen and (max-width: 767px) {
+
+  .sidebarWrapper {
+    
+    /* Adjust this breakpoint as needed */
+    width: 60px;
+    /* Set a smaller width for the sidebar on mobile */
+    border-right: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -400px !important;
+    /* Hide the sidebar by moving it out of the screen */
+    background-color: white;
+    background-color: red;
+
+    .sidebarTop {
+      /* Adjust styles for the top section on mobile */
+      justify-content: flex-start;
+      padding: 10px;
+      border-bottom: none;
+
+      .sidebarTopImageWrapper {
+        img {
+          height: 24px;
+        }
+      }
+    }
+
+    .sidebarBottom {
+      /* Adjust styles for the bottom section on mobile */
+      padding: 10px;
+
+      .ulTitle {
+        margin-bottom: 12px;
+
+        .sidebarListItem {
+          font-size: 18px;
+          padding: 8px 0;
+          padding-left: 12px;
+
+          .sidebarIcon {
+            font-size: 28px;
+            margin-right: 6px;
+          }
+        }
+      }
+
+      .sidebarBottomBottom {
+        margin-bottom: 20px;
+      }
+    }
+
+    
+  }
+    .open {
+      /* Show the sidebar when open */
+      left: 0;
+      background-color: green !important;
+
+    }
+    .menuIconWrapper{
+      display: flex !important;
+    }
+
 }
