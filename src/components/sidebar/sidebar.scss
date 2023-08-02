@@ -94,6 +94,16 @@ display: none;
   cursor: pointer;
 }
 }
+.cancelIconWrapper{
+display: none;
+margin-left: 30px;
+
+
+.cancelIcon{
+  font-size: 28px;
+  cursor: pointer;
+}
+}
 
 
 
@@ -113,7 +123,6 @@ display: none;
     left: -400px !important;
     /* Hide the sidebar by moving it out of the screen */
     background-color: white;
-    background-color: red;
 
     .sidebarTop {
       /* Adjust styles for the top section on mobile */
@@ -156,12 +165,16 @@ display: none;
   }
     .open {
       /* Show the sidebar when open */
-      left: 0;
-      background-color: green !important;
+      left: 0 !important;
 
     }
     .menuIconWrapper{
       display: flex !important;
+      z-index: 2000;
+    }
+    .cancelIconWrapper{
+display: flex;
+  align-items: center;
     }
 
 }

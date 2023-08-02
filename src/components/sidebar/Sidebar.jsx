@@ -21,10 +21,12 @@ import {
 } from "../../utils/data/sidebarData";
 import { useSelector } from "react-redux";
 import { IoIosMenu } from "react-icons/io";
+import { MdCancel } from "react-icons/md";
 
 const Sidebar = () => {
   // LOGOUT DIALOGUE
   const [open, setOpen] = React.useState(false);
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [sidebarList, setSidebarList] = React.useState(generalList);
   const sidebarListNoPendingCandidate = sidebarList.filter(
     (sidebarItem) => sidebarItem?.title !== "Pending Candidates"
@@ -99,13 +101,27 @@ const Sidebar = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleSidebarToggle = (action) => {
+    if (action === "showSidebar") {
+      setSidebarOpen(true);
+    }
+    if (action === "hideSidebar") {
+      setSidebarOpen(false);
+    }
+  };
+  console.log(sidebarOpen);
 
   return (
     <>
-      <div className="menuIconWrapper">
-        <IoIosMenu className="menuIcon" />
-      </div>
-      <div className={`sidebarWrapper ${open ? "open" : ""}`}>
+      {!sidebarOpen && (
+        <div
+          className="menuIconWrapper"
+          onClick={() => handleSidebarToggle("showSidebar")}
+        >
+          <IoIosMenu className="menuIcon" />
+        </div>
+      )}
+      <div className={`sidebarWrapper ${sidebarOpen ? "open" : ""}`}>
         <AlertDialogSlide
           open={open}
           handleClose={handleClose}
@@ -117,6 +133,12 @@ const Sidebar = () => {
         <div className="sidebarTop">
           <div className="sidebarTopImageWrapper">
             <img src={LogoImg} alt="Logo" /> <span>Biopath MedLab</span>
+          </div>
+          <div
+            className="cancelIconWrapper"
+            onClick={() => handleSidebarToggle("hideSidebar")}
+          >
+            <MdCancel className="cancelIcon" />
           </div>
         </div>
         <div className="sidebarBottom">
