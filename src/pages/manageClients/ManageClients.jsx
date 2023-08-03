@@ -78,11 +78,18 @@ const ManageClients = () => {
 
   // function for seting candidate info
   const handleUpdateClientInfo = (e, dataName, data) => {
-    if (dataName === "testCategory") {
+    if (dataName === "contactPersonEmail") {
       setupdatedClientInfo((prev) => {
         return {
           ...prev,
-          testcategory: data?.categoryName,
+          contactPersonEmail: e.target.value,
+        };
+      });
+    } else if (dataName === "contactPersonPhoneNummber") {
+      setupdatedClientInfo((prev) => {
+        return {
+          ...prev,
+          contactPersonPhone: e.target.value,
         };
       });
     } else {
@@ -464,7 +471,7 @@ const ManageClients = () => {
                       type="text"
                       id="address"
                       className="updateClientInput"
-                      value={updatedClientInfo?.address}
+                      value={updatedClientInfo?.contactPersonEmail}
                       disabled={disableClientProperties}
                       onChange={(e) =>
                         handleUpdateClientInfo(e, "contactPersonEmail")
@@ -477,13 +484,20 @@ const ManageClients = () => {
                       type="text"
                       id="address"
                       className="updateClientInput"
-                      value={updatedClientInfo?.address}
+                      value={updatedClientInfo?.contactPersonPhone}
                       disabled={disableClientProperties}
                       onChange={(e) =>
                         handleUpdateClientInfo(e, "contactPersonPhoneNummber")
                       }
                     />
                   </div>
+                  <button
+                    className="updateClientBtn"
+                    disabled={disableUpdateBtn}
+                    onClick={handleUpdateClient}
+                  >
+                    Update
+                  </button>
                 </div>
               )}
 
