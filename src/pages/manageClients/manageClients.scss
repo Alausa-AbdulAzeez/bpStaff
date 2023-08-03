@@ -4,9 +4,9 @@
   height: calc(100vh - 0px);
 
   .manageClientsRight {
-      overflow-y: auto !important;
-        flex: 5;
-        height: 100%;
+    overflow-y: auto !important;
+    flex: 5;
+    height: 100%;
 
     .manageClientsMainWrapper {
       // position: relative;
@@ -14,13 +14,13 @@
       // background-color: red;
       // height: calc(100% - 0px);
 
-        .zeroWidthManageClients {
-            position: absolute;
-            width: 0;
-            overflow-x: hidden;
-            transition: all ease-in-out 0.65s;
-        
-          }
+      .zeroWidthManageClients {
+        position: absolute;
+        width: 0;
+        overflow-x: hidden;
+        transition: all ease-in-out 0.65s;
+
+      }
 
       .slide {
         position: absolute;
@@ -41,14 +41,17 @@
         .slideMiddle {
           display: flex;
           flex-wrap: wrap;
+
           .companyDetail {
             width: 50%;
           }
-          & > .h3 > h3 {
+
+          &>.h3>h3 {
             margin-bottom: 0;
             // margin-top: 0;
           }
-          & > .h3 > p {
+
+          &>.h3>p {
             margin-bottom: 0;
             margin-top: 0;
             color: darkgray;
@@ -56,6 +59,7 @@
             font-size: 15px;
           }
         }
+
         .testCategoriesWrapper {
           max-height: 400px;
           width: 80%;
@@ -82,6 +86,7 @@
               cursor: pointer;
             }
           }
+
           .initials {
             height: 90px;
             width: 90px;
@@ -95,6 +100,7 @@
             letter-spacing: 2px;
             margin-right: 30px;
           }
+
           .slideFullname {
             font-size: 24px;
             font-weight: bold;
@@ -107,7 +113,7 @@
         justify-content: space-between;
         align-items: center;
 
-        & > h3 {
+        &>h3 {
           color: var(--text-silver-color);
         }
 
@@ -123,7 +129,7 @@
           border: none;
           cursor: pointer;
 
-          & > span {
+          &>span {
             display: flex;
             align-items: center;
             margin-left: 4px;
@@ -140,25 +146,26 @@
 }
 
 @media screen and (max-width: 767px) {
-.manageClientsMainWrapper {
+  .manageClientsMainWrapper {
     padding: 16px !important;
 
-          .manageClientsMainTop {
-                    justify-content:center !important;
-                      align-items: center;
-                      flex-direction: column-reverse;
+    .manageClientsMainTop {
+      justify-content: center !important;
+      align-items: center;
+      flex-direction: column-reverse;
 
-                      margin-bottom: 20px;
-          
-          
-              &>h3 {
-                display: none;
-              }
-                .addClientBtn {
-                  margin-bottom: 10px;
-            }
-            
-            }
+      margin-bottom: 20px;
 
-}
+
+      &>h3 {
+        display: none;
+      }
+
+      .addClientBtn {
+        margin-bottom: 10px;
+      }
+
+    }
+
+  }
 }
