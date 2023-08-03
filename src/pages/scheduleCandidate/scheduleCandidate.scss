@@ -68,7 +68,7 @@
           .autoComplete {
             display: flex;
             align-items: flex-end;
-            width: 400px !important;
+            width: 400px ;
 
             .autoCompleteInput {
               width: 350px;
@@ -208,4 +208,62 @@
       }
     }
   }
+}
+@media screen and (max-width: 767px) {
+  .scheduleCandidateMainWrapper {
+    .scheduleCandidateFormWrapper {
+      & > .inputsWrapper {
+        display: flex;
+        // flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+
+        .autoComplete {
+          display: flex;
+          // align-items: flex-end;
+          justify-content: center !important;
+          align-items: center !important;
+          width: 200px !important;
+
+          .autoCompleteInput {
+            width: 200px !important;
+          }
+        }
+
+        .singleInput {
+          flex: none;
+          width: 200px !important;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-end !important;
+          height: 78px;
+
+
+
+          .inputWrapper {
+            width: 200px !important;
+          }
+        }
+      }
+    }
+  }
+                        .bulkUploadWrapper {
+                          position: relative;
+                          width: 500px !important;
+            
+                          .bulkUploadButton {
+                            position: absolute;
+                            cursor: pointer;
+                            background-color: black;
+                            color: white;
+                            padding: 10px 15px;
+                            right: 0% !important;
+                            top: 30%;
+            
+                            &:hover {
+                              box-shadow: 1px 1px 40px 4px #6b6a6a6b;
+                            }
+                          }
+                        }
 }
