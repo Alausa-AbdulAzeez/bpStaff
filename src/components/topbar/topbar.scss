@@ -23,4 +23,23 @@
     font-size: 24px;
     cursor: pointer;
   }
+
+}
+
+
+@media screen and (max-width: 767px) {
+  .topbarWrapper {
+    padding: 0 16px;
+
+            &>.topbarUsername {
+                font-weight: 500;
+                font-size: 12px;
+            
+                &>.topbarLabname {
+                  font-weight: bold;
+                }
+            
+              }
+  }
+
 }

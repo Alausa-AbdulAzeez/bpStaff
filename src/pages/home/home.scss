@@ -28,3 +28,25 @@
     }
   }
 }
+
+@media screen and (max-width: 767px) {
+      .homeMainWrapper {
+         
+        padding: 30px 16px !important;
+    .homeMainTop {
+        display: flex;
+        overflow-x: auto;
+        gap: 20px;
+        flex-wrap: wrap;
+        min-height: 500px !important;
+        justify-content: center;
+      }
+    
+    
+      .homeMainBottom {
+        display: none;
+      }
+      }
+
+   
+}
