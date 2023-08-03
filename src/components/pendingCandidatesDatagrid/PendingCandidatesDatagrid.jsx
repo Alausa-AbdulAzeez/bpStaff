@@ -978,7 +978,10 @@ const PendingCandidatesDatagrid = (props) => {
         setReasonForRejection={setReasonForRejection}
       />
 
-      <form className="slide" style={{ right: position }}>
+      <form
+        className={position === "-100%" ? "zeroWidth" : "slide"}
+        style={{ right: position }}
+      >
         <div className="slideTop">
           <div className="cancelconWrapper" onClick={handleHideSlide}>
             <MdCancel className="cancelIcon" />
