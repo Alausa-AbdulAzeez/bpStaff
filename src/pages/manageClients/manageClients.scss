@@ -59,6 +59,74 @@
             font-size: 15px;
           }
         }
+                                .updateClientSlideBottom {
+                                  // border-top: 0.1px solid silver;
+                                  // border-bottom: 0.1px solid silver;
+                                  // margin-top: 30px;
+                                  height: 50%;
+                                  gap: 0px;
+                                  overflow-y: auto;
+                                  display: flex;
+                                  flex-wrap: wrap;
+                                  align-items: flex-start;
+                
+                                  padding-top: 30px;
+                                  justify-content: flex-start;
+                                  column-gap: 30px;
+                
+                                  .updateClientInputWrapper {
+                                    min-width: 300px;
+                                    // min-height: 50px;
+                                    height: 70px;
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: flex-end;
+                                    margin-bottom: 20px !important;
+                                    margin: 0;
+                                    // flex: ;
+                
+                                    .updateClientDatePicker {
+                                      height: 40px;
+                                      padding: 5px;
+                
+                                      &:focus {
+                                        outline: 1px solid silver;
+                                      }
+                                    }
+                
+                                    .updateClientInput {
+                                      padding: 10px;
+                                      // margin-bottom: 100px !important;
+                                      // color: darkgray;
+                                      // font-weight: 700;
+                
+                                      &:focus {
+                                        outline: 1px solid silver;
+                                      }
+                                    }
+                                  }
+                                }
+                
+                                .updateClientBtn {
+                                  background-color: #000;
+                                  color: white;
+                                  padding: 10px 15px;
+                                  position: absolute;
+                                  bottom: 50px;
+                                  right: 80px;
+                                  outline: none;
+                                  border: none;
+                                  cursor: pointer;
+                
+                                  &:hover {
+                                    box-shadow: 1px 1px 40px 4px #6b6a6a6b;
+                                  }
+                
+                                  &:disabled {
+                                    background-color: #0000007c;
+                                    cursor: not-allowed;
+                                  }
+                                }
 
         .testCategoriesWrapper {
           max-height: 400px;
@@ -141,6 +209,59 @@
           }
         }
       }
+    }
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: 18px;
+
+  .editWrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(60, 73, 186, 0.2);
+    border-radius: 16px;
+    padding: 6px 12px;
+    gap: 6px;
+    color: #0007b3;
+    cursor: pointer;
+
+    .editIcon {
+      font-size: 18px;
+    }
+  }
+
+  .deleteWrapper {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    background: #ba3c3c45;
+
+    border-radius: 16px;
+    padding: 6px 12px;
+    gap: 6px;
+    color: #470000;
+
+    .deleteIcon {
+      font-size: 18px;
+    }
+  }
+  .viewWrapper {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    background: #ba3c3c45;
+
+    border-radius: 16px;
+    padding: 6px 12px;
+    gap: 6px;
+    color: #470000;
+
+    .viewIcon {
+      font-size: 18px;
     }
   }
 }

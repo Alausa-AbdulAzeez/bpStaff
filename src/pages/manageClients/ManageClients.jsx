@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
-import { MdCancel } from "react-icons/md";
+import { MdCancel, MdEdit } from "react-icons/md";
 import { RiAddLine } from "react-icons/ri";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Topber from "../../components/topbar/Topber";
@@ -22,6 +22,7 @@ import Loading from "../../components/loading/Loading";
 import { FaAngleDown, FaDotCircle } from "react-icons/fa";
 import Error from "../../components/error/Error";
 import { useSelector } from "react-redux";
+import { BsEye, BsTrashFill } from "react-icons/bs";
 
 const ManageClients = () => {
   const [pageSize, setPageSize] = useState(50);
@@ -41,9 +42,121 @@ const ManageClients = () => {
   // LOGGED IN USER TOKEN
   const { token } = useSelector((state) => state?.user?.currentUser?.data);
 
+  // CLIENT  TO BE EDITED INFO
+  const [clientTobeEdited, setClientToBeEdited] = useState({});
+
+  // CLIENT  TO BE DELETED INFO
+  const [clientToBeDeleted, setClientToBeDeleted] = useState({});
+
+  // DATA TO BE DISPLAYED IN THE INPUTS AND SENT TO THE BACKEND
+  const [updatedClientInfo, setupdatedClientInfo] = useState({});
+
+  // DISABLE SLIDE INPUT PROPERTIES
+  const [disableClientProperties, setdisableClientProperties] = useState(true);
+
+  // TO SET THE STATE OF THE UPDATE BUTTON
+  const [disableUpdateBtn, setDisableUpdateBtn] = useState(false);
+
+  // handlerowclick function
+  const showSlide = (props, state) => {
+    // getCandidate(props?.row)
+    setClientToBeEdited(props?.row);
+    setupdatedClientInfo(props?.row);
+    console.log("function called");
+    if (position !== "0") {
+      setPosition("0");
+      if (state === "notDisabled") {
+        setdisableClientProperties(false);
+        console.log("aa");
+      }
+      if (state === "disabled") {
+        setdisableClientProperties(true);
+      }
+    }
+  };
+  // end of  handlerowclick function
+
+  // function for seting candidate info
+  const handleUpdateClientInfo = (e, dataName, data) => {
+    if (dataName === "testCategory") {
+      setupdatedClientInfo((prev) => {
+        return {
+          ...prev,
+          testcategory: data?.categoryName,
+        };
+      });
+    } else {
+      setupdatedClientInfo((prev) => {
+        return {
+          ...prev,
+          [dataName]: e.target.value,
+        };
+      });
+    }
+  };
+  // end of function for seting candidate info
+
+  // UPDATE USER FUNCTION
+  const handleUpdateClient = async () => {
+    toastId.current = toast("Please wait...", {
+      autoClose: 3000,
+      isLoading: true,
+    });
+
+    setDisableUpdateBtn(true);
+
+    try {
+      await publicRequest
+        .put(
+          `Candidate/EditbyCID?Candidateid=${candidateToBeEdited?.candidateId}`,
+          updatedClientInfo,
+          {
+            headers: {
+              Accept: "*",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then(() => {
+          toast.update(toastId.current, {
+            render: "Candidate updated succesfully!",
+            type: "success",
+            isLoading: false,
+            autoClose: 3000,
+          });
+          setDisableUpdateBtn(true);
+        })
+        .then(async () => {
+          await getAllCandidates().then(() => {
+            setPosition("-100%");
+          });
+        });
+    } catch (error) {
+      console.log(error);
+      toast.update(toastId.current, {
+        type: "error",
+        autoClose: 3000,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
+          error?.message ||
+          "Something went wrong, please try again"
+        }`,
+      });
+      setDisableUpdateBtn(true);
+    }
+  };
+  // END OF UPDATE USER FUNCTION
+
   // useEffect to update error and loading state
   useEffect(() => {}, [error, loading]);
   // end of useEffect to update error and loading state
+
+  // useeffect for disabled candidate inputs
+  useEffect(() => {}, [disableClientProperties]);
+
+  // useeffect for disabled candidate inputs
 
   // END OF SET LOADING AND ERROR FUNCTIONALITY
 
@@ -119,6 +232,40 @@ const ManageClients = () => {
       width: 300,
       editable: false,
     },
+
+    {
+      field: "fullName",
+      headerName: "Action",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 360,
+      renderCell: (props) => {
+        return (
+          <div className="buttons">
+            <div>
+              <div className="view" onClick={() => handleRowClick(props)}>
+                View
+              </div>
+            </div>
+            <div className="editWrapper">
+              <div
+                className="edit"
+                onClick={() => showSlide(props, "notDisabled")}
+              >
+                Edit
+              </div>
+              <MdEdit className="editIcon" />
+            </div>
+            <div className="deleteWrapper">
+              <div className="delete" onClick={() => handleClickOpen(props)}>
+                Delete
+              </div>
+              <BsTrashFill className="deleteIcon" />
+            </div>
+          </div>
+        );
+      },
+    },
     // {
     //   field: 'fullName',
     //   headerName: 'Action',
@@ -181,9 +328,11 @@ const ManageClients = () => {
   // end of functionalities for getting and updating client State
 
   // handlerowclick function
-  const handleRowClick = (row, e) => {
-    getClient(row?.row?.clientId);
-    setClientInfo(row);
+  const handleRowClick = (props, e) => {
+    console.log(props);
+    getClient(props?.row?.clientId);
+    setClientToBeEdited(props?.row);
+    setClientInfo(props);
     if (position !== "0") {
       setPosition("0");
     }
@@ -193,6 +342,7 @@ const ManageClients = () => {
   // hide slide function
   const handleHideSlide = () => {
     setPosition("-100%");
+    setdisableClientProperties(true);
   };
   // end of hide slide function
 
@@ -249,33 +399,95 @@ const ManageClients = () => {
                 <div className="cancelconWrapper" onClick={handleHideSlide}>
                   <MdCancel className="cancelIcon" />
                 </div>
-                <div className="initials">{clientInfo?.row?.clientName[0]}</div>
+                <div className="initials">
+                  {clientTobeEdited?.clientName?.[0]}
+                </div>
                 <div className="slideFullname">
-                  {clientInfo?.row?.clientName}
+                  {clientTobeEdited?.clientName}
                 </div>
               </div>
               <div className="slideMiddle">
                 <div className="companyName h3 companyDetail">
                   <h3>Email</h3>
-                  <p>{clientInfo?.row?.email}</p>
+                  <p>{clientTobeEdited?.email}</p>
                 </div>
 
                 <div className="phoneNo h3 companyDetail">
                   <h3>Phone Number</h3>
-                  <p>{clientInfo?.row?.phoneNumber}</p>
+                  <p>{clientTobeEdited?.phoneNumber}</p>
                 </div>
                 <div className="companyName h3 companyDetail">
                   <h3>Contact Person Email</h3>
-                  <p>{clientInfo?.row?.contactPersonEmail}</p>
+                  {clientTobeEdited?.contactPersonEmail
+                    ?.split(",")
+                    .map((singleEmail, index) => {
+                      return <p key={index}>{singleEmail}</p>;
+                    })}
                 </div>
 
                 <div className="phoneNo h3 companyDetail">
                   <h3>Contact Person Phone Number</h3>
-                  <p>{clientInfo?.row?.contactPersonPhone}</p>
+                  {clientTobeEdited?.contactPersonPhone
+                    ?.split(",")
+                    .map((singlePhone, index) => {
+                      return <p key={index}>{singlePhone}</p>;
+                    })}
                 </div>
               </div>
+              {!disableClientProperties && (
+                <div className="updateClientSlideBottom">
+                  <div className="updateClientInputWrapper">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="text"
+                      id="email"
+                      className="updateClientInput"
+                      value={updatedClientInfo?.email}
+                      onChange={(e) => handleUpdateClientInfo(e, "email")}
+                      disabled={disableClientProperties}
+                    />
+                  </div>
+                  <div className="updateClientInputWrapper">
+                    <label htmlFor="phoneNo">Phone Number</label>
+                    <input
+                      type="text"
+                      id="phoneNo"
+                      className="updateClientInput"
+                      value={updatedClientInfo?.phoneNumber}
+                      onChange={(e) => handleUpdateClientInfo(e, "phoneNumber")}
+                      disabled={disableClientProperties}
+                    />
+                  </div>
+                  <div className="updateClientInputWrapper">
+                    <label htmlFor="address">Contact Person Email</label>
+                    <input
+                      type="text"
+                      id="address"
+                      className="updateClientInput"
+                      value={updatedClientInfo?.address}
+                      disabled={disableClientProperties}
+                      onChange={(e) =>
+                        handleUpdateClientInfo(e, "contactPersonEmail")
+                      }
+                    />
+                  </div>
+                  <div className="updateClientInputWrapper">
+                    <label htmlFor="address">Contact Person Phone Number</label>
+                    <input
+                      type="text"
+                      id="address"
+                      className="updateClientInput"
+                      value={updatedClientInfo?.address}
+                      disabled={disableClientProperties}
+                      onChange={(e) =>
+                        handleUpdateClientInfo(e, "contactPersonPhoneNummber")
+                      }
+                    />
+                  </div>
+                </div>
+              )}
 
-              <div className="testCategoriesWrapper">
+              {/* <div className="testCategoriesWrapper">
                 <h3>Test Categories</h3>
                 {fetchingTestInfo
                   ? "Loading..."
@@ -317,7 +529,7 @@ const ManageClients = () => {
                         </Accordion>
                       );
                     })}
-              </div>
+              </div> */}
             </div>
 
             <div className="partnerLabsMainBottom">
@@ -333,7 +545,7 @@ const ManageClients = () => {
                   rowsPerPageOptions={[50, 150, 200]}
                   pagination
                   getRowId={(row) => row.clientId}
-                  onRowClick={(row, e) => handleRowClick(row, e)}
+                  // onRowClick={(row, e) => handleRowClick(row, e)}
                 />
               </Box>
             </div>

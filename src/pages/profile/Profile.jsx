@@ -19,49 +19,49 @@ const Profile = () => {
         <div className="profileMainWrapper">
           <h2>User Profile</h2>
           <div className="formWrapper">
-            <div className="inputsWrapper">
-              <div className="singleInput">
+            <div className="profileInputsWrapper">
+              <div className="profileSingleInput">
                 <p>Full Name</p>
-                <div className="inputWrapper">
+                <div className="profileInputWrapper">
                   <input
                     type="text"
-                    className="input"
+                    className="profileInput"
                     disabled
                     value={fullName}
                   />
                 </div>
               </div>
 
-              <div className="singleInput">
+              <div className="profileSingleInput">
                 <p>Email</p>
-                <div className="inputWrapper">
+                <div className="profileInputWrapper">
                   <input
                     type="email"
-                    className="input"
+                    className="profileInput"
                     value={email}
                     disabled
                   />
                 </div>
               </div>
-              <div className="singleInput">
+              <div className="profileSingleInput">
                 <p>Phone Number</p>
-                <div className="inputWrapper">
+                <div className="profileInputWrapper">
                   <input
                     type="number"
-                    className="input"
+                    className="profileInput"
                     disabled
                     value={phoneNumber}
                   />
                 </div>
               </div>
-              <div className="singleInput">
+              <div className="profileSingleInput">
                 <p>Role</p>
-                <div className="inputWrapper">
+                <div className="profileInputWrapper">
                   <select
                     name="roleSelect"
                     id="roleSelect"
                     disabled
-                    className="input"
+                    className="profileInput"
                     defaultValue={loggedInUserRole}
                   >
                     <option value={loggedInUserRole}>{loggedInUserRole}</option>
