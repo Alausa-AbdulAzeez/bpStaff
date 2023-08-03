@@ -130,3 +130,27 @@
     }
   }
 }
+
+@media screen and (max-width: 767px) {
+.manageClientsMainWrapper {
+    padding: 16px !important;
+
+          .manageClientsMainTop {
+                    justify-content:center !important;
+                      align-items: center;
+                      flex-direction: column-reverse;
+
+                      margin-bottom: 20px;
+          
+          
+              &>h3 {
+                display: none;
+              }
+                .addClientBtn {
+                  margin-bottom: 10px;
+            }
+            
+            }
+
+}
+}
