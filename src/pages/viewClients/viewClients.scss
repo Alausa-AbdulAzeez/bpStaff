@@ -1,12 +1,12 @@
 .viewClientsWrapper {
   width: 100%;
   display: flex;
-    height: calc(100vh - 0px);
+  height: calc(100vh - 0px);
 
   .viewClientsRight {
     flex: 5;
-        overflow-y: auto !important;
-          height: 100%;
+    overflow-y: auto !important;
+    height: 100%;
 
     .viewClientsMainWrapper {
       padding: 30px 64px;
@@ -29,6 +29,7 @@
         justify-content: center;
         flex-direction: column;
         height: 400px;
+        width: 100%;
 
         & > h3 {
           color: rgb(114, 114, 114);
@@ -38,4 +39,20 @@
   }
 }
 
+@media screen and (max-width: 767px) {
+  .viewClientsMainWrapper {
+    padding: 0px 16px !important;
+  }
 
+  .viewClientsMainTop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .candidateName {
+      width: 250px !important;
+      max-width: 300px !important;
+    }
+  }
+}

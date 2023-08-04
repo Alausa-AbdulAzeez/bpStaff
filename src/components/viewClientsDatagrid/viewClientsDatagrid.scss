@@ -1,6 +1,14 @@
 .viewClientsDatagridWraper {
   width: 100%;
   margin-top: 20px;
+
+  .zeroWidth {
+    position: absolute;
+    width: 0;
+    overflow-x: hidden;
+    transition: all ease-in-out 0.65s;
+  }
+
   .viewClientsSlide {
     overflow: auto;
     display: flex;
@@ -104,9 +112,9 @@
   color: rgba(2, 101, 0, 1);
   cursor: pointer;
 }
-@media screen and (max-width: 1200px) {
-  .viewClientsDatagridWraper {
-    width: 650px !important;
 
+@media screen and (max-width: 767px) {
+  .viewClientsSlide {
+    width: 100% !important;
   }
 }
