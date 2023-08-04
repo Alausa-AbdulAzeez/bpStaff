@@ -256,3 +256,22 @@
     }
   }
 }
+@media screen and (max-width: 767px) {
+  .partnerLabsMainWrapper {
+    padding: 30px 16px !important;
+
+    .partnerLabsMainTop {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 10px;
+
+      & > h3 {
+        margin: 0;
+        margin-top: 10px;
+      }
+    }
+    .manageCandidatesSlide {
+      width: 100% !important;
+    }
+  }
+}
