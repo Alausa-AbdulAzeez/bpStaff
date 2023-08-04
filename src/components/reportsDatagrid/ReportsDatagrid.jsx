@@ -210,27 +210,32 @@ const ReportsDatagrid = (props) => {
     <div className='datagridWraper'>
       <SimpleBackdrop open={open} handleClose={handleClose} />
 
-      <div className='slide' style={{ right: position }}>
+      <div
+        className={position === '-100%' ? 'zeroWidth' : 'slide'}
+        style={{ right: position }}
+      >
         <div className='slideTop'>
           <div className='cancelconWrapper' onClick={handleHideSlide}>
             <MdCancel className='cancelIcon' />
           </div>
-          <div className='initials'>AA</div>
-          <div className='slideFullname'>Alausa Abdulazeez</div>
+          <div className='initials'>
+            {selectedCandidate?.candidateName &&
+              selectedCandidate?.candidateName[0]?.toUpperCase()}
+          </div>
+          <div className='slideFullname'>
+            {selectedCandidate?.candidateName?.toUpperCase()}
+          </div>
         </div>
         <div className='companyName h3'>
           <h3>Company Name</h3>
-          <p>Chicken Republic</p>
+          <p>{selectedCandidate?.clientName}</p>
         </div>
 
         <div className='phoneNo h3'>
           <h3>Candidate Phone Number</h3>
-          <p>+23456789010</p>
+          <p>{selectedCandidate?.phoneNumber}</p>
         </div>
-        <div className='numberOfTests h3'>
-          <h3>Number of Tests</h3>
-          <p>3</p>
-        </div>
+
         {loggedInUserRole === 'Report' && (
           <div className='reportResultsWrapper'>
             <div className='qualityAssuranceAccordionWrapper'>
@@ -246,9 +251,7 @@ const ReportsDatagrid = (props) => {
                   <Typography>Age -{selectedCandidate?.age} years</Typography>
                   <Typography>Gender - {selectedCandidate?.gender}</Typography>
                   <Typography>BMI - {selectedCandidate?.bmi}</Typography>
-                  <Typography>
-                    Height - {selectedCandidate?.height}cm
-                  </Typography>
+                  <Typography>Height - {selectedCandidate?.height}m</Typography>
                   <Typography>
                     Weight - {selectedCandidate?.weight}kg
                   </Typography>

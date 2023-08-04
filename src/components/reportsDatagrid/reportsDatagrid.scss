@@ -1,6 +1,14 @@
 .datagridWraper {
   width: 100%;
   margin-top: 20px;
+
+  .zeroWidth {
+    position: absolute;
+    width: 0;
+    overflow-x: hidden;
+    transition: all ease-in-out 0.65s;
+  }
+
   .slide {
     overflow: auto;
     display: flex;
@@ -151,4 +159,10 @@
   width: 100%;
   // width: 500px;
   height: 100%;
+}
+
+@media screen and (max-width: 767px) {
+  .slide {
+    width: 100% !important;
+  }
 }

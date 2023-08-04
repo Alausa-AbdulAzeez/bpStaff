@@ -89,6 +89,7 @@ const Reports = () => {
                 label='Candidate name'
                 type='search'
                 className='candidateName'
+                size='small'
                 onChange={(e) => handleSearchParamsChange(e)}
               />
             </div>
