@@ -4,9 +4,11 @@
 
   .rejectedResultsRight {
     flex: 5;
+    overflow-x: hidden;
 
     .rejectedResultsMainWrapper {
       padding: 30px 64px;
+      width: 100%;
 
       .rejectedResultsMainTopForm {
         display: flex;
@@ -40,6 +42,7 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        width: 100%;
         .searchImg {
           height: 380px;
         }
@@ -47,6 +50,22 @@
         & > h3 {
           color: rgb(114, 114, 114);
         }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .rejectedResultsMainWrapper {
+    padding: 30px 16px !important;
+
+    .rejectedResultsMainTop {
+      display: flex;
+      flex-direction: column;
+      align-items: center !important;
+      .candidateName {
+        width: 250px !important;
+        max-width: 300px !important;
       }
     }
   }

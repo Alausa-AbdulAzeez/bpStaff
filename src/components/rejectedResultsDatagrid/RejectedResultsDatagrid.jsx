@@ -284,10 +284,13 @@ const RejectedResultsDatagrid = (props) => {
   useEffect(() => {}, [selectedCandidate])
 
   return (
-    <div className='datagridWraper'>
+    <div className='rejectedResultsDatagridWraper'>
       <SimpleBackdrop open={open} handleClose={handleClose} />
 
-      <form className='slide' style={{ right: position }}>
+      <form
+        className={position === '-100%' ? 'zeroWidth' : 'slide'}
+        style={{ right: position }}
+      >
         <div className='slideTop'>
           <div className='cancelconWrapper' onClick={handleHideSlide}>
             <MdCancel className='cancelIcon' />

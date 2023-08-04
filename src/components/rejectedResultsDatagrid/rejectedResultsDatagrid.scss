@@ -1,3 +1,30 @@
+.rejectedResultsDatagridWraper {
+  width: 100%;
+  margin-top: 20px;
+
+  .zeroWidth {
+    position: absolute;
+    width: 0;
+    overflow-x: hidden;
+    transition: all ease-in-out 0.65s;
+  }
+
+  .rejectedResultsSlide {
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 40%;
+    height: 100%;
+    top: 0;
+    background-color: white;
+    z-index: 2;
+    box-shadow: 1px 1px 40px 4px #6b6a6a6b;
+    transition: all ease-in-out 0.65s;
+    padding: 32px;
+  }
+}
+
 .pendingCandidatesAttendedTo {
   background-color: rgba(156, 220, 155, 1);
   padding: 6px 12px;
