@@ -336,7 +336,7 @@ const CandidateSearchDatagrid = (props) => {
   }, [candidateToBeUpdated?.height, candidateToBeUpdated?.weight])
   return (
     <div className='datagridWraper'>
-      <div className='slide' style={{ right: position }}>
+      <div className={position === "-100%" ? "zeroWidth" : "slide"} style={{ right: position }}>
         <div className='slideTop'>
           <div className='cancelconWrapper' onClick={handleHideSlide}>
             <MdCancel className='cancelIcon' />

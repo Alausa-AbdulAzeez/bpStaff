@@ -1,13 +1,13 @@
 .candidateSearchWrapper {
   width: 100%;
   display: flex;
-    height: calc(100vh - 0px);
+  height: calc(100vh - 0px);
 
   .candidateSearchRight {
     flex: 5;
     overflow-x: hidden;
-        overflow-y: auto !important;
-          height: 100%;
+    overflow-y: auto !important;
+    height: 100%;
 
     .candidateSearchMainWrapper {
       padding: 30px 64px;
@@ -139,9 +139,36 @@
 }
 
 @media screen and (max-width: 1200px) {
-  .filterContainer {
-    width: 600px !important;
-    padding: 0 20px !important;
+  .candidateSearchMainWrapper {
+    padding: 30px 16px !important;
 
+    .filterContainer {
+      width: 600px !important;
+      padding: 0 20px !important;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .candidateSearchMainWrapper {
+    padding: 30px 16px !important;
+
+    .filterContainer {
+      width: 100% !important;
+      flex-direction: column;
+      min-height: 250px;
+      height: auto !important;
+      padding: 0 20px !important;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      border-radius: 0px !important;
+      overflow-y: auto !important;
+
+      .resetBtn,
+      .searchFilterBtn {
+        margin-left: 0 !important;
+      }
+    }
   }
 }
