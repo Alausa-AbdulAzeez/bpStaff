@@ -23,16 +23,20 @@ import { FaAngleDown, FaDotCircle } from "react-icons/fa";
 import Error from "../../components/error/Error";
 import { useSelector } from "react-redux";
 import { BsEye, BsTrashFill } from "react-icons/bs";
+import { ToastContainer, toast } from "react-toastify";
+import AlertDialogSlide from "../../components/Dialogue";
 
 const ManageClients = () => {
   const [pageSize, setPageSize] = useState(50);
   const [tableData, setTableData] = useState([]);
   const [searchedTableData, setSearchedTableData] = useState([]);
+  const toastId = React.useRef(null);
 
   // GET CURRENT LOGGED IN USER
   const { currentUser } = useSelector((state) => state?.user);
   const loggedInUserRole = currentUser?.data?.role;
   const userData = currentUser?.data;
+  const [open, setOpen] = React.useState(false);
 
   // SET LOADING AND ERROR FUNCTIONALITY
   const [loading, setLoading] = useState(false);
@@ -76,6 +80,17 @@ const ManageClients = () => {
   };
   // end of  handlerowclick function
 
+  // SHOW AND HIDE DIALOGUE
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // END OF SHOW AND HIDE DIALOGUE
+
   // function for seting candidate info
   const handleUpdateClientInfo = (e, dataName, data) => {
     if (dataName === "contactPersonEmail") {
@@ -111,30 +126,27 @@ const ManageClients = () => {
     });
 
     setDisableUpdateBtn(true);
+    // const {email, ...others} = updatedClientInfo
 
     try {
       await publicRequest
-        .put(
-          `Candidate/EditbyCID?Candidateid=${candidateToBeEdited?.candidateId}`,
-          updatedClientInfo,
-          {
-            headers: {
-              Accept: "*",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        .put(`Client`, updatedClientInfo, {
+          headers: {
+            Accept: "*",
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then(() => {
           toast.update(toastId.current, {
-            render: "Candidate updated succesfully!",
+            render: "Client updated succesfully!",
             type: "success",
             isLoading: false,
             autoClose: 3000,
           });
-          setDisableUpdateBtn(true);
+          setDisableUpdateBtn(false);
         })
         .then(async () => {
-          await getAllCandidates().then(() => {
+          await getAllClients().then(() => {
             setPosition("-100%");
           });
         });
@@ -151,10 +163,51 @@ const ManageClients = () => {
           "Something went wrong, please try again"
         }`,
       });
-      setDisableUpdateBtn(true);
+      setDisableUpdateBtn(false);
     }
   };
   // END OF UPDATE USER FUNCTION
+
+  // FUNCTION TO DEACTIVATE CLIENT
+  const deactivateClient = async () => {
+    toastId.current = toast("Please wait...", {
+      autoClose: 3000,
+      isLoading: true,
+    });
+    client;
+    try {
+      await publicRequest
+        .put(`Client/toggle-status/${clientTobeEdited?.clientId}`, {
+          headers: {
+            Accept: "*",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          toast.update(toastId.current, {
+            render: "Client deleted succesfully!",
+            type: "success",
+            isLoading: false,
+            autoClose: 3000,
+          });
+        });
+    } catch (error) {
+      console.log(error);
+      toast.update(toastId.current, {
+        type: "error",
+        autoClose: 3000,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
+          error?.message ||
+          "Something went wrong, please try again"
+        }`,
+      });
+    }
+  };
+
+  // END OF FUNCTION TO DEACTIVATE CLIENT
 
   // useEffect to update error and loading state
   useEffect(() => {}, [error, loading]);
@@ -363,7 +416,16 @@ const ManageClients = () => {
   // useRedirectLoggedOutUser()
   return (
     <div className="manageClientsWrapper">
+      <AlertDialogSlide
+        open={open}
+        handleClose={handleClose}
+        title="Delete"
+        link="/"
+        message="Warning!! Are you sure you want to delete this client?"
+        action={deactivateClient}
+      />
       <Sidebar />
+      <ToastContainer />
       <div className="manageClientsRight">
         <Topber userData={userData} />
 
@@ -450,8 +512,7 @@ const ManageClients = () => {
                       id="email"
                       className="updateClientInput"
                       value={updatedClientInfo?.email}
-                      onChange={(e) => handleUpdateClientInfo(e, "email")}
-                      disabled={disableClientProperties}
+                      disabled
                     />
                   </div>
                   <div className="updateClientInputWrapper">
