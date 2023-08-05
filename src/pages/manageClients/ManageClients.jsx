@@ -50,7 +50,7 @@ const ManageClients = () => {
   const [clientTobeEdited, setClientToBeEdited] = useState({});
 
   // CLIENT  TO BE DELETED INFO
-  const [clientToBeDeleted, setClientToBeDeleted] = useState({});
+  const [clientTobeDeleted, setClientToBeDeleted] = useState({});
 
   // DATA TO BE DISPLAYED IN THE INPUTS AND SENT TO THE BACKEND
   const [updatedClientInfo, setupdatedClientInfo] = useState({});
@@ -81,7 +81,8 @@ const ManageClients = () => {
   // end of  handlerowclick function
 
   // SHOW AND HIDE DIALOGUE
-  const handleClickOpen = () => {
+  const handleClickOpen = (props) => {
+    setClientToBeDeleted(props?.row);
     setOpen(true);
   };
 
@@ -174,15 +175,18 @@ const ManageClients = () => {
       autoClose: 3000,
       isLoading: true,
     });
-    client;
     try {
       await publicRequest
-        .put(`Client/toggle-status/${clientTobeEdited?.clientId}`, {
-          headers: {
-            Accept: "*",
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .put(
+          `Client/toggle-status/${clientTobeDeleted?.clientId}`,
+          {},
+          {
+            headers: {
+              Accept: "*",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then(() => {
           toast.update(toastId.current, {
             render: "Client deleted succesfully!",
@@ -190,6 +194,11 @@ const ManageClients = () => {
             isLoading: false,
             autoClose: 3000,
           });
+        })
+        .then(async () => {
+          handleClose();
+
+          return await getAllClients();
         });
     } catch (error) {
       console.log(error);
@@ -204,6 +213,7 @@ const ManageClients = () => {
           "Something went wrong, please try again"
         }`,
       });
+      handleClose();
     }
   };
 
@@ -412,6 +422,8 @@ const ManageClients = () => {
   // update errorMessage state
   useEffect(() => {}, [errorMessage]);
   // end of update errorMessage state
+
+  useEffect(() => {}, [clientTobeDeleted]);
   // END OF MISCELLANEOUS USEEFFECTS
   // useRedirectLoggedOutUser()
   return (
