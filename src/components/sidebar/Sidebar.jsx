@@ -109,7 +109,6 @@ const Sidebar = () => {
       setSidebarOpen(false);
     }
   };
-  console.log(sidebarOpen);
 
   return (
     <>
@@ -142,63 +141,65 @@ const Sidebar = () => {
           </div>
         </div>
         <div className="sidebarBottom">
-          <div className="sidebarBottomTop">
-            {sidebarData?.map((singleItem, index) => {
-              return (
-                <ul className="ulTitle" key={index}>
-                  {singleItem?.ulTitle}
-                  {singleItem?.listItems?.map((listItem, index) => {
-                    return (
-                      <NavLink
-                        to={listItem.link}
-                        style={{ textDecoration: "none" }}
-                        key={index}
-                      >
-                        {({ isActive }) => (
-                          <li
-                            className={
-                              isActive
-                                ? "activeLink sidebarListItem"
-                                : "sidebarListItem"
-                            }
-                          >
-                            {listItem.icon}
-                            <span> {listItem.title}</span>
-                          </li>
-                        )}
-                      </NavLink>
-                    );
-                  })}
-                </ul>
-              );
-            })}
-          </div>
-          <div className="sidebarBottomTopBottom">
-            <ul className="ulTitle">
-              LIST
-              {sidebarInfo?.map((listItem, index) => {
+          <div className="sidebarBottomWrapper">
+            <div className="sidebarBottomTop">
+              {sidebarData?.map((singleItem, index) => {
                 return (
-                  <NavLink
-                    to={listItem.link}
-                    style={{ textDecoration: "none" }}
-                    key={index}
-                  >
-                    {({ isActive }) => (
-                      <li
-                        className={
-                          isActive
-                            ? "activeLink sidebarListItem"
-                            : "sidebarListItem"
-                        }
-                      >
-                        {listItem.icon}
-                        <span> {listItem.title}</span>
-                      </li>
-                    )}
-                  </NavLink>
+                  <ul className="ulTitle" key={index}>
+                    {singleItem?.ulTitle}
+                    {singleItem?.listItems?.map((listItem, index) => {
+                      return (
+                        <NavLink
+                          to={listItem.link}
+                          style={{ textDecoration: "none" }}
+                          key={index}
+                        >
+                          {({ isActive }) => (
+                            <li
+                              className={
+                                isActive
+                                  ? "activeLink sidebarListItem"
+                                  : "sidebarListItem"
+                              }
+                            >
+                              {listItem.icon}
+                              <span> {listItem.title}</span>
+                            </li>
+                          )}
+                        </NavLink>
+                      );
+                    })}
+                  </ul>
                 );
               })}
-            </ul>
+            </div>
+            <div className="sidebarBottomTopBottom">
+              <ul className="ulTitle">
+                LIST
+                {sidebarInfo?.map((listItem, index) => {
+                  return (
+                    <NavLink
+                      to={listItem.link}
+                      style={{ textDecoration: "none" }}
+                      key={index}
+                    >
+                      {({ isActive }) => (
+                        <li
+                          className={
+                            isActive
+                              ? "activeLink sidebarListItem"
+                              : "sidebarListItem"
+                          }
+                        >
+                          {listItem.icon}
+                          <span> {listItem.title}</span>
+                        </li>
+                      )}
+                    </NavLink>
+                  );
+                })}
+              </ul>
+            </div>
           </div>
           <div className="sidebarBottomBottom">
             <ul className="ulTitle">

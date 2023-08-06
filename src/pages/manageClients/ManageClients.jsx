@@ -399,7 +399,6 @@ const ManageClients = () => {
 
   // handlerowclick function
   const handleRowClick = (props, e) => {
-    console.log(props);
     getClient(props?.row?.clientId);
     setClientToBeEdited(props?.row);
     setClientInfo(props);
