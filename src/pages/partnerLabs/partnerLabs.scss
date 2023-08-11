@@ -8,8 +8,18 @@
     height: 100%;
     flex: 5;
 
+
+
     .partnerLabsMainWrapper {
       padding: 30px 64px;
+
+        .zeroWidth {
+            position: absolute;
+            width: 0;
+            overflow-x: hidden;
+            transition: all ease-in-out 0.65s;
+        
+          }
 
       .partnerLabsMainTop {
         display: flex;
@@ -64,7 +74,6 @@
         box-shadow: 1px 1px 40px 4px #6b6a6a6b;
         transition: all ease-in-out 0.65s;
         padding: 32px;
-        visibility: hidden;
 
         .slideMiddle {
           display: flex;
