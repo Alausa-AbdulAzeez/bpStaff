@@ -4,7 +4,15 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Topber from "../../components/topbar/Topber";
 import "./scheduleCandidate.scss";
 import AlertDialogSlide from "../../components/Dialogue";
-import { Autocomplete, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+} from "@mui/material";
 import { publicRequest } from "../../functions/requestMethods";
 import DatePicker from "react-datepicker";
 
@@ -29,6 +37,9 @@ const ScheduleCandidate = () => {
   // TO SET THE STATE OF THE DONE AND CANCEL BUTTONS
   const [disableDoneAndCancelBtn, setDisableDoneAndCancelBtn] = useState(false);
 
+  // CANDIDATE TYPE
+  const [isCandidateCoreStaff, setIsCandidateCoreStaff] = useState("yes");
+
   // ALL LABORATORIES
   const [laboratories, setLaboratories] = useState([]);
 
@@ -45,6 +56,12 @@ const ScheduleCandidate = () => {
     setOpen(false);
   };
   // END OF MISCELLANEOUS
+
+  // FUNCTION TO HANDLE CANDIDATE TYPE CHANGE
+  const handleCandidateTypeChange = (event) => {
+    setIsCandidateCoreStaff(event.target.value);
+  };
+  // END OF FUNCTION TO HANDLE CANDIDATE TYPE CHANGE
 
   // DATE SELECTION AND CHANGE FUNCTIONALITIES
   const [startDate, setStartDate] = useState(new Date());
@@ -123,6 +140,7 @@ const ScheduleCandidate = () => {
     appointmentdate: null,
     clientid: "",
     testcategory: "",
+    companyName: "",
     status: "PENDING",
   });
 
@@ -441,7 +459,7 @@ const ScheduleCandidate = () => {
                     />
                   </div>
                 </div>
-                <div className="singleInput">
+                <div className="singleInput ">
                   <p>
                     Phone Number <span>*</span>
                   </p>
@@ -457,6 +475,7 @@ const ScheduleCandidate = () => {
                     />
                   </div>
                 </div>
+
                 <div className="singleInput">
                   <p>
                     Date <span>*</span>
@@ -474,6 +493,52 @@ const ScheduleCandidate = () => {
                       minDate={new Date()}
                     />
                   </div>
+                </div>
+                <div className="singleInput singleInputRadioWrapper">
+                  <FormControl className="radioInputWrapper">
+                    <FormLabel
+                      id="demo-controlled-radio-buttons-group"
+                      className="formTitle"
+                    >
+                      Is the candidate a core staff or a private candidate?
+                      {/* Candidate type */}
+                    </FormLabel>
+                    <RadioGroup
+                      aria-labelledby="demo-controlled-radio-buttons-group"
+                      name="controlled-radio-buttons-group"
+                      value={isCandidateCoreStaff}
+                      onChange={handleCandidateTypeChange}
+                      className="radioGroup"
+                      row
+                    >
+                      <FormControlLabel
+                        value="yes"
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value="no"
+                        control={<Radio />}
+                        label="No"
+                      />
+                    </RadioGroup>
+                    {isCandidateCoreStaff === "no" && (
+                      <div className="singleInput ">
+                        <p>Company Name</p>
+                        <div className="inputWrapper">
+                          <input
+                            type="text"
+                            className="input"
+                            required
+                            onChange={(e) =>
+                              handlescheduleCandidateInfo(e, "companyName")
+                            }
+                            value={scheduleInfo?.companyName}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </FormControl>
                 </div>
                 <div className="bulkUploadWrapper">
                   <p>Bulk Upload</p>
