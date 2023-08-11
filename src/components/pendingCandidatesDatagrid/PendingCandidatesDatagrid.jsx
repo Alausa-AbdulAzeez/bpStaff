@@ -1086,7 +1086,7 @@ const PendingCandidatesDatagrid = (props) => {
               />
               <TextField
                 id="outlined-search"
-                label="Blood Pressure"
+                label="Blood Pressure, Heart Rate"
                 type="search"
                 className="candidateName basicCandidateDetailsInput"
                 onChange={(e) =>
@@ -1281,7 +1281,7 @@ const PendingCandidatesDatagrid = (props) => {
                   <Typography>
                     bloodPressure -----
                     <span style={{ fontWeight: "bold" }}>
-                      {selectedCandidate?.bloodPressure}mm/Hg
+                      {selectedCandidate?.bloodPressure}
                     </span>
                   </Typography>
                 </AccordionDetails>

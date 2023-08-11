@@ -171,7 +171,7 @@ const DownloadReportPage = () => {
           </div>
           <div className="doctorPageTopName doctorPageTopKey">
             Blood Pressure -----{" "}
-            <span>{candidateDetails[0]?.bloodPressure}mm/Hg</span>
+            <span>{candidateDetails[0]?.bloodPressure}</span>
           </div>
         </div>
         <div className="parametersInvestigated">
