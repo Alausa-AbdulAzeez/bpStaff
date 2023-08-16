@@ -10,36 +10,75 @@
   z-index: 2;
 
   backdrop-filter: blur(5px);
-  & > .topbarUsername{
+  & > .topbarUsername {
     font-weight: 500;
 
-    & > .topbarLabname{
+    & > .topbarLabname {
       font-weight: bold;
     }
-
-   }
-
-  .topbarIcon {
-    font-size: 24px;
-    cursor: pointer;
   }
 
-}
+  .topbarIconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    .topbarIcon {
+      font-size: 24px;
+      cursor: pointer;
+      color: black;
+    }
+    .notificationCount {
+      background-color: rgb(121, 32, 0);
+      height: 18px;
+      width: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: wheat;
+      position: absolute;
+      top: -5px;
+      right: -3px;
+    }
+    .loadingnotificationCount {
+      background-color: rgb(121, 32, 0);
 
+      height: 18px;
+      width: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: wheat;
+      position: absolute;
+      top: -5px;
+      right: -3px;
+      animation: shiny 1s ease infinite alternate-reverse;
+    }
+    @keyframes shiny {
+      to {
+        opacity: 0.5;
+      }
+    }
+  }
+}
 
 @media screen and (max-width: 767px) {
   .topbarWrapper {
     padding: 0 16px;
 
-            &>.topbarUsername {
-                font-weight: 500;
-                font-size: 12px;
-            
-                &>.topbarLabname {
-                  font-weight: bold;
-                }
-            
-              }
-  }
+    & > .topbarUsername {
+      font-weight: 500;
+      font-size: 12px;
 
+      & > .topbarLabname {
+        font-weight: bold;
+      }
+    }
+  }
 }
