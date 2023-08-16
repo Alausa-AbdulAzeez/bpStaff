@@ -32,6 +32,9 @@ const PendingCandidatesDatagrid = (props) => {
   // REJECTION DETAILS
   const [reasonForRejection, setReasonForRejection] = React.useState("");
 
+  // SINGLE CANDIDATE
+  // const [singleCandidate, setSingleCandidate] = useState({});
+
   // SELECTED CANDIDATE TESTS (FOR MAINLAB)
   const [candidateTests, setCandidateTests] = useState([]);
   const [loadingCandedateTests, setLoadingCandedateTests] = useState(false);
@@ -270,9 +273,30 @@ const PendingCandidatesDatagrid = (props) => {
   };
   // END OF SET SIDE INFO POSITION
 
+  // FUNCTION TO GET SELECTED CANDIDATE'S INFO
+  // const getSingleCandidate = async (candidateId) => {
+  //   try {
+  //     await publicRequest
+  //       .get(`Candidate/SearchByID?Candidateid=${candidateId}`, {
+  //         headers: {
+  //           Accept: "*",
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       })
+  //       .then((res) => {
+  //         setSingleCandidate(res?.data?.data);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // END OF FUNCTION TO GET SELECTED CANDIDATE'S INFO
+
   // HANDLE ROW CLICK
   const handleRowClick = (row, e) => {
     setSelecedCandidate(row?.row);
+    // getSingleCandidate(row?.row?.candidateId);
 
     setUserDetails({
       ...userDetails,
@@ -1235,8 +1259,8 @@ const PendingCandidatesDatagrid = (props) => {
           </>
         )}
 
-        {(loggedInUserRole === "MainLab1" ||
-          loggedInUserRole === "Quality assurance") && (
+        {loggedInUserRole === "MainLab1" && (
+          // loggedInUserRole === "Quality assurance") && (
           <>
             <div className="qualityAssuranceAccordionWrapper">
               <Accordion>
@@ -1251,37 +1275,38 @@ const PendingCandidatesDatagrid = (props) => {
                   <Typography>
                     Age -----
                     <span style={{ fontWeight: "bold" }}>
-                      {selectedCandidate?.age} years
+                      {selectedCandidate?.age || singleCandidate?.age} years
                     </span>
                   </Typography>
                   <Typography>
                     Gender -----
                     <span style={{ fontWeight: "bold" }}>
-                      {selectedCandidate?.gender}
+                      {selectedCandidate?.gender || singleCandidate?.gender}
                     </span>
                   </Typography>
                   <Typography>
                     BMI -----
                     <span style={{ fontWeight: "bold" }}>
-                      {selectedCandidate?.bmi}
+                      {selectedCandidate?.bmi || singleCandidate?.bmi}
                     </span>
                   </Typography>
                   <Typography>
                     Height -----
                     <span style={{ fontWeight: "bold" }}>
-                      {selectedCandidate?.height}m
+                      {selectedCandidate?.height || singleCandidate?.height}m
                     </span>
                   </Typography>
                   <Typography>
                     Weight -----{" "}
                     <span style={{ fontWeight: "bold" }}>
-                      {selectedCandidate?.weight}kg
+                      {selectedCandidate?.weight || singleCandidate?.weight}kg
                     </span>
                   </Typography>
                   <Typography>
-                    bloodPressure -----
+                    bloodPressure, Heart Rate -----
                     <span style={{ fontWeight: "bold" }}>
-                      {selectedCandidate?.bloodPressure}
+                      {selectedCandidate?.bloodPressure ||
+                        singleCandidate?.bloodPressure}
                     </span>
                   </Typography>
                 </AccordionDetails>

@@ -170,7 +170,7 @@ const DownloadReportPage = () => {
             <span>{Number(candidateDetails[0]?.bmi)?.toFixed(3)}</span>
           </div>
           <div className="doctorPageTopName doctorPageTopKey">
-            Blood Pressure -----{" "}
+            Blood Pressure, Heart Rate -----{" "}
             <span>{candidateDetails[0]?.bloodPressure}</span>
           </div>
         </div>
