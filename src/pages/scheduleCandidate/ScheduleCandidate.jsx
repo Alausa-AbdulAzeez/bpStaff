@@ -32,10 +32,16 @@ const ScheduleCandidate = () => {
 
   // LOGGEDIN USER
   const { currentUser } = useSelector((state) => state?.user);
+  const loggedInUserRole = currentUser?.data?.role[0];
+
+  console.log(loggedInUserRole);
   const userData = currentUser?.data;
 
   // TO SET THE STATE OF THE DONE AND CANCEL BUTTONS
   const [disableDoneAndCancelBtn, setDisableDoneAndCancelBtn] = useState(false);
+
+  // RELOAD INPUTS
+  const [toggleInputState, setToggleInputState] = useState(false);
 
   // CANDIDATE TYPE
   const [isCandidateCoreStaff, setIsCandidateCoreStaff] = useState("yes");
@@ -140,7 +146,7 @@ const ScheduleCandidate = () => {
     appointmentdate: null,
     clientid: "",
     testcategory: "",
-    companyName: "",
+    // companyName: "",
     status: "PENDING",
   });
 
@@ -201,20 +207,21 @@ const ScheduleCandidate = () => {
             autoClose: 2500,
           });
           setDisableDoneAndCancelBtn(false);
+          setToggleInputState((prev) => !prev);
         })
         .then(() => {
-          window.location.reload();
-          // setScheduleInfo({
-          //   candidateName: '',
-          //   phoneNumber: '',
-          //   createdDate: date,
-          //   email: '',
-          //   address: '',
-          //   appointmentdate: startDate?.toISOString(),
-          //   clientid: '',
-          //   testcategory: '',
-          //   status: 'PENDING',
-          // })
+          // window.location.reload();
+          setScheduleInfo({
+            candidateName: "",
+            phoneNumber: "",
+            createdDate: date,
+            email: "",
+            address: "",
+            appointmentdate: startDate?.toISOString(),
+            clientid: "",
+            testcategory: "",
+            status: "PENDING",
+          });
         });
     } catch (error) {
       console.log(error.response);
@@ -232,7 +239,82 @@ const ScheduleCandidate = () => {
       setDisableDoneAndCancelBtn(false);
     }
   };
-  // end of function for creating a test category
+  // end of function for scheduling a candidate
+
+  // function for scheduling and authorizing a candidate
+  const handleScheduleAndAuthorizeCandidate = async (e) => {
+    e.preventDefault();
+    toastId.current = toast("Please wait...", {
+      autoClose: 2500,
+      isLoading: true,
+    });
+
+    setDisableDoneAndCancelBtn(true);
+
+    try {
+      await publicRequest
+        .post("/Candidate", scheduleInfo, {
+          headers: {
+            Accept: "*",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(async (res) => {
+          const candidateId = res?.data?.data?.candidateId;
+
+          await publicRequest.put(
+            `Candidate/Authorize/${candidateId}`,
+            { recommendation: "" },
+            {
+              headers: {
+                Accept: "*",
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+        })
+        .then(() => {
+          toast.update(toastId.current, {
+            render: "Candidate scheduled succesfully!",
+            type: "success",
+            isLoading: false,
+            autoClose: 2500,
+          });
+          setDisableDoneAndCancelBtn(false);
+          setToggleInputState((prev) => !prev);
+        })
+        .then(() => {
+          // window.location.reload();
+          setScheduleInfo({
+            candidateName: "",
+            phoneNumber: "",
+            createdDate: date,
+            email: "",
+            address: "",
+            appointmentdate: startDate?.toISOString(),
+            clientid: "",
+            testcategory: "",
+            status: "PENDING",
+          });
+        });
+    } catch (error) {
+      console.log(error.response);
+      toast.update(toastId.current, {
+        type: "error",
+        autoClose: 2500,
+        isLoading: false,
+        render: `${
+          error?.response?.data?.title ||
+          error?.response?.data?.description ||
+          error?.message ||
+          "Something went wrong, please try again"
+        }`,
+      });
+      setDisableDoneAndCancelBtn(false);
+    }
+  };
+  // end of function for scheduling and authorizing a candidate
 
   // END OF FUNCTIONALITY FOR SETTING SCHEDULE INFO
   //  FUNCTIONALITIES FOR FETCHING AND SETTING TEST CATEGORIES
@@ -356,7 +438,11 @@ const ScheduleCandidate = () => {
           <div className="scheduleCandidateMainWrapper">
             <form
               className="scheduleCandidateFormWrapper"
-              onSubmit={handleScheduleCandidate}
+              onSubmit={
+                loggedInUserRole === "Reception"
+                  ? handleScheduleAndAuthorizeCandidate
+                  : handleScheduleCandidate
+              }
             >
               <div className="inputsWrapper">
                 <div className="singleInput autoComplete">
@@ -365,6 +451,7 @@ const ScheduleCandidate = () => {
                     disablePortal
                     id="combo-box-demo"
                     options={clients}
+                    key={toggleInputState}
                     getOptionLabel={(option) => `${option.clientName}`}
                     onChange={(e, option) =>
                       handlescheduleCandidateInfo(e, "clientid", option)
@@ -381,6 +468,7 @@ const ScheduleCandidate = () => {
                     disablePortal
                     id="combo-box-demo"
                     options={laboratories}
+                    key={toggleInputState}
                     getOptionLabel={(option) => `${option.laboratoryName}`}
                     onChange={(e, option) =>
                       handlescheduleCandidateInfo(e, "laboratoryId", option)
@@ -397,6 +485,7 @@ const ScheduleCandidate = () => {
                     className="autoCompleteInput"
                     id="combo-box-demo"
                     options={testCategory}
+                    key={toggleInputState}
                     getOptionLabel={(option) => `${option.categoryName}`}
                     onChange={(e, option) =>
                       handlescheduleCandidateInfo(e, "test", option)
@@ -494,14 +583,13 @@ const ScheduleCandidate = () => {
                     />
                   </div>
                 </div>
-                <div className="singleInput singleInputRadioWrapper">
+                {/* <div className="singleInput singleInputRadioWrapper">
                   <FormControl className="radioInputWrapper">
                     <FormLabel
                       id="demo-controlled-radio-buttons-group"
                       className="formTitle"
                     >
                       Is the candidate a core staff or a private candidate?
-                      {/* Candidate type */}
                     </FormLabel>
                     <RadioGroup
                       aria-labelledby="demo-controlled-radio-buttons-group"
@@ -539,7 +627,7 @@ const ScheduleCandidate = () => {
                       </div>
                     )}
                   </FormControl>
-                </div>
+                </div> */}
                 <div className="bulkUploadWrapper">
                   <p>Bulk Upload</p>
                   <input

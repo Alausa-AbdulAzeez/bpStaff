@@ -313,7 +313,7 @@ const PendingCandidatesDatagrid = (props) => {
       await publicRequest
         .put(
           `Candidate/Authorize/${selectedCandidateId}`,
-          {},
+          { recommendation: "" },
           {
             headers: {
               Accept: "*",
@@ -379,7 +379,7 @@ const PendingCandidatesDatagrid = (props) => {
         .then(async () => {
           await publicRequest.put(
             `Candidate/Authorize/${candidateId}`,
-            {},
+            { recommendation: "" },
             {
               headers: {
                 Accept: "*",
@@ -463,7 +463,7 @@ const PendingCandidatesDatagrid = (props) => {
           .then(async () => {
             await publicRequest.put(
               `Candidate/Authorize/${candidateId}`,
-              {},
+              { recommendation: "" },
               {
                 headers: {
                   Accept: "*",
@@ -1455,7 +1455,8 @@ const PendingCandidatesDatagrid = (props) => {
                     Weight - {selectedCandidate?.weight}kg
                   </Typography>
                   <Typography>
-                    bloodPressure - {selectedCandidate?.bloodPressure}mm/Hg
+                    Blood Pressure/Heart rate -{" "}
+                    {selectedCandidate?.bloodPressure}
                   </Typography>
                 </AccordionDetails>
               </Accordion>
