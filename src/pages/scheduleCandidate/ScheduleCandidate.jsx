@@ -146,7 +146,7 @@ const ScheduleCandidate = () => {
     appointmentdate: null,
     clientid: "",
     testcategory: "",
-    // companyName: "",
+    candidateClientType: "",
     status: "PENDING",
   });
 
@@ -190,6 +190,7 @@ const ScheduleCandidate = () => {
     });
 
     setDisableDoneAndCancelBtn(true);
+    console.log(scheduleInfo);
 
     try {
       await publicRequest
@@ -583,7 +584,7 @@ const ScheduleCandidate = () => {
                     />
                   </div>
                 </div>
-                {/* <div className="singleInput singleInputRadioWrapper">
+                <div className="singleInput singleInputRadioWrapper">
                   <FormControl className="radioInputWrapper">
                     <FormLabel
                       id="demo-controlled-radio-buttons-group"
@@ -619,15 +620,18 @@ const ScheduleCandidate = () => {
                             className="input"
                             required
                             onChange={(e) =>
-                              handlescheduleCandidateInfo(e, "companyName")
+                              handlescheduleCandidateInfo(
+                                e,
+                                "candidateClientType"
+                              )
                             }
-                            value={scheduleInfo?.companyName}
+                            value={scheduleInfo?.candidateClientType}
                           />
                         </div>
                       </div>
                     )}
                   </FormControl>
-                </div> */}
+                </div>
                 <div className="bulkUploadWrapper">
                   <p>Bulk Upload</p>
                   <input
