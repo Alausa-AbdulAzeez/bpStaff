@@ -34,7 +34,6 @@ const ScheduleCandidate = () => {
   const { currentUser } = useSelector((state) => state?.user);
   const loggedInUserRole = currentUser?.data?.role[0];
 
-  console.log(loggedInUserRole);
   const userData = currentUser?.data;
 
   // TO SET THE STATE OF THE DONE AND CANCEL BUTTONS
@@ -170,6 +169,10 @@ const ScheduleCandidate = () => {
       setScheduleInfo((prev) => {
         return { ...prev, [dataName]: data?.id?.toString() };
       });
+    } else if (dataName === "candidateClientTypeSelect") {
+      setScheduleInfo((prev) => {
+        return { ...prev, ["candidateClientType"]: data };
+      });
     } else {
       setScheduleInfo((prev) => {
         return { ...prev, [dataName]: e.target.value };
@@ -190,7 +193,6 @@ const ScheduleCandidate = () => {
     });
 
     setDisableDoneAndCancelBtn(true);
-    console.log(scheduleInfo);
 
     try {
       await publicRequest
@@ -628,6 +630,48 @@ const ScheduleCandidate = () => {
                             value={scheduleInfo?.candidateClientType}
                           />
                         </div>
+                      </div>
+                    )}
+                    {isCandidateCoreStaff === "yes" && (
+                      // <div className="singleInput ">
+                      //   <p>Cabdidate Type</p>
+                      //   <div className="inputWrapper">
+                      //     <input
+                      //       type="text"
+                      //       className="input"
+                      //       required
+                      //       onChange={(e) =>
+                      //         handlescheduleCandidateInfo(
+                      //           e,
+                      //           "candidateClientType"
+                      //         )
+                      //       }
+                      //       value={scheduleInfo?.candidateClientType}
+                      //     />
+                      //   </div>
+                      // </div>
+                      <div className="singleInput autoComplete">
+                        <Autocomplete
+                          className="autoCompleteInput"
+                          disablePortal
+                          id="combo-box-demo"
+                          options={["Core staff", "Private"]}
+                          key={toggleInputState}
+                          onChange={(e, option) =>
+                            handlescheduleCandidateInfo(
+                              e,
+                              "candidateClientTypeSelect",
+                              option
+                            )
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Candidate type"
+                              required
+                            />
+                          )}
+                        />
                       </div>
                     )}
                   </FormControl>
