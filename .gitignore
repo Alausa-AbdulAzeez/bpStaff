@@ -113,3 +113,32 @@ Password123
   "stoolAnalysis": "brown/yellow",
   "urinalysis": "{'Color/Appearance':'brown/red','Leucocytes':'no','Nitrites':'no','Urobilinogen':'no','Protein':'no','pH':'6.5','Blood':'no','SpecificGravity':'1.2','Ketone':'no','Bilirubin':'no','Glucose':'no'}"
 }
+
+{
+"recommendation":"null",
+"address": "Peace Street, Tanke Ilorin.",
+"age":"20",
+"appointmentdate":"2023-08-22T04:21:00",
+"bloodPressure": "80,100mm/hg, 80b/m",
+"bmi":"12.5",
+"candidateId":69,
+"candidateName": "ze",
+"clientName": "client active",
+"clientid": 12,
+"createdDate":"2023-08-22T04:21:00.214",
+"email":"alausaabdulazeez@gmail.com",
+"gender": "F",
+"height":"2",
+"laboratory": "Biopath Lagos (Head)",
+"laboratoryId": "11",
+"phoneNumber": "08118487185",
+"randomBloodSugar": "0.1",
+"state": "state",
+"status": "PENDING",
+"stoolAnalysis":"green/green",
+"temperature": "30",
+"testcategory": "FHT",
+"urinalysis": "{\"Color/Appearance\":\"yellow/yellow\",\"Leucocytes\":\"no\",\"Nitrites\":\"no\",\"Urobilinogen\":\"no\",\"Protein\":\"no\",\"pH\":\"7.5\",\"Blood\":\"no\",\"SpecificGravity\":\"1\",\"Ketone\":\"no\",\"Bilirubin\":\"no\",\"Glucose\":\"no\"}",
+"visaulAcuity": "2",
+"weight": "50"
+}

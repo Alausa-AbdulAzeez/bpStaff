@@ -277,10 +277,7 @@ const DownloadReportPage = () => {
         <div className='recommendation'>
           <div className='recommendationTitle'>RECOMMENDATION</div>
           <div className='recommendationBody'>
-            {/* <p>
-              In the light of all the results obtained, the above-named person
-              is hereby certified as medically fit.
-            </p> */}
+            <p>{candidateResultDetails[0]?.recommendation}</p>
             <p>
               Kindly, find attached the result of Laboratory investigations.
             </p>

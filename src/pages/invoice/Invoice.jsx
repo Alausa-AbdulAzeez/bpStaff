@@ -128,6 +128,8 @@ const Invoice = () => {
       convertedStartDate || '2023/01/01'
     }&endDate=${convertedEndDate || '2024/01/01'}`
 
+    console.log(url)
+
     try {
       const res = await publicRequest.get(url, {
         headers: {

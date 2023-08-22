@@ -270,7 +270,10 @@ const CandidateSearchDatagrid = (props) => {
           `/Candidate/UInfo?Candidateid=${Number(
             candidateId
           )}&Clientid=${Number(clientid)}`,
-          { ...candidateToBeUpdated, state: 'state' },
+          {
+            ...candidateToBeUpdated,
+            state: 'state',
+          },
           {
             headers: {
               Accept: '*',
@@ -282,7 +285,7 @@ const CandidateSearchDatagrid = (props) => {
         .then(async () => {
           await publicRequest.put(
             `Candidate/Authorize/${candidateId}`,
-            {},
+            { recommendation: '' },
             {
               headers: {
                 Accept: '*',
@@ -336,7 +339,10 @@ const CandidateSearchDatagrid = (props) => {
   }, [candidateToBeUpdated?.height, candidateToBeUpdated?.weight])
   return (
     <div className='datagridWraper'>
-      <div className={position === "-100%" ? "zeroWidth" : "slide"} style={{ right: position }}>
+      <div
+        className={position === '-100%' ? 'zeroWidth' : 'slide'}
+        style={{ right: position }}
+      >
         <div className='slideTop'>
           <div className='cancelconWrapper' onClick={handleHideSlide}>
             <MdCancel className='cancelIcon' />

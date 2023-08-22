@@ -34,7 +34,7 @@ const PendingCandidatesDatagrid = (props) => {
   const [reasonForRejection, setReasonForRejection] = React.useState('')
 
   // SINGLE CANDIDATE
-  // const [singleCandidate, setSingleCandidate] = useState({});
+  const [singleCandidate, setSingleCandidate] = useState({})
 
   // SELECTED CANDIDATE TESTS (FOR MAINLAB)
   const [candidateTests, setCandidateTests] = useState([])
@@ -882,6 +882,7 @@ const PendingCandidatesDatagrid = (props) => {
               })
               .then((res) => {
                 setCandidateTests(res?.data?.data?.tests)
+                console.log(res?.data?.data?.tests)
                 let tests = res?.data?.data?.tests
 
                 containsWidalTest = tests?.some((test) => {
@@ -1101,6 +1102,9 @@ const PendingCandidatesDatagrid = (props) => {
                 placeholder='°C'
                 size='small'
                 className='candidateName basicCandidateDetailsInput'
+                onChange={(e) =>
+                  handleCandidatePropertyChange(e, 'temperature')
+                }
               />
               <TextField
                 // id="outlined-search"
@@ -1320,7 +1324,9 @@ const PendingCandidatesDatagrid = (props) => {
                   <Typography>
                     BMI -----
                     <span style={{ fontWeight: 'bold' }}>
-                      {selectedCandidate?.bmi || singleCandidate?.bmi}
+                      {Number(
+                        selectedCandidate?.bmi || singleCandidate?.bmi
+                      )?.toFixed(3)}
                     </span>
                   </Typography>
                   <Typography>
@@ -1507,7 +1513,9 @@ const PendingCandidatesDatagrid = (props) => {
                 <AccordionDetails>
                   <Typography>Age -{selectedCandidate?.age} years</Typography>
                   <Typography>Gender - {selectedCandidate?.gender}</Typography>
-                  <Typography>BMI - {selectedCandidate?.bmi}</Typography>
+                  <Typography>
+                    BMI - {Number(selectedCandidate?.bmi)?.toFixed(3)}
+                  </Typography>
                   <Typography>Height - {selectedCandidate?.height}m</Typography>
                   <Typography>
                     Weight - {selectedCandidate?.weight}kg
