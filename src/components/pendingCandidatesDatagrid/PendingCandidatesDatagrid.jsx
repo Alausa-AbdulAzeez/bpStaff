@@ -3,6 +3,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -1092,6 +1093,11 @@ const PendingCandidatesDatagrid = (props) => {
                 id='outlined-search'
                 label='Temperature'
                 type='string'
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='start'>°C</InputAdornment>
+                  ),
+                }}
                 placeholder='°C'
                 size='small'
                 className='candidateName basicCandidateDetailsInput'
@@ -1100,6 +1106,11 @@ const PendingCandidatesDatagrid = (props) => {
                 // id="outlined-search"
                 label='Weight'
                 type='string'
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='start'>kg</InputAdornment>
+                  ),
+                }}
                 placeholder='kg'
                 className='candidateName basicCandidateDetailsInput'
                 onChange={(e) => handleCandidatePropertyChange(e, 'weight')}
@@ -1114,6 +1125,11 @@ const PendingCandidatesDatagrid = (props) => {
                 onChange={(e) => handleCandidatePropertyChange(e, 'height')}
                 value={userDetails?.height}
                 placeholder='m'
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='start'>m</InputAdornment>
+                  ),
+                }}
                 size='small'
               />
               <TextField
