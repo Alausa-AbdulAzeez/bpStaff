@@ -477,12 +477,18 @@ const PendingCandidatesDatagrid = (props) => {
     try {
       let found
       for (let index = 0; index < candidateResults?.length; index++) {
-        found = keys?.find((key) => {
-          return (
+        for (const key of keys) {
+          if (
             candidateResults[index][key] === '' ||
             candidateResults[index][key] === undefined
-          )
-        })
+          ) {
+            found = true // Set found to true if an incomplete field is found
+            break // Exit the inner loop if an incomplete field is found
+          }
+        }
+        if (found) {
+          break // Exit the outer loop if an incomplete field is found
+        }
       }
 
       if (!found) {
@@ -518,7 +524,45 @@ const PendingCandidatesDatagrid = (props) => {
             })
           })
       } else {
-        throw Error(`Please fill all fields, the "${found}" field is empty`)
+        if (
+          window.confirm(
+            'Please review your entries: an empty field has been detected. If this is not intentional, kindly complete all required fields before proceeding.'
+          )
+        ) {
+          await publicRequest
+            .post(`/Result/create`, candidateResults, {
+              headers: {
+                Accept: '*',
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+            })
+            .then(async () => {
+              await publicRequest.put(
+                `Candidate/Authorize/${candidateId}`,
+                { recommendation: '' },
+                {
+                  headers: {
+                    Accept: '*',
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                  },
+                }
+              )
+            })
+            .then(async () => await props?.getPendingCandidates())
+            // .then(() => props?.setReloadTable((prev) => !prev))
+            .then(() => {
+              toast.update(toastId.current, {
+                render: 'Result sent to QA for review',
+                type: 'success',
+                isLoading: false,
+                autoClose: 2500,
+              })
+            })
+        } else {
+          toastId.current = toast.dismiss()
+        }
       }
     } catch (error) {
       console.log(error)
@@ -1361,8 +1405,26 @@ const PendingCandidatesDatagrid = (props) => {
                     : candidateTests?.length === 0
                     ? 'No test for selected candidate'
                     : candidateTests?.map((candidateTest, index) => {
+                        console.log(candidateTest)
                         return (
-                          candidateTest?.test !== 'Widal test' && (
+                          candidateTest?.test !== 'Widal test' &&
+                          (candidateTest?.testId === 64 ||
+                          candidateTest?.testId === 30 ||
+                          candidateTest?.testId === 38 ? (
+                            <div className='textAreaSingleInput'>
+                              <p>{candidateTest?.test}</p>
+                              <div className='textAreaInputWrapper'>
+                                <textarea
+                                  // value={recommendation}
+                                  type='text'
+                                  className='specialTextArea'
+                                  onChange={(e) =>
+                                    handleTestInputChange(e, candidateTest)
+                                  }
+                                />
+                              </div>
+                            </div>
+                          ) : (
                             <TextField
                               key={index}
                               id={candidateTest?.id}
@@ -1374,7 +1436,7 @@ const PendingCandidatesDatagrid = (props) => {
                               }
                               size='small'
                             />
-                          )
+                          ))
                         )
                       })}
                 </div>
