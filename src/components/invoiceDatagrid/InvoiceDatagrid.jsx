@@ -40,11 +40,17 @@ const InvoiceDatagrid = (props) => {
       width: 280,
       editable: false,
     },
+    {
+      field: 'clientType',
+      headerName: 'Client Type',
+      width: 180,
+      editable: false,
+    },
 
     {
       field: 'amount',
       headerName: 'Amount',
-      width: 200,
+      width: 150,
     },
 
     {

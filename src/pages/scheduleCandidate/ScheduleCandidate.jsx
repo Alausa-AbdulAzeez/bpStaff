@@ -487,7 +487,9 @@ const ScheduleCandidate = () => {
                     disablePortal
                     className='autoCompleteInput'
                     id='combo-box-demo'
-                    options={testCategory}
+                    options={testCategory?.filter(
+                      (singleCategory) => singleCategory?.id !== 24
+                    )}
                     key={toggleInputState}
                     getOptionLabel={(option) => `${option.categoryName}`}
                     onChange={(e, option) =>
@@ -586,45 +588,45 @@ const ScheduleCandidate = () => {
                     />
                   </div>
                 </div>
-                {/* <div className="singleInput singleInputRadioWrapper">
-                  <FormControl className="radioInputWrapper">
+                <div className='singleInput singleInputRadioWrapper'>
+                  <FormControl className='radioInputWrapper'>
                     <FormLabel
-                      id="demo-controlled-radio-buttons-group"
-                      className="formTitle"
+                      id='demo-controlled-radio-buttons-group'
+                      className='formTitle'
                     >
                       Is the candidate a core staff or a private candidate?
                     </FormLabel>
                     <RadioGroup
-                      aria-labelledby="demo-controlled-radio-buttons-group"
-                      name="controlled-radio-buttons-group"
+                      aria-labelledby='demo-controlled-radio-buttons-group'
+                      name='controlled-radio-buttons-group'
                       value={isCandidateCoreStaff}
                       onChange={handleCandidateTypeChange}
-                      className="radioGroup"
+                      className='radioGroup'
                       row
                     >
                       <FormControlLabel
-                        value="yes"
+                        value='yes'
                         control={<Radio />}
-                        label="Yes"
+                        label='Yes'
                       />
                       <FormControlLabel
-                        value="no"
+                        value='no'
                         control={<Radio />}
-                        label="No"
+                        label='No'
                       />
                     </RadioGroup>
-                    {isCandidateCoreStaff === "no" && (
-                      <div className="singleInput ">
+                    {isCandidateCoreStaff === 'no' && (
+                      <div className='singleInput '>
                         <p>Company Name</p>
-                        <div className="inputWrapper">
+                        <div className='inputWrapper'>
                           <input
-                            type="text"
-                            className="input"
+                            type='text'
+                            className='input'
                             required
                             onChange={(e) =>
                               handlescheduleCandidateInfo(
                                 e,
-                                "candidateClientType"
+                                'candidateClientType'
                               )
                             }
                             value={scheduleInfo?.candidateClientType}
@@ -632,26 +634,25 @@ const ScheduleCandidate = () => {
                         </div>
                       </div>
                     )}
-                    {isCandidateCoreStaff === "yes" && (
-                   
-                      <div className="singleInput autoComplete">
+                    {isCandidateCoreStaff === 'yes' && (
+                      <div className='singleInput autoComplete'>
                         <Autocomplete
-                          className="autoCompleteInput"
+                          className='autoCompleteInput'
                           disablePortal
-                          id="combo-box-demo"
-                          options={["Core staff", "Private"]}
+                          id='combo-box-demo'
+                          options={['Core staff', 'Private']}
                           key={toggleInputState}
                           onChange={(e, option) =>
                             handlescheduleCandidateInfo(
                               e,
-                              "candidateClientTypeSelect",
+                              'candidateClientTypeSelect',
                               option
                             )
                           }
                           renderInput={(params) => (
                             <TextField
                               {...params}
-                              label="Candidate type"
+                              label='Candidate type'
                               required
                             />
                           )}
@@ -659,7 +660,7 @@ const ScheduleCandidate = () => {
                       </div>
                     )}
                   </FormControl>
-                </div> */}
+                </div>
                 <div className='bulkUploadWrapper'>
                   <p>Bulk Upload</p>
                   <input

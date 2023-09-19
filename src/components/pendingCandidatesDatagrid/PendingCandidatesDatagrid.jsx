@@ -926,7 +926,6 @@ const PendingCandidatesDatagrid = (props) => {
               })
               .then((res) => {
                 setCandidateTests(res?.data?.data?.tests)
-                console.log(res?.data?.data?.tests)
                 let tests = res?.data?.data?.tests
 
                 containsWidalTest = tests?.some((test) => {
@@ -1405,7 +1404,6 @@ const PendingCandidatesDatagrid = (props) => {
                     : candidateTests?.length === 0
                     ? 'No test for selected candidate'
                     : candidateTests?.map((candidateTest, index) => {
-                        console.log(candidateTest)
                         return (
                           candidateTest?.test !== 'Widal test' &&
                           (candidateTest?.testId === 64 ||
