@@ -51,6 +51,73 @@ const ScheduleCandidate = () => {
   // TO SET THE STATE OF TEST CATEGORY INPUT
   const [loadingTestCategory, setLoadingTestCategory] = useState(true)
 
+  // CANDIDATE CLIENT TYPE
+  const candidateClientTypeList = [
+    { clientName: 'Accion' },
+    { clientName: 'Raddison' },
+    { clientName: 'Abuja' },
+    { clientName: 'Akwa Ibom' },
+    { clientName: 'Astrata Group' },
+    { clientName: 'ATC' },
+    { clientName: 'J Elshaddai' },
+    { clientName: 'Jubilee Life Bank' },
+    { clientName: 'Lekki' },
+    { clientName: 'Edo' },
+    { clientName: 'Bayelsa' },
+    { clientName: 'Kaduna' },
+    { clientName: 'Pan Africa Capital' },
+    { clientName: 'Pregcare' },
+    { clientName: 'Savannah Energy' },
+    { clientName: 'Ren Money' },
+    { clientName: 'Union Bank' },
+    { clientName: 'UBA' },
+    { clientName: 'UBN' },
+    { clientName: 'Natcom' },
+    { clientName: 'NTEL' },
+    { clientName: 'MTN' },
+    { clientName: 'Keystone' },
+    { clientName: 'Inlak' },
+    { clientName: 'Heritage' },
+    { clientName: 'GSR' },
+    { clientName: 'Guiness' },
+    { clientName: 'Fidelity' },
+    { clientName: 'FBN' },
+    { clientName: 'CFAO' },
+    { clientName: 'ATC' },
+    { clientName: 'Interswitch' },
+    { clientName: 'Sterling Bank' },
+    { clientName: 'Zamfara' },
+    { clientName: 'Yobe' },
+    { clientName: 'Taraba' },
+    { clientName: 'Osun' },
+    { clientName: 'Sokoto' },
+    { clientName: 'Sanofi' },
+    { clientName: 'Robert and John' },
+    { clientName: 'Sanctory Brewery' },
+    { clientName: 'Radisson Blue' },
+    { clientName: 'Providus' },
+    { clientName: 'Philips Morris' },
+    { clientName: 'Polaris' },
+    { clientName: 'Hovozymes' },
+    { clientName: 'Hyde' },
+    { clientName: 'Hyjeia' },
+    { clientName: 'Evercare' },
+    { clientName: 'Eco Bank' },
+    { clientName: 'Diverse' },
+    { clientName: 'Diago' },
+    { clientName: 'Cummins' },
+    { clientName: 'Barry Callebaut' },
+    { clientName: 'AG Leventis' },
+    { clientName: 'Access' },
+    { clientName: '234 Stores' },
+    { clientName: 'ABA' },
+    { clientName: 'Delta' },
+    { clientName: 'RainOil' },
+    { clientName: 'Kayvee Microfinance' },
+    { clientName: 'Hilal Takafur' },
+    { clientName: 'BAA' },
+  ]
+
   // FILE TO BE UPLOADED
   const [selectedFile, setSelectedFile] = useState(null)
   const handleClickOpen = () => {
@@ -616,22 +683,43 @@ const ScheduleCandidate = () => {
                       />
                     </RadioGroup>
                     {isCandidateCoreStaff === 'no' && (
-                      <div className='singleInput '>
-                        <p>Company Name</p>
-                        <div className='inputWrapper'>
-                          <input
-                            type='text'
-                            className='input'
-                            required
-                            onChange={(e) =>
-                              handlescheduleCandidateInfo(
-                                e,
-                                'candidateClientType'
-                              )
-                            }
-                            value={scheduleInfo?.candidateClientType}
-                          />
-                        </div>
+                      // <div className='singleInput '>
+                      //   <p>Company Name</p>
+                      //   <div className='inputWrapper'>
+                      //     <input
+                      //       type='text'
+                      //       className='input'
+                      //       required
+                      //       onChange={(e) =>
+                      //         handlescheduleCandidateInfo(
+                      //           e,
+                      //           'candidateClientType'
+                      //         )
+                      //       }
+                      //       value={scheduleInfo?.candidateClientType}
+                      //     />
+                      //   </div>
+                      // </div>
+                      <div className='singleInput autoComplete'>
+                        <Autocomplete
+                          className='autoCompleteInput'
+                          disablePortal
+                          id='combo-box-demo'
+                          options={clients}
+                          key={toggleInputState}
+                          getOptionLabel={(option) => `${option.clientName}`}
+                          onChange={(e, option) =>
+                            handlescheduleCandidateInfo(e, 'clientid', option)
+                          }
+                          // sx={{ width: 400 }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label='Client Name'
+                              required
+                            />
+                          )}
+                        />
                       </div>
                     )}
                     {isCandidateCoreStaff === 'yes' && (
