@@ -83,7 +83,6 @@ const ScheduleCandidate = () => {
     { clientName: 'Fidelity' },
     { clientName: 'FBN' },
     { clientName: 'CFAO' },
-    { clientName: 'ATC' },
     { clientName: 'Interswitch' },
     { clientName: 'Sterling Bank' },
     { clientName: 'Zamfara' },
@@ -115,7 +114,87 @@ const ScheduleCandidate = () => {
     { clientName: 'RainOil' },
     { clientName: 'Kayvee Microfinance' },
     { clientName: 'Hilal Takafur' },
+    { clientName: 'Haggai Mortgage' },
     { clientName: 'BAA' },
+    { clientName: 'Karakata' },
+    { clientName: 'Kyosk Digital Services' },
+    { clientName: 'Amvil' },
+    { clientName: 'Titan' },
+    { clientName: 'VFD' },
+    { clientName: 'V Room' },
+    { clientName: 'V Bank' },
+    { clientName: 'Vertiv' },
+    { clientName: 'Unilever' },
+    { clientName: 'UTL' },
+    { clientName: 'Unified Payment' },
+    { clientName: 'Tangerine' },
+    { clientName: 'Transmed' },
+    { clientName: 'TSL' },
+    { clientName: 'Standard Chartered' },
+    { clientName: 'Stanbic' },
+    { clientName: 'Sonia' },
+    { clientName: 'Shoprite' },
+    { clientName: 'Secure ID' },
+    { clientName: 'SEPLAT' },
+    { clientName: 'RMD' },
+    { clientName: 'Royal Exchange' },
+    { clientName: 'SDS' },
+    { clientName: 'Rite' },
+    { clientName: 'Rand Merchant' },
+    { clientName: 'Pound' },
+    { clientName: 'Power Tools' },
+    { clientName: 'POS' },
+    { clientName: 'Pharmadeko' },
+    { clientName: 'PAN Africa' },
+    { clientName: 'PAT' },
+    { clientName: 'RMD BANK' },
+    { clientName: 'Outside Labs' },
+    { clientName: 'Office Assistants' },
+    { clientName: 'MFB' },
+    { clientName: 'Nestle' },
+    { clientName: 'Mandilas Group' },
+    { clientName: 'Lotus Bank' },
+    { clientName: 'Main One' },
+    { clientName: 'Lotus' },
+    { clientName: 'Letshego' },
+    { clientName: 'Leadway' },
+    { clientName: 'Kyosk' },
+    { clientName: 'JTI' },
+    { clientName: 'Hope' },
+    { clientName: 'Househelp' },
+    { clientName: 'GTC' },
+    { clientName: 'GT Bank' },
+    { clientName: 'IMO' },
+    { clientName: 'First Atoben' },
+    { clientName: 'FITC' },
+    { clientName: 'Fortress MCB' },
+    { clientName: 'First Pension Custodian' },
+    { clientName: 'FUNMOR' },
+    { clientName: 'Factory Worker' },
+    { clientName: 'EDC' },
+    { clientName: 'Electronic Payplus Limited' },
+    { clientName: 'E-Settlement' },
+    { clientName: 'DSA' },
+    { clientName: 'Dimension Data' },
+    { clientName: 'Coronation' },
+    { clientName: 'Cornerstone' },
+    { clientName: 'Continental Logistics' },
+    { clientName: 'Cardinal Stone' },
+    { clientName: 'Car Wash' },
+    { clientName: 'Chef' },
+    { clientName: 'BOA Sugar' },
+    { clientName: 'BOOM' },
+    { clientName: 'CAN' },
+    { clientName: 'BMC' },
+    { clientName: 'BLUME' },
+    { clientName: 'BCT' },
+    { clientName: 'Auto Tech' },
+    { clientName: 'AXA' },
+    { clientName: 'Ample SYS' },
+    { clientName: 'ATOBEN' },
+    { clientName: 'Alma Stock' },
+    { clientName: 'Arcelormittal' },
+    { clientName: 'Abbey Mortgage' },
   ]
 
   // FILE TO BE UPLOADED
@@ -236,6 +315,10 @@ const ScheduleCandidate = () => {
       setScheduleInfo((prev) => {
         return { ...prev, [dataName]: data?.id?.toString() }
       })
+    } else if (dataName === 'candidateClientType') {
+      setScheduleInfo((prev) => {
+        return { ...prev, [dataName]: data?.clientName }
+      })
     } else if (dataName === 'candidateClientTypeSelect') {
       setScheduleInfo((prev) => {
         return { ...prev, ['candidateClientType']: data }
@@ -254,6 +337,7 @@ const ScheduleCandidate = () => {
   // function for scheduling a candidate
   const handleScheduleCandidate = async (e) => {
     e.preventDefault()
+    console.log(scheduleInfo)
     toastId.current = toast('Please wait...', {
       autoClose: 2500,
       isLoading: true,
@@ -705,11 +789,15 @@ const ScheduleCandidate = () => {
                           className='autoCompleteInput'
                           disablePortal
                           id='combo-box-demo'
-                          options={clients}
+                          options={candidateClientTypeList}
                           key={toggleInputState}
                           getOptionLabel={(option) => `${option.clientName}`}
                           onChange={(e, option) =>
-                            handlescheduleCandidateInfo(e, 'clientid', option)
+                            handlescheduleCandidateInfo(
+                              e,
+                              'candidateClientType',
+                              option
+                            )
                           }
                           // sx={{ width: 400 }}
                           renderInput={(params) => (
